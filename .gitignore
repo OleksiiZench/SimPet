@@ -103,7 +103,6 @@ DerivedDataCache/
 
 Intermediate/
 Saved/
-Content/StarterContent/
 # Visual Studio Files
 .vs/
 
@@ -132,10 +131,6 @@ Crashes/
 *.log
 
 *.dmp
-# Configuration files
-Config/DefaultEngine.ini
-Config/DefaultGame.ini
-Config/DefaultInput.ini
 
 # Plugin specific
 Plugins/*/Intermediate/
