@@ -1,0 +1,12 @@
+// Copyright (c) 2025 Oleksii Zenchenko. All Rights Reserved.
+
+#pragma once
+
+#include "NativeGameplayTags.h"
+
+namespace SimPetGameplayTags
+{
+	/** Input Tags **/
+	SIMPET_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Move);
+	SIMPET_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Look);
+}
