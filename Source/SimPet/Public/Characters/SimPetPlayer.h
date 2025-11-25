@@ -44,7 +44,7 @@ private:
 
 	void Input_Move(const FInputActionValue &InputActionValue);
 	void Input_Look(const FInputActionValue &InputActionValue);
-	void Input_Interact();
+	void Input_Interact(const FInputActionValue &InputActionValue);
 
 #pragma endregion
 

@@ -7,6 +7,8 @@
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "GameplayTagAssetInterface.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 #include "DataAsset/Input/SimPetInputConfig.h"
 #include "SimPetGameplayTags.h"
@@ -76,7 +78,53 @@ void ASimPetPlayer::Input_Look(const FInputActionValue &InputActionValue)
 	}
 }
 
-void ASimPetPlayer::Input_Interact()
+void ASimPetPlayer::Input_Interact(const FInputActionValue &InputActionValue)
 {
-	Debug::Print(TEXT("Interaction!"));
+	if (!InputActionValue.Get<bool>())
+		return;
+
+	float InteractionDistance = 250.0f;
+	float InteractionRadius = 15.0f;
+	FHitResult HitResult;
+	FVector StartLocation = Camera->GetComponentLocation();
+	FVector EndLocation = StartLocation + Camera->GetForwardVector() * InteractionDistance;
+
+	TArray<AActor *> ActorsToIgnore;
+	ActorsToIgnore.Add(this);
+
+	bool bHit = UKismetSystemLibrary::SphereTraceSingle(
+		GetWorld(),
+		StartLocation,
+		EndLocation,
+		InteractionRadius,
+		ETraceTypeQuery::TraceTypeQuery2,
+		false,
+		ActorsToIgnore,
+		EDrawDebugTrace::None,
+		HitResult,
+		true
+	);
+
+	if (bHit)
+	{
+		AActor *HitActor = HitResult.GetActor();
+
+		if (IGameplayTagAssetInterface *TaggedInterface = Cast<IGameplayTagAssetInterface>(HitActor))
+		{
+			FGameplayTagContainer HitActorTags;
+			TaggedInterface->GetOwnedGameplayTags(HitActorTags);
+
+			// If food
+			if (HitActorTags.HasTag(SimPetGameplayTags::Interactable_Food))
+			{
+				Debug::Print(TEXT("Its food |") + HitActor->GetActorLabel());
+			}
+
+			// If waste
+			else if (HitActorTags.HasTag(SimPetGameplayTags::Interactable_Waste))
+			{
+				Debug::Print(TEXT("Its waste |") + HitActor->GetActorLabel());
+			}
+		}
+	}
 }
