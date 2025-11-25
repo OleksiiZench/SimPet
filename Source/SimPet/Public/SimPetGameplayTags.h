@@ -9,4 +9,5 @@ namespace SimPetGameplayTags
 	/** Input Tags **/
 	SIMPET_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Move);
 	SIMPET_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Look);
+	SIMPET_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Interact);
 }

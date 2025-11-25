@@ -11,6 +11,8 @@
 #include "DataAsset/Input/SimPetInputConfig.h"
 #include "SimPetGameplayTags.h"
 
+#include "SimPetDebugHelper.h"
+
 ASimPetPlayer::ASimPetPlayer()
 {
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
@@ -47,6 +49,10 @@ void ASimPetPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputCompon
 		const UInputAction *LookAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_Look);
 		if (LookAction)
 			EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASimPetPlayer::Input_Look);
+
+		const UInputAction *InteractAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_Interact);
+		if (InteractAction)
+			EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ASimPetPlayer::Input_Interact);
 	}
 }
 
@@ -68,4 +74,9 @@ void ASimPetPlayer::Input_Look(const FInputActionValue &InputActionValue)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void ASimPetPlayer::Input_Interact()
+{
+	Debug::Print(TEXT("Interaction!"));
 }
