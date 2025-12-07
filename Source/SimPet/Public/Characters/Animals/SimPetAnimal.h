@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Characters/SimPetBaseCharacter.h"
+
 #include "SimPetAnimal.generated.h"
 
 UENUM(BlueprintType)
@@ -25,28 +26,55 @@ public:
 	ASimPetAnimal();
 
 	virtual void Tick(float DeltaTime) override;
+
+	void ToEat();
+	void ToClean();
 	
 protected:
 
 #pragma region State
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	float TimeSinceLastMeal;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|State")
+	bool bIsClean;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|State")
+	int32 MealPerDay;  // Скільки разів за день тварина поїла
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|State")
+	float TimeSinceLastMeal;  // Час з останнього харчування
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|State")
+	float TimeSinceLastClean;  // Час з останнього прибирання
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "SimPet|State")
 	ESimPetAnimalState AnimalState;
 #pragma endregion
 
 #pragma region Config
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	int32 GameSpeed;  // За скільки секунд проходить ігрова година
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|Config")
+	float GameSpeed;  // За скільки секунд проходить ігрова година
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|Config")
 	float TiredThresholdHours;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|Config")
 	float DeathThresholdHours;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|Config")
+	float DirtyThresholdHours;
+#pragma endregion
+
+#pragma region Appearance
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|Appearance", meta = (ClampMin = "0", ClampMax = "2", UIMin = "0", UIMax = "2"))
+	int32 EyesCount;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|Appearance", meta = (ClampMin = "0", ClampMax = "4", UIMin = "0", UIMax = "4"))
+	int32 PawsCount;
 #pragma endregion
 
 private:
 	float TimeAccumulator;
+
+	void ToDie();
+	void ToDirty();
+	void UpdateAnimalState();
 };
