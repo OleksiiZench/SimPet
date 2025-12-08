@@ -25,8 +25,8 @@ ASimPetAnimal::ASimPetAnimal()
 	DirtyThresholdHours = 24.0f;
 
 	// Appearance
-	EyesCount = 2;
-	PawsCount = 4;
+	EyesCount = 0;
+	PawsCount = 0;
 
 	TimeAccumulator = 0.0f;
 }
