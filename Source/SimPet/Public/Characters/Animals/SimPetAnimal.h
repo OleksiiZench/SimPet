@@ -26,6 +26,7 @@ public:
 	ASimPetAnimal();
 
 	virtual void Tick(float DeltaTime) override;
+	virtual void OnConstruction(const FTransform &Transform) override;
 
 	void ToEat();
 	void ToClean();
@@ -63,12 +64,34 @@ protected:
 	float DirtyThresholdHours;
 #pragma endregion
 
-#pragma region Appearance
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|Appearance", meta = (ClampMin = "0", ClampMax = "2", UIMin = "0", UIMax = "2"))
-	int32 EyesCount;
+#pragma region BodyParts
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|BodyParts")
+	UStaticMeshComponent *BodyMesh;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|Appearance", meta = (ClampMin = "0", ClampMax = "4", UIMin = "0", UIMax = "4"))
-	int32 PawsCount;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|BodyParts")
+	UStaticMeshComponent *HeadMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|BodyParts")
+	UStaticMeshComponent *TailMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|BodyParts")
+	TArray<UStaticMeshComponent *> SpawnedEyes;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|BodyParts")
+	TArray<UStaticMeshComponent *> SpawnedLegs;
+
+	// Налаштування динамічних частини тіла
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|BodyParts")
+	UStaticMesh * EyesAsset;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|BodyParts")
+	UStaticMesh * LegsAsset;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|BodyParts")
+	TArray<FName> EyesSockets;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|BodyParts")
+	TArray<FName> LegsSockets;
 #pragma endregion
 
 private:

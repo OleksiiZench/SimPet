@@ -24,10 +24,17 @@ ASimPetAnimal::ASimPetAnimal()
 	DeathThresholdHours = 24.0f;
 	DirtyThresholdHours = 24.0f;
 
-	// Appearance
-	EyesCount = 0;
-	PawsCount = 0;
+	// BodyParts
+	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BodyMesh"));
+	BodyMesh->SetupAttachment(GetRootComponent());
 
+	HeadMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HeadMesh"));
+	HeadMesh->SetupAttachment(BodyMesh);
+
+	TailMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TailMesh"));
+	TailMesh->SetupAttachment(BodyMesh);
+
+	// Other
 	TimeAccumulator = 0.0f;
 }
 
@@ -57,6 +64,35 @@ void ASimPetAnimal::Tick(float DeltaTime)
 		}
 
 		UpdateAnimalState();
+	}
+}
+
+void ASimPetAnimal::OnConstruction(const FTransform &Transform)
+{
+	Super::OnConstruction(Transform);
+
+	for (UStaticMeshComponent *SpawnedEye : SpawnedEyes)
+	{
+		SpawnedEye->DestroyComponent();
+		SpawnedEye = nullptr;
+	}
+	SpawnedEyes.Empty();
+
+	for (UStaticMeshComponent *SpawnedLeg : SpawnedLegs)
+	{
+		SpawnedLeg->DestroyComponent();
+		SpawnedLeg = nullptr;
+	}
+	SpawnedLegs.Empty();
+
+	if (EyesAsset)
+	{
+
+	}
+
+	if (LegsAsset)
+	{
+
 	}
 }
 
