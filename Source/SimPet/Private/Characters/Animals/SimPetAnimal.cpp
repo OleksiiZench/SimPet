@@ -25,6 +25,9 @@ ASimPetAnimal::ASimPetAnimal()
 	DirtyThresholdHours = 24.0f;
 
 	// BodyParts
+	EyesCount = 0;
+	LegsCount = 0;
+
 	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BodyMesh"));
 	BodyMesh->SetupAttachment(GetRootComponent());
 
@@ -73,26 +76,50 @@ void ASimPetAnimal::OnConstruction(const FTransform &Transform)
 
 	for (UStaticMeshComponent *SpawnedEye : SpawnedEyes)
 	{
-		SpawnedEye->DestroyComponent();
+		if (SpawnedEye)
+			SpawnedEye->DestroyComponent();
+
 		SpawnedEye = nullptr;
 	}
 	SpawnedEyes.Empty();
 
 	for (UStaticMeshComponent *SpawnedLeg : SpawnedLegs)
 	{
-		SpawnedLeg->DestroyComponent();
+		if (SpawnedLeg)
+			SpawnedLeg->DestroyComponent();
+
 		SpawnedLeg = nullptr;
 	}
 	SpawnedLegs.Empty();
 
-	if (EyesAsset)
+	if (EyesAsset && EyesSockets.Num() > 0)
 	{
+		int32 NumEyesToSpawn = FMath::Min(EyesCount, EyesSockets.Num());
 
+		for (int i = 0; i < NumEyesToSpawn; i++)
+		{
+			UStaticMeshComponent *NewComp = NewObject<UStaticMeshComponent>(this);
+			NewComp->SetStaticMesh(EyesAsset);
+			NewComp->AttachToComponent(BodyMesh, FAttachmentTransformRules::KeepRelativeTransform, EyesSockets[i]);
+			NewComp->RegisterComponent();
+
+			SpawnedEyes.Add(NewComp);
+		}
 	}
 
-	if (LegsAsset)
+	if (LegsAsset && LegsSockets.Num() > 0)
 	{
+		int32 NumLegsToSpawn = FMath::Min(LegsCount, LegsSockets.Num());
 
+		for (int i = 0; i < NumLegsToSpawn; i++)
+		{
+			UStaticMeshComponent *NewComp = NewObject<UStaticMeshComponent>(this);
+			NewComp->SetStaticMesh(LegsAsset);
+			NewComp->AttachToComponent(BodyMesh, FAttachmentTransformRules::KeepRelativeTransform, LegsSockets[i]);
+			NewComp->RegisterComponent();
+
+			SpawnedLegs.Add(NewComp);
+		}
 	}
 }
 

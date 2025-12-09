@@ -81,6 +81,12 @@ protected:
 	TArray<UStaticMeshComponent *> SpawnedLegs;
 
 	// Налаштування динамічних частини тіла
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|Appearance", meta = (ClampMin = "0", ClampMax = "2", UIMin = "0", UIMax = "2"))
+	int32 EyesCount;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|Appearance", meta = (ClampMin = "0", ClampMax = "4", UIMin = "0", UIMax = "4"))
+	int32 LegsCount;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|BodyParts")
 	UStaticMesh * EyesAsset;
 

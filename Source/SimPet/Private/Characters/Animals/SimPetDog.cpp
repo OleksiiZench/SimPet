@@ -5,7 +5,4 @@
 
 ASimPetDog::ASimPetDog()
 {
-	// Appearance
-	EyesCount = 2;
-	PawsCount = 4;
 }
