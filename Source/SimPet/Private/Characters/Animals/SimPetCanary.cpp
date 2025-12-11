@@ -6,14 +6,34 @@
 
 ASimPetCanary::ASimPetCanary()
 {
-	MovementComponent = GetCharacterMovement();
-	MovementComponent->BrakingDecelerationFlying = 2000.0f;
-	MovementComponent->MaxFlySpeed = 600.0f;
+	GetCharacterMovement()->BrakingDecelerationFlying = 2000.0f;
+	GetCharacterMovement()->MaxFlySpeed = 600.0f;
 }
 
 void ASimPetCanary::BeginPlay()
 {
 	Super::BeginPlay();
 
-	MovementComponent->SetMovementMode(MOVE_Flying);
+	GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+}
+
+void ASimPetCanary::OnConstruction(const FTransform &Transform)
+{
+	Super::OnConstruction(Transform);
+
+	if (SpawnedWings)
+	{
+		SpawnedWings->DestroyComponent();
+		SpawnedWings = nullptr;
+	}
+
+	if (bHasWings && WingsAsset && !WingsSocket.IsNone())
+	{
+		UStaticMeshComponent *NewComp = NewObject<UStaticMeshComponent>(this);
+		NewComp->SetStaticMesh(WingsAsset);
+		NewComp->AttachToComponent(BodyMesh, FAttachmentTransformRules::KeepRelativeTransform, WingsSocket);
+		NewComp->RegisterComponent();
+
+		SpawnedWings = NewComp;
+	}
 }

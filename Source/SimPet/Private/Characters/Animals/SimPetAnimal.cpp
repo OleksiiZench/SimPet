@@ -100,7 +100,7 @@ void ASimPetAnimal::OnConstruction(const FTransform &Transform)
 		{
 			UStaticMeshComponent *NewComp = NewObject<UStaticMeshComponent>(this);
 			NewComp->SetStaticMesh(EyesAsset);
-			NewComp->AttachToComponent(BodyMesh, FAttachmentTransformRules::KeepRelativeTransform, EyesSockets[i]);
+			NewComp->AttachToComponent(HeadMesh, FAttachmentTransformRules::KeepRelativeTransform, EyesSockets[i]);
 			NewComp->RegisterComponent();
 
 			SpawnedEyes.Add(NewComp);

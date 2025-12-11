@@ -19,7 +19,20 @@ public:
 	ASimPetCanary();
 
 	virtual void BeginPlay() override;
+	virtual void OnConstruction(const FTransform &Transform) override;
 
-private:
-	UCharacterMovementComponent *MovementComponent;
+protected:
+#pragma region BodyParts
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|BodyParts")
+	bool bHasWings;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|BodyParts")
+	UStaticMesh *WingsAsset;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|BodyParts")
+	FName WingsSocket;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|BodyParts")
+	UStaticMeshComponent *SpawnedWings;
+#pragma endregion
 };

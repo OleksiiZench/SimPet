@@ -74,17 +74,17 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|BodyParts")
 	UStaticMeshComponent *TailMesh;
 
+	// Налаштування динамічних частини тіла
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|BodyParts")
 	TArray<UStaticMeshComponent *> SpawnedEyes;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|BodyParts")
 	TArray<UStaticMeshComponent *> SpawnedLegs;
-
-	// Налаштування динамічних частини тіла
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|Appearance", meta = (ClampMin = "0", ClampMax = "2", UIMin = "0", UIMax = "2"))
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|BodyParts", meta = (ClampMin = "0", ClampMax = "4", UIMin = "0", UIMax = "4"))
 	int32 EyesCount;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|Appearance", meta = (ClampMin = "0", ClampMax = "4", UIMin = "0", UIMax = "4"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|BodyParts", meta = (ClampMin = "0", ClampMax = "4", UIMin = "0", UIMax = "4"))
 	int32 LegsCount;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|BodyParts")
