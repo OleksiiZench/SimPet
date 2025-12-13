@@ -100,6 +100,9 @@ void ASimPetAnimal::OnConstruction(const FTransform &Transform)
 		{
 			UStaticMeshComponent *NewComp = NewObject<UStaticMeshComponent>(this);
 			NewComp->SetStaticMesh(EyesAsset);
+
+			NewComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 			NewComp->AttachToComponent(HeadMesh, FAttachmentTransformRules::KeepRelativeTransform, EyesSockets[i]);
 			NewComp->RegisterComponent();
 
@@ -115,6 +118,9 @@ void ASimPetAnimal::OnConstruction(const FTransform &Transform)
 		{
 			UStaticMeshComponent *NewComp = NewObject<UStaticMeshComponent>(this);
 			NewComp->SetStaticMesh(LegsAsset);
+
+			NewComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 			NewComp->AttachToComponent(BodyMesh, FAttachmentTransformRules::KeepRelativeTransform, LegsSockets[i]);
 			NewComp->RegisterComponent();
 
