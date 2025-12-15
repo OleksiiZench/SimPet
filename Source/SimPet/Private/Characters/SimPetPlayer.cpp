@@ -12,6 +12,7 @@
 
 #include "DataAsset/Input/SimPetInputConfig.h"
 #include "SimPetGameplayTags.h"
+#include "Interfaces/SimPetInteractable.h"
 
 #include "SimPetDebugHelper.h"
 
@@ -109,22 +110,9 @@ void ASimPetPlayer::Input_Interact(const FInputActionValue &InputActionValue)
 	{
 		AActor *HitActor = HitResult.GetActor();
 
-		if (IGameplayTagAssetInterface *TaggedInterface = Cast<IGameplayTagAssetInterface>(HitActor))
+		if (HitActor && HitActor->Implements<USimPetInteractable>())
 		{
-			FGameplayTagContainer HitActorTags;
-			TaggedInterface->GetOwnedGameplayTags(HitActorTags);
-
-			// If food
-			if (HitActorTags.HasTag(SimPetGameplayTags::Interactable_Food))
-			{
-				Debug::Print(TEXT("Its food |") + HitActor->GetActorLabel());
-			}
-
-			// If waste
-			else if (HitActorTags.HasTag(SimPetGameplayTags::Interactable_Waste))
-			{
-				Debug::Print(TEXT("Its waste |") + HitActor->GetActorLabel());
-			}
+			ISimPetInteractable::Execute_Interact(HitActor, this);
 		}
 	}
 }
