@@ -9,6 +9,8 @@
 
 #include "SimPetFabricator.generated.h"
 
+class ASimPetAnimal;
+
 UCLASS()
 class SIMPET_API ASimPetFabricator : public AActor, public ISimPetInteractable
 {
@@ -18,4 +20,16 @@ public:
 	//~ Begin ISimPetInteractable Interface
 	virtual void Interact_Implementation(AActor *InstigatorActor) override;
 	//~ End ISimPetInteractable Interface
+	
+	// UPROPERTY(EditAnywhere)
+	// TSubclassOf<ASimPetCanary> CanaryClassToSpawn;
+	//
+	// UPROPERTY(EditAnywhere)
+	// TSubclassOf<ASimPetDog> DogClassToSpawn;
+	//
+	// UPROPERTY(EditAnywhere)
+	// TSubclassOf<ASimPetLizard> LizardClassToSpawn;
+	
+	UPROPERTY(EditAnywhere)
+	TArray<TSubclassOf<ASimPetAnimal>> AnimalsToSpawn;
 };
