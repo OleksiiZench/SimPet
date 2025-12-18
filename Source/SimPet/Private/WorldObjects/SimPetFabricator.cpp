@@ -4,9 +4,6 @@
 #include "WorldObjects/SimPetFabricator.h"
 
 #include "Characters/Animals/SimPetAnimal.h"
-#include "Characters/Animals/SimPetCanary.h"
-#include "Characters/Animals/SimPetDog.h"
-#include "Characters/Animals/SimPetLizard.h"
 
 #include "SimPetDebugHelper.h"
 
@@ -14,18 +11,12 @@ void ASimPetFabricator::Interact_Implementation(AActor *InstigatorActor)
 {
 	Debug::Print(__func__);
 
-	if (!AnimalsToSpawn.IsEmpty())
+	if (TSubclassOf<ASimPetAnimal> *FoundClassAnimal = AnimalClassMap.Find(CurrentAnimal))
 	{
-		int32 RandomIndexAnimal = FMath::RandRange(0, AnimalsToSpawn.Num() - 1);
-		TSubclassOf<ASimPetAnimal> SelectedAnimal = AnimalsToSpawn[RandomIndexAnimal];
-	
-		if (SelectedAnimal)
-		{
-			FTransform AnimalTransform = FTransform(FRotator::ZeroRotator, FVector3d(50.0f, 50.0f, 400.0f));
+		FTransform AnimalTransform = FTransform(FRotator::ZeroRotator, FVector3d(50.0f, 50.0f, 400.0f));
 		
-			GetWorld()->SpawnActor<ASimPetAnimal>(SelectedAnimal, AnimalTransform);
+		GetWorld()->SpawnActor<ASimPetAnimal>(*FoundClassAnimal, AnimalTransform);
 			
-			Debug::Print(TEXT("Spawned: ") + SelectedAnimal->GetName());
-		}
+		Debug::Print(TEXT("Spawned: ") + (*FoundClassAnimal)->GetName());
 	}
 }

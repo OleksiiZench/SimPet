@@ -11,6 +11,14 @@
 
 class ASimPetAnimal;
 
+UENUM(BlueprintType)
+enum class ESimPetAnimals : uint8
+{
+	EA_Canary	UMETA(DisplayName = "Canary"),
+	EA_Dog		UMETA(DisplayName = "Dog"),
+	EA_Lizard	UMETA(DisplayName = "Lizard"),
+};
+
 UCLASS()
 class SIMPET_API ASimPetFabricator : public AActor, public ISimPetInteractable
 {
@@ -21,15 +29,9 @@ public:
 	virtual void Interact_Implementation(AActor *InstigatorActor) override;
 	//~ End ISimPetInteractable Interface
 	
-	// UPROPERTY(EditAnywhere)
-	// TSubclassOf<ASimPetCanary> CanaryClassToSpawn;
-	//
-	// UPROPERTY(EditAnywhere)
-	// TSubclassOf<ASimPetDog> DogClassToSpawn;
-	//
-	// UPROPERTY(EditAnywhere)
-	// TSubclassOf<ASimPetLizard> LizardClassToSpawn;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimalSettings")
+	ESimPetAnimals CurrentAnimal;
 	
-	UPROPERTY(EditAnywhere)
-	TArray<TSubclassOf<ASimPetAnimal>> AnimalsToSpawn;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AnimalSettings")
+	TMap<ESimPetAnimals, TSubclassOf<ASimPetAnimal>> AnimalClassMap;
 };
