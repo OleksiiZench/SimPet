@@ -13,4 +13,8 @@ namespace SimPetGameplayTags
 	/** Interactable Tags **/
 	UE_DEFINE_GAMEPLAY_TAG(Interactable_Food, "Interactable.Food");
 	UE_DEFINE_GAMEPLAY_TAG(Interactable_Waste, "Interactable.Waste");
+
+	/** Spawn Tags **/
+	UE_DEFINE_GAMEPLAY_TAG(Spawn_Point, "Spawn.Point");
+	UE_DEFINE_GAMEPLAY_TAG(Spawn_Point_HasAnimal, "Spawn.Point.HasAnimal");
 }

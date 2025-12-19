@@ -14,4 +14,8 @@ namespace SimPetGameplayTags
 	/** Interactable Tags **/
 	SIMPET_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Interactable_Food);
 	SIMPET_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Interactable_Waste);
+	
+	/** Spawn Tags **/
+	SIMPET_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Spawn_Point);
+	SIMPET_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Spawn_Point_HasAnimal);
 }

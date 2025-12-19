@@ -2,8 +2,11 @@
 
 
 #include "WorldObjects/SimPetFabricator.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "Characters/Animals/SimPetAnimal.h"
+#include "WorldObjects/SimPetSpawnPoint.h"
+#include "SimPetGameplayTags.h"
 
 #include "SimPetDebugHelper.h"
 
@@ -13,10 +16,47 @@ void ASimPetFabricator::Interact_Implementation(AActor *InstigatorActor)
 
 	if (TSubclassOf<ASimPetAnimal> *FoundClassAnimal = AnimalClassMap.Find(CurrentAnimal))
 	{
-		FTransform AnimalTransform = FTransform(FRotator::ZeroRotator, FVector3d(50.0f, 50.0f, 400.0f));
+		TArray<AActor *> FoundActors;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASimPetSpawnPoint::StaticClass(), FoundActors);
 		
-		GetWorld()->SpawnActor<ASimPetAnimal>(*FoundClassAnimal, AnimalTransform);
+		ASimPetSpawnPoint *AnimalSpawnPoint = nullptr;
+		
+		// 1. Беремо перешу ліпшу ASimPetSpawnPoint
+		for (AActor *Actor : FoundActors)
+		{
+			if (ASimPetSpawnPoint *СastAnimalSpawnPoint = Cast<ASimPetSpawnPoint>(Actor))
+			{
+				AnimalSpawnPoint = СastAnimalSpawnPoint;
+			}
+			else
+				continue;
 			
-		Debug::Print(TEXT("Spawned: ") + (*FoundClassAnimal)->GetName());
+			// 2. Отримуємо теги точки
+			FGameplayTagContainer TagContainer;
+		
+			if (AnimalSpawnPoint)
+				AnimalSpawnPoint->GetOwnedGameplayTags(TagContainer);
+		
+			// 3. Точка має бути SpawnPoint та не мати тварину
+			if (TagContainer.HasTag(SimPetGameplayTags::Spawn_Point) && !TagContainer.HasTag(SimPetGameplayTags::Spawn_Point_HasAnimal))
+			{
+				FTransform AnimalTransform = AnimalSpawnPoint->GetTransform();
+
+				ASimPetAnimal * NewAnimal = GetWorld()->SpawnActor<ASimPetAnimal>(*FoundClassAnimal, AnimalTransform);
+
+				if (NewAnimal)
+				{
+					Debug::Print(TEXT("Spawned: ") + (*FoundClassAnimal)->GetName());
+			
+					AnimalSpawnPoint->AddGameplayTags(SimPetGameplayTags::Spawn_Point_HasAnimal);
+				
+					break;
+				}
+				else
+					continue;
+			}
+			else
+				continue;
+		}
 	}
 }
