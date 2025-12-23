@@ -45,6 +45,7 @@ void ASimPetAnimal::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// 1. Симуляція метаболізму та життєвого циклу
 	if (AnimalState == ESimPetAnimalState::Dead)
 		return;
 
@@ -67,6 +68,24 @@ void ASimPetAnimal::Tick(float DeltaTime)
 		}
 
 		UpdateAnimalState();
+	}
+	
+	// 2. Рух ніг
+	for (UStaticMeshComponent *Leg : SpawnedLegs)
+	{
+		float RotationSpeed = 100.0f;
+		FRotator LegRotation = Leg->GetRelativeRotation();
+		
+		if (LegRotation.Pitch < 45.0f)
+		{
+			FRotator NewRotation = FRotator(LegRotation.Pitch + (RotationSpeed * DeltaTime), LegRotation.Yaw, LegRotation.Roll);
+			Leg->SetRelativeRotation(NewRotation);
+		}
+		
+		Debug::Print(TEXT("Leg: " + Leg->GetName() + ". Yaw = "), LegRotation.Yaw);
+		Debug::Print(TEXT("Leg: " + Leg->GetName() + ". Pitch = "), LegRotation.Pitch);
+		Debug::Print(TEXT("Leg: " + Leg->GetName() + ". Roll = "), LegRotation.Roll);
+		Debug::Print(TEXT(""));
 	}
 }
 

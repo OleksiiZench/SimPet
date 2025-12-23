@@ -106,4 +106,6 @@ private:
 	void ToDie();
 	void ToDirty();
 	void UpdateAnimalState();
+	
+	const float LegLiftAngle = 45.0f;
 };
