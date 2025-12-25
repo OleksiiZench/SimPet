@@ -98,6 +98,10 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|BodyParts")
 	TArray<FName> LegsSockets;
+	
+	float LegLiftAngle = 45.0f;
+	
+	virtual void AnimateLegs(float DeltaTime, float CurrentTime);
 #pragma endregion
 
 private:
@@ -106,6 +110,4 @@ private:
 	void ToDie();
 	void ToDirty();
 	void UpdateAnimalState();
-	
-	const float LegLiftAngle = 45.0f;
 };

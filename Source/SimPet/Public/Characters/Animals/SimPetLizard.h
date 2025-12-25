@@ -17,4 +17,7 @@ class SIMPET_API ASimPetLizard : public ASimPetAnimal
 	
 public:
 	ASimPetLizard();
+	
+protected:
+	virtual void AnimateLegs(float DeltaTime, float CurrentTime) override;
 };

@@ -71,21 +71,9 @@ void ASimPetAnimal::Tick(float DeltaTime)
 	}
 	
 	// 2. Рух ніг
-	for (UStaticMeshComponent *Leg : SpawnedLegs)
+	if (true /*GetVelocity().Size() > 0.0f*/)
 	{
-		float RotationSpeed = 100.0f;
-		FRotator LegRotation = Leg->GetRelativeRotation();
-		
-		if (LegRotation.Pitch < 45.0f)
-		{
-			FRotator NewRotation = FRotator(LegRotation.Pitch + (RotationSpeed * DeltaTime), LegRotation.Yaw, LegRotation.Roll);
-			Leg->SetRelativeRotation(NewRotation);
-		}
-		
-		Debug::Print(TEXT("Leg: " + Leg->GetName() + ". Yaw = "), LegRotation.Yaw);
-		Debug::Print(TEXT("Leg: " + Leg->GetName() + ". Pitch = "), LegRotation.Pitch);
-		Debug::Print(TEXT("Leg: " + Leg->GetName() + ". Roll = "), LegRotation.Roll);
-		Debug::Print(TEXT(""));
+		AnimateLegs(DeltaTime, GetGameTimeSinceCreation());
 	}
 }
 
@@ -166,6 +154,29 @@ void ASimPetAnimal::ToClean()
 	Debug::Print("Animal is clean now!");
 
 	UpdateAnimalState();
+}
+
+void ASimPetAnimal::AnimateLegs(float DeltaTime, float CurrentTime)
+{
+	float WalkSpeed = 10.0f;  // Швидкість ходьби, частота кроків
+	float Time = CurrentTime;
+	
+	for (int32 i = 0; i < SpawnedLegs.Num(); i++)
+	{
+		UStaticMeshComponent *Leg = SpawnedLegs[i];
+		if (!Leg)
+			continue;
+			
+		FString LegSocketName = LegsSockets[i].ToString();
+	 	
+		bool bIsRightLeg = LegSocketName.Contains(TEXT("Right"));
+		float PhaseOffset = bIsRightLeg ? UE_PI : 0.0f;
+			
+		float NewPitch = FMath::Sin((Time * WalkSpeed) + PhaseOffset) * LegLiftAngle;
+			
+		FRotator LegRotation = Leg->GetRelativeRotation();
+		Leg->SetRelativeRotation(FRotator(NewPitch, LegRotation.Yaw, LegRotation.Roll));
+	}
 }
 
 void ASimPetAnimal::ToDie()
