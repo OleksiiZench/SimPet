@@ -31,6 +31,9 @@ public:
 	void ToEat();
 	void ToClean();
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CurrentVelocity = 0;
+	
 protected:
 
 #pragma region State

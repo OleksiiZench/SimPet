@@ -158,8 +158,11 @@ void ASimPetAnimal::ToClean()
 
 void ASimPetAnimal::AnimateLegs(float DeltaTime, float CurrentTime)
 {
+	// 1. Отримуємо поточну швидкість
+	// float CurrentVelocity = GetVelocity().Size();
+	
 	float WalkSpeed = 10.0f;  // Швидкість ходьби, частота кроків
-	float Time = CurrentTime;
+	float ReturnSpeed = 10.0f;  // Швидкість повернення ніг у вихідне положення
 	
 	for (int32 i = 0; i < SpawnedLegs.Num(); i++)
 	{
@@ -168,14 +171,23 @@ void ASimPetAnimal::AnimateLegs(float DeltaTime, float CurrentTime)
 			continue;
 			
 		FString LegSocketName = LegsSockets[i].ToString();
+		FRotator CurrentRotation = Leg->GetRelativeRotation();
+		
+		float TargetPitch = 0.0f;
 	 	
-		bool bIsRightLeg = LegSocketName.Contains(TEXT("Right"));
-		float PhaseOffset = bIsRightLeg ? UE_PI : 0.0f;
+		// 2. Рахуємо синусоїду тільки при русі
+		if (CurrentVelocity > 0.0f)
+		{
+			bool bIsRightLeg = LegSocketName.Contains(TEXT("Right"));
+			float PhaseOffset = bIsRightLeg ? UE_PI : 0.0f;
 			
-		float NewPitch = FMath::Sin((Time * WalkSpeed) + PhaseOffset) * LegLiftAngle;
-			
-		FRotator LegRotation = Leg->GetRelativeRotation();
-		Leg->SetRelativeRotation(FRotator(NewPitch, LegRotation.Yaw, LegRotation.Roll));
+			TargetPitch = FMath::Sin((CurrentTime * WalkSpeed) + PhaseOffset) * LegLiftAngle;
+		}	
+		
+		// 3. Інтерполяція
+		float NewPitch = FMath::FInterpTo(CurrentRotation.Pitch, TargetPitch, DeltaTime, ReturnSpeed);
+		
+		Leg->SetRelativeRotation(FRotator(NewPitch, CurrentRotation.Yaw, CurrentRotation.Roll));
 	}
 }
 
