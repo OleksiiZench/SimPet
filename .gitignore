@@ -165,3 +165,7 @@ Backup*/
 *.suo
 *.opensdf
 *.sdf
+
+.vscode/
+.ignore
+*SimPet.code-workspace
