@@ -159,7 +159,7 @@ void ASimPetAnimal::ToClean()
 void ASimPetAnimal::AnimateLegs(float DeltaTime, float CurrentTime)
 {
 	// 1. Отримуємо поточну швидкість
-	// float CurrentVelocity = GetVelocity().Size();
+	// float CurrentVelocity = GetVelocity().Size();  // Розкоментувати якщо реалізований рух тварин
 	
 	float WalkSpeed = 10.0f;  // Швидкість ходьби, частота кроків
 	float ReturnSpeed = 10.0f;  // Швидкість повернення ніг у вихідне положення

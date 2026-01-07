@@ -32,7 +32,7 @@ public:
 	void ToClean();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float CurrentVelocity = 0;
+	float CurrentVelocity = 0.0f;                     // Якщо реалізований рух тварин то можна видалити
 	
 protected:
 
