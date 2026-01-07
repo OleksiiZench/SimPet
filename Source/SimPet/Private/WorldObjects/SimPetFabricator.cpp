@@ -9,12 +9,41 @@
 #include "SimPetGameplayTags.h"
 
 #include "SimPetDebugHelper.h"
+#include "Blueprint/UserWidget.h"
+#include "Widgets/SimPetFabricatorWidget.h"
 
 void ASimPetFabricator::Interact_Implementation(AActor *InstigatorActor)
 {
 	Debug::Print(__func__);
 
-	if (TSubclassOf<ASimPetAnimal> *FoundClassAnimal = AnimalClassMap.Find(CurrentAnimal))
+	if (!FabricatorWidgetClass)
+	{
+		Debug::Print(TEXT("Error: FabricatorWidgetClass is not selected in Blueprint!"));
+		return;
+	}
+	
+	APlayerController *PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (PC)
+	{
+		USimPetFabricatorWidget *FabricatorUI = CreateWidget<USimPetFabricatorWidget>(PC, FabricatorWidgetClass);
+		if (FabricatorUI)
+		{
+			FabricatorUI->InitializeFabricator(this);
+			FabricatorUI->AddToViewport();
+			
+			PC->SetShowMouseCursor(true);
+			FInputModeUIOnly InputMode;
+			InputMode.SetWidgetToFocus(FabricatorUI->TakeWidget());
+			PC->SetInputMode(InputMode);
+		}
+	}
+}
+
+void ASimPetFabricator::RequestSpawnAnimal(ESimPetAnimals AnimalType)
+{
+	Debug::Print(__func__);
+	
+	if (TSubclassOf<ASimPetAnimal> *FoundClassAnimal = AnimalClassMap.Find(AnimalType))
 	{
 		TArray<AActor *> FoundActors;
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASimPetSpawnPoint::StaticClass(), FoundActors);

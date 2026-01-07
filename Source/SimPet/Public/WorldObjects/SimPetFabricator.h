@@ -29,8 +29,12 @@ public:
 	virtual void Interact_Implementation(AActor *InstigatorActor) override;
 	//~ End ISimPetInteractable Interface
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimalSettings")
-	ESimPetAnimals CurrentAnimal;
+	UFUNCTION(BlueprintCallable, Category = "Fabricator")
+	void RequestSpawnAnimal(ESimPetAnimals AnimalType);
+	
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<class USimPetFabricatorWidget> FabricatorWidgetClass;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AnimalSettings")
 	TMap<ESimPetAnimals, TSubclassOf<ASimPetAnimal>> AnimalClassMap;
