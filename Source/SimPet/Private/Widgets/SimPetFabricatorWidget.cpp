@@ -3,7 +3,7 @@
 
 #include "Widgets/SimPetFabricatorWidget.h"
 
-#include "SimPetDebugHelper.h"
+#include "WorldObjects/SimPetFabricator.h"
 
 void USimPetFabricatorWidget::InitializeFabricator(ASimPetFabricator* InFabricator)
 {
@@ -16,12 +16,17 @@ void USimPetFabricatorWidget::OnAnimalSelected(ESimPetAnimals AnimalType)
 	{
 		LinkedFabricator->RequestSpawnAnimal(AnimalType);
 		
-		RemoveFromParent();
+		OnCloseMenu();
+	}
+}
+
+void USimPetFabricatorWidget::OnCloseMenu()
+{
+	RemoveFromParent();
 		
-		if (APlayerController* PC = GetOwningPlayer())
-		{
-			PC->SetShowMouseCursor(false);
-			PC->SetInputMode(FInputModeGameOnly());
-		}
+	if (APlayerController* PC = GetOwningPlayer())
+	{
+		PC->SetShowMouseCursor(false);
+		PC->SetInputMode(FInputModeGameOnly());
 	}
 }

@@ -5,9 +5,9 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 
-#include "WorldObjects/SimPetFabricator.h"
-
 #include "SimPetFabricatorWidget.generated.h"
+
+class ASimPetFabricator;
 
 /**
  * Клас UI, який керує вибором тварин
@@ -24,6 +24,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SimPet | Widgets")
 	void OnAnimalSelected(ESimPetAnimals AnimalType);
 	
+	UFUNCTION(BlueprintCallable, Category = "SimPet | Widgets")
+	void OnCloseMenu();
 protected:
 	TWeakObjectPtr<ASimPetFabricator> LinkedFabricator;  // Посилання на фабрикатор який відкрив цей UI
 };
