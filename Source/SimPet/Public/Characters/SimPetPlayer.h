@@ -11,6 +11,7 @@
 class UCameraComponent;
 class UInputMappingContext;
 class USimPetInputConfig;
+class USimPetHUDWidget;
 
 struct FInputActionValue;
 
@@ -24,15 +25,25 @@ class SIMPET_API ASimPetPlayer : public ASimPetBaseCharacter
 	
 public:
 	ASimPetPlayer();
+	
+	virtual void BeginPlay() override;
 
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent *PlayerInputComponent) override;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<USimPetHUDWidget> HUDWidgetClass;
 
 private:
 
+	APlayerController *PlayerController;
+	
 #pragma region Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent *Camera;
+	
+	UPROPERTY()
+	USimPetHUDWidget *CurrentHUD;
 #pragma endregion
 
 #pragma region Inputs

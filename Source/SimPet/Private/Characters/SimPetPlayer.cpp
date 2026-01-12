@@ -7,20 +7,37 @@
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "GameplayTagAssetInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 #include "DataAsset/Input/SimPetInputConfig.h"
 #include "SimPetGameplayTags.h"
 #include "Interfaces/SimPetInteractable.h"
-
-#include "SimPetDebugHelper.h"
+#include "Widgets/SimPetHUDWidget.h"
 
 ASimPetPlayer::ASimPetPlayer()
 {
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(GetCapsuleComponent());
 	Camera->bUsePawnControlRotation = true;
+}
+
+void ASimPetPlayer::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	// 1. Ініціалізуємо PC
+	PlayerController = Cast<APlayerController>(GetController());
+	
+	// 2. Виводимо HUD
+	if (IsLocallyControlled() && HUDWidgetClass)
+	{
+		if (PlayerController)
+		{
+			CurrentHUD = CreateWidget<USimPetHUDWidget>(PlayerController, HUDWidgetClass);
+			if (CurrentHUD)
+				CurrentHUD->AddToViewport();
+		}
+	}
 }
 
 void ASimPetPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
