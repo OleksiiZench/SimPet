@@ -38,6 +38,15 @@ void ASimPetPlayer::BeginPlay()
 				CurrentHUD->AddToViewport();
 		}
 	}
+	
+	// 3. Налаштування інпуту при старті
+	if (PlayerController)
+	{
+		PlayerController->bShowMouseCursor = false;
+		
+		FInputModeGameOnly GameModeInput;
+		PlayerController->SetInputMode(GameModeInput);
+	}
 }
 
 void ASimPetPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)

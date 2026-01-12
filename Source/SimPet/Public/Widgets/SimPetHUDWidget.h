@@ -22,7 +22,7 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	
 protected:
-#pragma region UI_Elements
+#pragma region UI Bindings
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock *TimerText;
 	

@@ -3,7 +3,6 @@
 
 #include "GameModes/SimPetMenuGameMode.h"
 #include "Blueprint/UserWidget.h"
-#include "Kismet/GameplayStatics.h"
 
 void ASimPetMenuGameMode::BeginPlay()
 {
