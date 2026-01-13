@@ -8,6 +8,7 @@
 #include "SimPetMainMenuWidget.generated.h"
 
 class UButton;
+class UTextBlock;
 class UWidgetSwitcher;
 
 /**
@@ -26,6 +27,7 @@ protected:
 	FName GameplayLevelName;
 	
 #pragma region UI Bindings
+	// 1. MainMenu
 	UPROPERTY(meta = (BindWidget))
 	UWidgetSwitcher *MenuSwitcher;
 	
@@ -39,10 +41,20 @@ protected:
 	UButton *Btn_Settings;
 	
 	UPROPERTY(meta = (BindWidget))
+	UButton *Btn_Exit;
+	
+	// 2. SettingsMenu
+	UPROPERTY(meta = (BindWidget))
+	UButton *Btn_DifficultyLeft;
+	
+	UPROPERTY(meta = (BindWidget))
+	UButton *Btn_DifficultyRight;
+	
+	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_SettingsBack;
 	
 	UPROPERTY(meta = (BindWidget))
-	UButton *Btn_Exit;
+	UTextBlock *Text_Difficulty;
 #pragma endregion
 	
 #pragma region UI Callbacks
@@ -60,5 +72,17 @@ protected:
 	
 	UFUNCTION()
 	void OnExitClicked();
+	
+	UFUNCTION()
+	void OnDifficultyLeftClicked();
+	
+	UFUNCTION()
+	void OnDifficultyRightClicked();
 #pragma endregion
+	
+private:
+	TArray<FText> DifficultyOptions;
+	int32 CurrentDifficultyIndex;
+	
+	void UpdateDifficultyDisplay();
 };
