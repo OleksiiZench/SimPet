@@ -8,10 +8,12 @@
 
 #include "SimPetPlayer.generated.h"
 
+class UInputComponent;
 class UCameraComponent;
 class UInputMappingContext;
 class USimPetInputConfig;
 class USimPetHUDWidget;
+class USimPetPauseMenuWidget;
 
 struct FInputActionValue;
 
@@ -27,15 +29,21 @@ public:
 	ASimPetPlayer();
 	
 	virtual void BeginPlay() override;
+	
+	UFUNCTION(BlueprintCallable)
+	void TogglePauseMenu();
 
 protected:
-	virtual void SetupPlayerInputComponent(class UInputComponent *PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent(UInputComponent *PlayerInputComponent) override;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<USimPetHUDWidget> HUDWidgetClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<USimPetPauseMenuWidget> PauseMenuWidgetClass;
 
 private:
-
+	bool bIsGamePaused = false;
 	APlayerController *PlayerController;
 	
 #pragma region Components
@@ -43,7 +51,10 @@ private:
 	UCameraComponent *Camera;
 	
 	UPROPERTY()
-	USimPetHUDWidget *CurrentHUD;
+	USimPetHUDWidget *CurrentHUDWidget;
+	
+	UPROPERTY()
+	USimPetPauseMenuWidget *CurrentPauseMenuWidget;
 #pragma endregion
 
 #pragma region Inputs
@@ -56,6 +67,7 @@ private:
 	void Input_Move(const FInputActionValue &InputActionValue);
 	void Input_Look(const FInputActionValue &InputActionValue);
 	void Input_Interact(const FInputActionValue &InputActionValue);
+	void Input_Pause(const FInputActionValue &InputActionValue);
 
 #pragma endregion
 
