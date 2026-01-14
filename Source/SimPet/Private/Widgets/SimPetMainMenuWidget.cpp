@@ -42,6 +42,9 @@ void USimPetMainMenuWidget::NativeConstruct()
 	DifficultyOptions.Add(NSLOCTEXT("Settings", "Diff_Hard", "Hard"));
 	
 	UpdateDifficultyDisplay();
+	
+	if (Btn_Continue)
+		Btn_Continue->SetUserFocus(GetOwningPlayer());
 }
 
 void USimPetMainMenuWidget::OnContinueClicked()
