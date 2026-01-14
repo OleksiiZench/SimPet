@@ -15,6 +15,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Widgets/SimPetPauseMenuWidget.h"
 #include "Widgets/SimPetHUD.h"
+#include "Controllers/SimPetPlayerController.h"
 
 #include "SimPetDebugHelper.h"
 
@@ -30,7 +31,7 @@ void ASimPetPlayer::BeginPlay()
 	Super::BeginPlay();
 	
 	// 1. Ініціалізуємо PC
-	PlayerController = Cast<APlayerController>(GetController());
+	SimPetPC = Cast<ASimPetPlayerController>(GetController());
 	
 	// 2. Виводимо HUD
 	// if (IsLocallyControlled() && HUDWidgetClass)
@@ -44,18 +45,18 @@ void ASimPetPlayer::BeginPlay()
 	// }
 	
 	// 3. Налаштування інпуту при старті
-	if (PlayerController)
-	{
-		PlayerController->bShowMouseCursor = false;
-		
-		FInputModeGameOnly GameModeInput;
-		PlayerController->SetInputMode(GameModeInput);
-	}
+	// if (PlayerController)
+	// {
+	// 	PlayerController->bShowMouseCursor = false;
+	// 	
+	// 	FInputModeGameOnly GameModeInput;
+	// 	PlayerController->SetInputMode(GameModeInput);
+	// }
 }
 
 void ASimPetPlayer::TogglePauseMenu()
 {
-	if (!PlayerController)
+	if (!SimPetPC)
 		return;
 	
 	bIsGamePaused = !bIsGamePaused;
@@ -66,52 +67,44 @@ void ASimPetPlayer::TogglePauseMenu()
 	// 2. Логіка відображення
 	if (bIsGamePaused)
 	{
-		if (ASimPetHUD *CurrentHUD = Cast<ASimPetHUD>(PlayerController->GetHUD()))
+		if (ASimPetHUD *CurrentHUD = Cast<ASimPetHUD>(SimPetPC->GetHUD()))
 			CurrentHUD->SetHUDVisibility(false);
 		
 		if (!CurrentPauseMenuWidget && PauseMenuWidgetClass)
 		{
-			CurrentPauseMenuWidget = CreateWidget<USimPetPauseMenuWidget>(PlayerController, PauseMenuWidgetClass);
+			CurrentPauseMenuWidget = CreateWidget<USimPetPauseMenuWidget>(SimPetPC, PauseMenuWidgetClass);
 			CurrentPauseMenuWidget->AddToViewport(10);
 		}
 		
 		if (CurrentPauseMenuWidget)
 			CurrentPauseMenuWidget->SetVisibility(ESlateVisibility::Visible);
 		
-		PlayerController->bShowMouseCursor = true;
+		// PlayerController->bShowMouseCursor = true;
+		//
+		// FInputModeGameAndUI InputMode;
+		// InputMode.SetWidgetToFocus(CurrentPauseMenuWidget ? CurrentPauseMenuWidget->TakeWidget().ToSharedPtr() : nullptr);
+		// PlayerController->SetInputMode(InputMode);
 		
-		FInputModeGameAndUI InputMode;
-		InputMode.SetWidgetToFocus(CurrentPauseMenuWidget ? CurrentPauseMenuWidget->TakeWidget().ToSharedPtr() : nullptr);
-		PlayerController->SetInputMode(InputMode);
+		SimPetPC->SetInputMode_UI();
 	}
 	else
 	{
 		if (CurrentPauseMenuWidget)
 			CurrentPauseMenuWidget->SetVisibility(ESlateVisibility::Hidden);
 		
-		if (ASimPetHUD *CurrentHUD = Cast<ASimPetHUD>(PlayerController->GetHUD()))
+		if (ASimPetHUD *CurrentHUD = Cast<ASimPetHUD>(SimPetPC->GetHUD()))
 			CurrentHUD->SetHUDVisibility(true);
 		
-		PlayerController->bShowMouseCursor = false;
-		PlayerController->SetInputMode(FInputModeGameOnly());
+		// SimPetPC->bShowMouseCursor = false;
+		// SimPetPC->SetInputMode(FInputModeGameOnly());
+		
+		SimPetPC->SetInputMode_Game();
 	}
 }
 
 void ASimPetPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	// Adding Mapping Context
-	if (APlayerController *PC = Cast<APlayerController>(Controller))
-	{
-		if (UEnhancedInputLocalPlayerSubsystem *Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
-		{
-			if (DefaultMappingContext)
-			{
-				Subsystem->AddMappingContext(DefaultMappingContext, 0);
-			}
-		}
-	}
 
 	// Configure EnhancedInputComponent
 	if (UEnhancedInputComponent *EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))

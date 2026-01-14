@@ -14,6 +14,7 @@ class UInputMappingContext;
 class USimPetInputConfig;
 class USimPetHUDWidget;
 class USimPetPauseMenuWidget;
+class ASimPetPlayerController;
 
 struct FInputActionValue;
 
@@ -44,7 +45,7 @@ protected:
 
 private:
 	bool bIsGamePaused = false;
-	APlayerController *PlayerController;
+	ASimPetPlayerController *SimPetPC;
 	
 #pragma region Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
@@ -61,8 +62,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	USimPetInputConfig *InputConfigDataAsset;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
-	UInputMappingContext *DefaultMappingContext;
+	// UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	// UInputMappingContext *DefaultMappingContext;
 
 	void Input_Move(const FInputActionValue &InputActionValue);
 	void Input_Look(const FInputActionValue &InputActionValue);
