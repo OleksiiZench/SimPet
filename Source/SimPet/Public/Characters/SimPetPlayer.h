@@ -36,8 +36,8 @@ public:
 protected:
 	virtual void SetupPlayerInputComponent(UInputComponent *PlayerInputComponent) override;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<USimPetHUDWidget> HUDWidgetClass;
+	// UPROPERTY(EditDefaultsOnly, Category = "UI")
+	// TSubclassOf<USimPetHUDWidget> HUDWidgetClass;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<USimPetPauseMenuWidget> PauseMenuWidgetClass;
@@ -50,8 +50,8 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent *Camera;
 	
-	UPROPERTY()
-	USimPetHUDWidget *CurrentHUDWidget;
+	// UPROPERTY()
+	// USimPetHUDWidget *CurrentHUDWidget;
 	
 	UPROPERTY()
 	USimPetPauseMenuWidget *CurrentPauseMenuWidget;

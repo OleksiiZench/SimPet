@@ -13,8 +13,8 @@
 #include "SimPetGameplayTags.h"
 #include "Interfaces/SimPetInteractable.h"
 #include "Kismet/GameplayStatics.h"
-#include "Widgets/SimPetHUDWidget.h"
 #include "Widgets/SimPetPauseMenuWidget.h"
+#include "Widgets/SimPetHUD.h"
 
 #include "SimPetDebugHelper.h"
 
@@ -33,15 +33,15 @@ void ASimPetPlayer::BeginPlay()
 	PlayerController = Cast<APlayerController>(GetController());
 	
 	// 2. Виводимо HUD
-	if (IsLocallyControlled() && HUDWidgetClass)
-	{
-		if (PlayerController)
-		{
-			CurrentHUDWidget = CreateWidget<USimPetHUDWidget>(PlayerController, HUDWidgetClass);
-			if (CurrentHUDWidget)
-				CurrentHUDWidget->AddToViewport();
-		}
-	}
+	// if (IsLocallyControlled() && HUDWidgetClass)
+	// {
+	// 	if (PlayerController)
+	// 	{
+	// 		CurrentHUDWidget = CreateWidget<USimPetHUDWidget>(PlayerController, HUDWidgetClass);
+	// 		if (CurrentHUDWidget)
+	// 			CurrentHUDWidget->AddToViewport();
+	// 	}
+	// }
 	
 	// 3. Налаштування інпуту при старті
 	if (PlayerController)
@@ -66,8 +66,8 @@ void ASimPetPlayer::TogglePauseMenu()
 	// 2. Логіка відображення
 	if (bIsGamePaused)
 	{
-		if (CurrentHUDWidget)
-			CurrentHUDWidget->SetVisibility(ESlateVisibility::Hidden);
+		if (ASimPetHUD *CurrentHUD = Cast<ASimPetHUD>(PlayerController->GetHUD()))
+			CurrentHUD->SetHUDVisibility(false);
 		
 		if (!CurrentPauseMenuWidget && PauseMenuWidgetClass)
 		{
@@ -89,8 +89,8 @@ void ASimPetPlayer::TogglePauseMenu()
 		if (CurrentPauseMenuWidget)
 			CurrentPauseMenuWidget->SetVisibility(ESlateVisibility::Hidden);
 		
-		if (CurrentHUDWidget)
-			CurrentHUDWidget->SetVisibility(ESlateVisibility::Visible);
+		if (ASimPetHUD *CurrentHUD = Cast<ASimPetHUD>(PlayerController->GetHUD()))
+			CurrentHUD->SetHUDVisibility(true);
 		
 		PlayerController->bShowMouseCursor = false;
 		PlayerController->SetInputMode(FInputModeGameOnly());
