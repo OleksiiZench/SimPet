@@ -35,6 +35,7 @@ public:
 	void TogglePauseMenu();
 
 protected:
+	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(UInputComponent *PlayerInputComponent) override;
 	
 	// UPROPERTY(EditDefaultsOnly, Category = "UI")
@@ -42,10 +43,19 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<USimPetPauseMenuWidget> PauseMenuWidgetClass;
+	
+	// Налаштування швидкості персонажа
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float WalkSpeed;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float SprintSpeed;
 
 private:
 	bool bIsGamePaused = false;
+	//bool bIsSprinting = false;
 	ASimPetPlayerController *SimPetPC;
+	UCharacterMovementComponent *CurrentMovementComp;
 	
 #pragma region Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
@@ -69,7 +79,18 @@ private:
 	void Input_Look(const FInputActionValue &InputActionValue);
 	void Input_Interact(const FInputActionValue &InputActionValue);
 	void Input_Pause(const FInputActionValue &InputActionValue);
+	void Input_Sprint_Started(const FInputActionValue &InputActionValue);
+	void Input_Sprint_Completed(const FInputActionValue &InputActionValue);
 
 #pragma endregion
-
+	
+#pragma region Bobbing
+	float BobVerticalAmplitude;  // Наскільки сильно коливає вгору/ вниз
+	float BobHorizontalAmplitude;  // Наскільки сильно коливає вліво/ вправо
+	float BobFrequencyMultiplier;  // Множник швидкості коливання
+	float BobTimer;  // Таймер для синумоїди
+	FVector DefaultCameraRelativeLocation;  // Координати камери в спокої
+	
+	void UpdateCameraBob(float DeltaTime);
+#pragma endregion
 };
