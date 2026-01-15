@@ -8,6 +8,8 @@
 #include "SimPetHUDWidget.generated.h"
 
 class UTextBlock;
+class UProgressBar;
+class ASimPetPlayer;
 
 /**
  * 
@@ -34,9 +36,16 @@ protected:
 	
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock *LizardCountText;
+	
+	UPROPERTY(meta = (BindWidget))
+	UProgressBar *StaminaProgressBar;
 #pragma endregion
 	
 #pragma region Logic
+	UFUNCTION()
+	void UpdateStaminaBar(float NewValue, float Percent);
+	
+	UFUNCTION()
 	void UpdateAnimalStats();  // Функція для оновлення статистики (за таймером)
 	
 	FTimerHandle StatsTimerHandle;  // Таймер для оновлення статистики

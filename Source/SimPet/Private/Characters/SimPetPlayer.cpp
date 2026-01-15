@@ -193,6 +193,8 @@ void ASimPetPlayer::SetSprint(bool bIsSprint)
 
 void ASimPetPlayer::UpdateStamina(float DeltaTime)
 {
+	float OldStamina = CurrentStamina;
+	
 	if (bIsSprinting)
 	{
 		CurrentStamina -= StaminaDrainRate * DeltaTime;
@@ -206,6 +208,14 @@ void ASimPetPlayer::UpdateStamina(float DeltaTime)
 	else if (CurrentStamina < MaxStamina)
 	{
 		CurrentStamina += StaminaRegenRate * DeltaTime;
+	}
+	
+	if (!FMath::IsNearlyEqual(OldStamina, CurrentStamina))
+	{
+		float StaminaPercent = FMath::Clamp(CurrentStamina / MaxStamina, 0.0f, 1.0f);
+		
+		if (OnStaminaChanged.IsBound())
+			OnStaminaChanged.Broadcast(CurrentStamina, StaminaPercent);
 	}
 }
 

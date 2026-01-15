@@ -18,6 +18,8 @@ class ASimPetPlayerController;
 
 struct FInputActionValue;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStaminaChanged, float, CurrentValue, float, Precent);
+
 /**
  * 
  */
@@ -33,6 +35,11 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void TogglePauseMenu();
+	
+#pragma region Delegates
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnStaminaChanged OnStaminaChanged;
+#pragma endregion
 
 protected:
 	virtual void Tick(float DeltaTime) override;

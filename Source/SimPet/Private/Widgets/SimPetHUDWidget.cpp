@@ -8,6 +8,8 @@
 #include "Characters/Animals/SimPetDog.h"
 #include "Characters/Animals/SimPetCanary.h"
 #include "Characters/Animals/SimPetLizard.h"
+#include "Characters/SimPetPlayer.h"
+#include "Components/ProgressBar.h"
 
 void USimPetHUDWidget::NativeConstruct()
 {
@@ -19,6 +21,12 @@ void USimPetHUDWidget::NativeConstruct()
 	}
 	
 	UpdateAnimalStats();
+	
+	if (ASimPetPlayer *SimPetPlayer = Cast<ASimPetPlayer>(GetOwningPlayerPawn()))
+	{
+		StaminaProgressBar->SetPercent(1.0f);
+		SimPetPlayer->OnStaminaChanged.AddDynamic(this, &USimPetHUDWidget::UpdateStaminaBar);
+	}
 }
 
 void USimPetHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -34,6 +42,14 @@ void USimPetHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime
 		FString TimeString = FString::Printf(TEXT("%02d:%02d"), Timespan.GetMinutes(), Timespan.GetSeconds());
 		
 		TimerText->SetText(FText::FromString(TimeString));
+	}
+}
+
+void USimPetHUDWidget::UpdateStaminaBar(float NewValue, float Percent)
+{
+	if (StaminaProgressBar)
+	{
+		StaminaProgressBar->SetPercent(Percent);
 	}
 }
 
