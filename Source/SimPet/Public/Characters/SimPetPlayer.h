@@ -50,12 +50,27 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float SprintSpeed;
-
+	
+	// Налаштування стаміни персонажа
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float MaxStamina;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float StaminaDrainRate;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Movement")
+	float StaminaRegenRate;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Movement")
+	float CurrentStamina;
 private:
 	bool bIsGamePaused = false;
-	//bool bIsSprinting = false;
+	bool bIsSprinting = false;
 	ASimPetPlayerController *SimPetPC;
 	UCharacterMovementComponent *CurrentMovementComp;
+	
+	void SetSprint(bool bIsSprint);
+	void UpdateStamina(float DeltaTime);
 	
 #pragma region Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))

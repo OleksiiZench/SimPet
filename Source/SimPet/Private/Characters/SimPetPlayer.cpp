@@ -33,6 +33,12 @@ ASimPetPlayer::ASimPetPlayer()
 	BobHorizontalAmplitude = 5.0f;
 	BobFrequencyMultiplier = 0.015f;
 	BobTimer = 0.0f;
+	
+	// Налаштування стаміни
+	MaxStamina = 3.0f;
+	StaminaDrainRate = 1.0f;
+	StaminaRegenRate = 1.0f;
+	CurrentStamina = MaxStamina;
 }
 
 void ASimPetPlayer::BeginPlay()
@@ -131,6 +137,9 @@ void ASimPetPlayer::Tick(float DeltaTime)
 	
 	// 1. Оновлюємо коливання камери
 	UpdateCameraBob(DeltaTime);
+	
+	// 2. Оновлення стаміни
+	UpdateStamina(DeltaTime);
 }
 
 void ASimPetPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
@@ -165,6 +174,38 @@ void ASimPetPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputCompon
 			EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &ASimPetPlayer::Input_Sprint_Started);
 			EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &ASimPetPlayer::Input_Sprint_Completed);
 		}
+	}
+}
+
+void ASimPetPlayer::SetSprint(bool bIsSprint)
+{
+	if (bIsSprint)
+	{
+		CurrentMovementComp->MaxWalkSpeed = SprintSpeed;
+		bIsSprinting = true;
+	}
+	else
+	{
+		CurrentMovementComp->MaxWalkSpeed = WalkSpeed;
+		bIsSprinting = false;
+	}
+}
+
+void ASimPetPlayer::UpdateStamina(float DeltaTime)
+{
+	if (bIsSprinting)
+	{
+		CurrentStamina -= StaminaDrainRate * DeltaTime;
+		
+		if (CurrentStamina <= 0.0f)
+		{
+			CurrentStamina = 0.0f;
+			SetSprint(false);
+		}
+	}
+	else if (CurrentStamina < MaxStamina)
+	{
+		CurrentStamina += StaminaRegenRate * DeltaTime;
 	}
 }
 
@@ -233,14 +274,13 @@ void ASimPetPlayer::Input_Pause(const FInputActionValue& InputActionValue)
 
 void ASimPetPlayer::Input_Sprint_Started(const FInputActionValue& InputActionValue)
 {
-		CurrentMovementComp->MaxWalkSpeed = SprintSpeed;
-		//bIsSprinting = true;
+	SetSprint(true);
+		
 }
 
 void ASimPetPlayer::Input_Sprint_Completed(const FInputActionValue& InputActionValue)
 {
-	CurrentMovementComp->MaxWalkSpeed = WalkSpeed;
-	//bIsSprinting = false;
+	SetSprint(false);
 }
 
 void ASimPetPlayer::UpdateCameraBob(float DeltaTime)
