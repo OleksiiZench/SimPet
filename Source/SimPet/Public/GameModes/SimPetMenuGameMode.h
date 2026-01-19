@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "GameModes/SimPetBaseGameMode.h"
 
 #include "SimPetMenuGameMode.generated.h"

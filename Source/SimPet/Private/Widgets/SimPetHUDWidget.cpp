@@ -2,14 +2,15 @@
 
 
 #include "Widgets/SimPetHUDWidget.h"
+
 #include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/ProgressBar.h"
 
 #include "Characters/Animals/SimPetDog.h"
 #include "Characters/Animals/SimPetCanary.h"
 #include "Characters/Animals/SimPetLizard.h"
 #include "Characters/SimPetPlayer.h"
-#include "Components/ProgressBar.h"
 
 void USimPetHUDWidget::NativeConstruct()
 {

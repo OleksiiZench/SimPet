@@ -2,6 +2,7 @@
 
 
 #include "Characters/Animals/SimPetCanary.h"
+
 #include "GameFramework/CharacterMovementComponent.h"
 
 ASimPetCanary::ASimPetCanary()

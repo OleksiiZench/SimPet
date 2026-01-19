@@ -14,7 +14,7 @@ ASimPetLizard::ASimPetLizard()
 
 void ASimPetLizard::AnimateLegs(float DeltaTime, float CurrentTime)
 {// Повторення логіки з SimPetAnimal, але Yaw замість Pitch
-	// float CurrentVelocity = GetVelocity().Size();  // Розкоментувати якщо реалізований рух тварин
+	float CurrentVelocity = GetVelocity().Size();  // Розкоментувати якщо реалізований рух тварин
 	
 	float WalkSpeed = 15.0f;  // Швидкість ходьби, частота кроків
 	float ReturnSpeed = 15.0f;  // Швидкість повернення ніг у вихідне положення

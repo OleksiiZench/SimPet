@@ -11,20 +11,20 @@ ASimPetAnimal::ASimPetAnimal()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	// State
+	// 1. State
 	bIsClean = true;
 	MealPerDay = 0;
 	TimeSinceLastMeal = 0.0f;
 	TimeSinceLastClean = 0.0f;
 	AnimalState = ESimPetAnimalState::Happy;
 
-	// Config
+	// 2. Config
 	GameSpeed = 8.0f;
 	TiredThresholdHours = 8.0f;
 	DeathThresholdHours = 24.0f;
 	DirtyThresholdHours = 24.0f;
 
-	// BodyParts
+	// 3. BodyParts
 	EyesCount = 0;
 	LegsCount = 0;
 
@@ -37,7 +37,7 @@ ASimPetAnimal::ASimPetAnimal()
 	TailMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TailMesh"));
 	TailMesh->SetupAttachment(BodyMesh);
 
-	// Other
+	// 4. Other
 	TimeAccumulator = 0.0f;
 }
 
@@ -159,7 +159,7 @@ void ASimPetAnimal::ToClean()
 void ASimPetAnimal::AnimateLegs(float DeltaTime, float CurrentTime)
 {
 	// 1. Отримуємо поточну швидкість
-	// float CurrentVelocity = GetVelocity().Size();  // Розкоментувати якщо реалізований рух тварин
+	float CurrentVelocity = GetVelocity().Size();
 	
 	float WalkSpeed = 10.0f;  // Швидкість ходьби, частота кроків
 	float ReturnSpeed = 10.0f;  // Швидкість повернення ніг у вихідне положення

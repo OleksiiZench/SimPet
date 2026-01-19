@@ -2,12 +2,13 @@
 
 
 #include "Widgets/SimPetMainMenuWidget.h"
+
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/WidgetSwitcher.h"
 
 #include "SimPetDebugHelper.h"
-#include "Components/WidgetSwitcher.h"
 
 void USimPetMainMenuWidget::NativeConstruct()
 {

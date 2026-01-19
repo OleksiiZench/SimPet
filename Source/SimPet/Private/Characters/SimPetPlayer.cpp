@@ -19,22 +19,22 @@
 
 ASimPetPlayer::ASimPetPlayer()
 {
-	// Налаштування камери
+	// 1. Налаштування камери
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(GetCapsuleComponent());
 	Camera->bUsePawnControlRotation = true;
 	
-	// Налаштування швидкості
+	// 2. Налаштування швидкості
 	WalkSpeed = 500.0f;
 	SprintSpeed = 800.0f;
 	
-	// Налаштування коливання камери
+	// 3. Налаштування коливання камери
 	BobVerticalAmplitude = 10.0f;
 	BobHorizontalAmplitude = 5.0f;
 	BobFrequencyMultiplier = 0.015f;
 	BobTimer = 0.0f;
 	
-	// Налаштування стаміни
+	// 4. Налаштування стаміни
 	MaxStamina = 3.0f;
 	StaminaDrainRate = 1.0f;
 	StaminaRegenRate = 1.0f;
@@ -57,30 +57,51 @@ void ASimPetPlayer::BeginPlay()
 	// 4. Записуємо стартову позицію камери (відносно персонажу)
 	if (Camera)
 		DefaultCameraRelativeLocation = Camera->GetRelativeLocation();
+}
+
+void ASimPetPlayer::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
 	
+	// 1. Оновлюємо коливання камери
+	UpdateCameraBob(DeltaTime);
 	
+	// 2. Оновлення стаміни
+	UpdateStamina(DeltaTime);
+}
+
+void ASimPetPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	
-	
-	
-	// 2. Виводимо HUD
-	// if (IsLocallyControlled() && HUDWidgetClass)
-	// {
-	// 	if (PlayerController)
-	// 	{
-	// 		CurrentHUDWidget = CreateWidget<USimPetHUDWidget>(PlayerController, HUDWidgetClass);
-	// 		if (CurrentHUDWidget)
-	// 			CurrentHUDWidget->AddToViewport();
-	// 	}
-	// }
-	
-	// 3. Налаштування інпуту при старті
-	// if (PlayerController)
-	// {
-	// 	PlayerController->bShowMouseCursor = false;
-	// 	
-	// 	FInputModeGameOnly GameModeInput;
-	// 	PlayerController->SetInputMode(GameModeInput);
-	// }
+	if (UEnhancedInputComponent *EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+	{// Configure EnhancedInputComponent
+		if (!InputConfigDataAsset)
+			return;
+
+		const UInputAction *MoveAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_Move);
+		if (MoveAction)
+			EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASimPetPlayer::Input_Move);
+
+		const UInputAction *LookAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_Look);
+		if (LookAction)
+			EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASimPetPlayer::Input_Look);
+
+		const UInputAction *InteractAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_Interact);
+		if (InteractAction)
+			EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ASimPetPlayer::Input_Interact);
+		
+		const UInputAction *PauseAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_Pause);
+		if (PauseAction)
+			EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &ASimPetPlayer::Input_Pause);
+		
+		const UInputAction *SprintAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_Sprint);
+		if (SprintAction)
+		{
+			EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &ASimPetPlayer::Input_Sprint_Started);
+			EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &ASimPetPlayer::Input_Sprint_Completed);
+		}
+	}
 }
 
 void ASimPetPlayer::TogglePauseMenu()
@@ -108,12 +129,6 @@ void ASimPetPlayer::TogglePauseMenu()
 		if (CurrentPauseMenuWidget)
 			CurrentPauseMenuWidget->SetVisibility(ESlateVisibility::Visible);
 		
-		// PlayerController->bShowMouseCursor = true;
-		//
-		// FInputModeGameAndUI InputMode;
-		// InputMode.SetWidgetToFocus(CurrentPauseMenuWidget ? CurrentPauseMenuWidget->TakeWidget().ToSharedPtr() : nullptr);
-		// PlayerController->SetInputMode(InputMode);
-		
 		SimPetPC->SetInputMode_UI();
 	}
 	else
@@ -124,56 +139,7 @@ void ASimPetPlayer::TogglePauseMenu()
 		if (ASimPetHUD *CurrentHUD = Cast<ASimPetHUD>(SimPetPC->GetHUD()))
 			CurrentHUD->SetHUDVisibility(true);
 		
-		// SimPetPC->bShowMouseCursor = false;
-		// SimPetPC->SetInputMode(FInputModeGameOnly());
-		
 		SimPetPC->SetInputMode_Game();
-	}
-}
-
-void ASimPetPlayer::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	
-	// 1. Оновлюємо коливання камери
-	UpdateCameraBob(DeltaTime);
-	
-	// 2. Оновлення стаміни
-	UpdateStamina(DeltaTime);
-}
-
-void ASimPetPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	// Configure EnhancedInputComponent
-	if (UEnhancedInputComponent *EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
-	{
-		if (!InputConfigDataAsset)
-			return;
-
-		const UInputAction *MoveAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_Move);
-		if (MoveAction)
-			EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASimPetPlayer::Input_Move);
-
-		const UInputAction *LookAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_Look);
-		if (LookAction)
-			EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASimPetPlayer::Input_Look);
-
-		const UInputAction *InteractAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_Interact);
-		if (InteractAction)
-			EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ASimPetPlayer::Input_Interact);
-		
-		const UInputAction *PauseAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_Pause);
-		if (PauseAction)
-			EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &ASimPetPlayer::Input_Pause);
-		
-		const UInputAction *SprintAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_Sprint);
-		if (SprintAction)
-		{
-			EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &ASimPetPlayer::Input_Sprint_Started);
-			EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &ASimPetPlayer::Input_Sprint_Completed);
-		}
 	}
 }
 

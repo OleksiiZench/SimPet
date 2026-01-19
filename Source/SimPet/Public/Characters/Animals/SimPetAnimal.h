@@ -3,16 +3,9 @@
 #pragma once
 
 #include "Characters/SimPetBaseCharacter.h"
+#include "SimPetEnumTypes.h"
 
 #include "SimPetAnimal.generated.h"
-
-UENUM(BlueprintType)
-enum class ESimPetAnimalState : uint8
-{
-	Happy		UMETA(DisplayName = "Happy"),
-	Tired		UMETA(DisplayName = "Tired"),
-	Dead		UMETA(DisplayName = "Dead")
-};
 
 /**
  * 
@@ -30,9 +23,6 @@ public:
 
 	void ToEat();
 	void ToClean();
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float CurrentVelocity = 0.0f;                     // Якщо реалізований рух тварин то можна видалити
 	
 protected:
 
@@ -77,7 +67,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|BodyParts")
 	UStaticMeshComponent *TailMesh;
 
-	// Налаштування динамічних частини тіла
+	/* Налаштування динамічних частини тіла */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|BodyParts")
 	TArray<UStaticMeshComponent *> SpawnedEyes;
 

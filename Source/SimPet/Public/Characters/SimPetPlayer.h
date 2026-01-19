@@ -32,6 +32,8 @@ public:
 	ASimPetPlayer();
 	
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+	virtual void SetupPlayerInputComponent(UInputComponent *PlayerInputComponent) override;
 	
 	UFUNCTION(BlueprintCallable)
 	void TogglePauseMenu();
@@ -42,23 +44,17 @@ public:
 #pragma endregion
 
 protected:
-	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(UInputComponent *PlayerInputComponent) override;
-	
-	// UPROPERTY(EditDefaultsOnly, Category = "UI")
-	// TSubclassOf<USimPetHUDWidget> HUDWidgetClass;
-	
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<USimPetPauseMenuWidget> PauseMenuWidgetClass;
 	
-	// Налаштування швидкості персонажа
+	/* Налаштування швидкості персонажа */
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float WalkSpeed;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float SprintSpeed;
 	
-	// Налаштування стаміни персонажа
+	/* Налаштування стаміни персонажа */
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float MaxStamina;
 	
@@ -83,9 +79,6 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent *Camera;
 	
-	// UPROPERTY()
-	// USimPetHUDWidget *CurrentHUDWidget;
-	
 	UPROPERTY()
 	USimPetPauseMenuWidget *CurrentPauseMenuWidget;
 #pragma endregion
@@ -93,9 +86,6 @@ private:
 #pragma region Inputs
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	USimPetInputConfig *InputConfigDataAsset;
-
-	// UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
-	// UInputMappingContext *DefaultMappingContext;
 
 	void Input_Move(const FInputActionValue &InputActionValue);
 	void Input_Look(const FInputActionValue &InputActionValue);

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "Characters/Animals/SimPetAnimal.h"
 
 #include "SimPetLizard.generated.h"
