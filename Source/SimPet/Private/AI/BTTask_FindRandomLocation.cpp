@@ -26,16 +26,19 @@ EBTNodeResult::Type UBTTask_FindRandomLocation::ExecuteTask(UBehaviorTreeCompone
 	if (!NavSys)
 		return EBTNodeResult::Failed;
 	
+	// 3. Отримуємо початкову позицію pawn
+	FVector OriginLocation = AIPawn->GetActorLocation();
+	
 	FNavLocation ResultLocation;
 	
-	// 3. Шукаємо випадкову точка на NavMesh навколо тварини
+	// 4. Шукаємо випадкову точка на NavMesh навколо тварини
 	bool bFound = NavSys->GetRandomPointInNavigableRadius(
-		AIPawn->GetActorLocation(),
+		OriginLocation,
 		Radius,
 		ResultLocation
 	);
 	
-	// 4. Записуємо результат у ключ TargetLocation
+	// 5. Записуємо результат у ключ TargetLocation
 	if (bFound)
 	{
 		OwnerComp.GetBlackboardComponent()->SetValueAsVector(GetSelectedBlackboardKey(), ResultLocation.Location);

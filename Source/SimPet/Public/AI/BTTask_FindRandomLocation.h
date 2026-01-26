@@ -22,5 +22,5 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "AI")
-	float Radius = 1000.0f; // Радіус пошуку точки
+	float Radius; // Радіус пошуку точки
 };

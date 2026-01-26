@@ -23,4 +23,10 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, Category = "AI")
 	float DetectionRange;  // Дистанція виявлення
+	
+	UPROPERTY(EditAnywhere, Category = "AI")
+	float MaxDistanceFromHome;  // Максимальна відстань куди можна забігати
+	
+	UPROPERTY(EditAnywhere, Category = "AI")
+	FBlackboardKeySelector HomeLocationKey;  // Ключ координат дому
 };
