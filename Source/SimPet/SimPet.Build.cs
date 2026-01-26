@@ -15,7 +15,9 @@ public class SimPet : ModuleRules
             "Engine",
             "InputCore",
             "EnhancedInput",
-            "GameplayTags"
+            "GameplayTags",
+            "NavigationSystem",
+            "AIModule"
         });
 
         PrivateDependencyModuleNames.AddRange(new string[] { });
