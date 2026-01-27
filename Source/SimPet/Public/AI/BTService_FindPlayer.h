@@ -18,8 +18,9 @@ class SIMPET_API UBTService_FindPlayer : public UBTService_BlackboardBase
 public:
 	UBTService_FindPlayer();
 	
+	virtual void InitializeFromAsset(UBehaviorTree &Asset) override;
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaTime) override;
-	
+
 protected:
 	UPROPERTY(EditAnywhere, Category = "AI")
 	float DetectionRange;  // Дистанція виявлення

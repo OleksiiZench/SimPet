@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "BehaviorTree/Blackboard/BlackboardKeyType_Vector.h"
 
 UBTService_FindPlayer::UBTService_FindPlayer()
 {
@@ -17,6 +18,18 @@ UBTService_FindPlayer::UBTService_FindPlayer()
 	NodeName = TEXT("Find Player Service");
 	Interval = 0.5f;  // Перевірка кожні 0.5 сек
 	RandomDeviation = 0.1f;  // Щоб всі AI не рахували в один кадр
+	
+}
+
+void UBTService_FindPlayer::InitializeFromAsset(UBehaviorTree &Asset)
+{
+	Super::InitializeFromAsset(Asset);
+	
+	UBlackboardData *BBAsset = GetBlackboardAsset();
+	if (BBAsset)
+	{
+		HomeLocationKey.ResolveSelectedKey(*BBAsset);  // Ця функція знаходить ID ключа і записує його всередину структури HomeLocationKey
+	}
 }
 
 void UBTService_FindPlayer::TickNode(UBehaviorTreeComponent &OwnerComp, uint8 *NodeMemory, float DeltaTime)
@@ -34,7 +47,7 @@ void UBTService_FindPlayer::TickNode(UBehaviorTreeComponent &OwnerComp, uint8 *N
 	UBlackboardComponent* BlackboardComp = OwnerComp.GetBlackboardComponent();
 	
 	FVector MyLocation = AIPawn->GetActorLocation();
-	FVector HomeLocation = BlackboardComp->GetValueAsVector(HomeLocationKey.SelectedKeyName);
+	FVector HomeLocation = BlackboardComp->GetValue<UBlackboardKeyType_Vector>(HomeLocationKey.GetSelectedKeyID());  // Оптимізований метод який використовує ID за мість Name
 	
 	float DistToHome = FVector::Dist(MyLocation, HomeLocation);
 	
@@ -53,11 +66,11 @@ void UBTService_FindPlayer::TickNode(UBehaviorTreeComponent &OwnerComp, uint8 *N
 		
 		if (Dist < DetectionRange)
 		{// Якщо дистанція дозволяє - записуємо в BB
-			OwnerComp.GetBlackboardComponent()->SetValueAsObject(GetSelectedBlackboardKey(), Player);
+			BlackboardComp->SetValueAsObject(GetSelectedBlackboardKey(), Player);
 		}
 		else
 		{// Якщо дистанція не дозволяє - стираємо запис
-			OwnerComp.GetBlackboardComponent()->ClearValue(GetSelectedBlackboardKey());
+			BlackboardComp->ClearValue(GetSelectedBlackboardKey());
 		}
 	}
 }
