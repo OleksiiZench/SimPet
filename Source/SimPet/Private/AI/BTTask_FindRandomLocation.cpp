@@ -10,6 +10,8 @@
 UBTTask_FindRandomLocation::UBTTask_FindRandomLocation()
 {
 	NodeName = TEXT("Find Random Location");
+	
+	Radius = 300.0f;
 }
 
 EBTNodeResult::Type UBTTask_FindRandomLocation::ExecuteTask(UBehaviorTreeComponent &OwnerComp, uint8 *NodeMemory)
