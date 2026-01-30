@@ -71,10 +71,7 @@ void ASimPetAnimal::Tick(float DeltaTime)
 	}
 	
 	// 2. Рух ніг
-	if (true /*GetVelocity().Size() > 0.0f*/)
-	{
-		AnimateLegs(DeltaTime, GetGameTimeSinceCreation());
-	}
+	AnimateLegs(DeltaTime, GetGameTimeSinceCreation());
 }
 
 void ASimPetAnimal::OnConstruction(const FTransform &Transform)

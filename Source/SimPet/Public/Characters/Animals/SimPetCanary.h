@@ -20,6 +20,7 @@ public:
 	ASimPetCanary();
 
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 	virtual void OnConstruction(const FTransform &Transform) override;
 
 protected:
@@ -36,4 +37,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|BodyParts")
 	UStaticMeshComponent *SpawnedWings;
 #pragma endregion
+	
+private:
+	void AnimateWings(float DeltaTime);
+	
+	float WingsLiftOffset;
+	UCharacterMovementComponent *Movement;
 };

@@ -7,15 +7,27 @@
 
 ASimPetCanary::ASimPetCanary()
 {
-	GetCharacterMovement()->BrakingDecelerationFlying = 2000.0f;
-	GetCharacterMovement()->MaxFlySpeed = 600.0f;
+	Movement = GetCharacterMovement();
+	
+	Movement->BrakingDecelerationFlying = 2000.0f;
+	Movement->MaxFlySpeed = 600.0f;
+	
+	WingsLiftOffset = 15.0f;
 }
 
 void ASimPetCanary::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+	Movement->SetMovementMode(MOVE_Flying);
+}
+
+void ASimPetCanary::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	
+	// 1. Анімація крил
+	AnimateWings(DeltaTime);
 }
 
 void ASimPetCanary::OnConstruction(const FTransform &Transform)
@@ -37,4 +49,23 @@ void ASimPetCanary::OnConstruction(const FTransform &Transform)
 
 		SpawnedWings = NewComp;
 	}
+}
+
+void ASimPetCanary::AnimateWings(float DeltaTime)
+{
+	float FlySpeed = 15.0f;  // частота махів крил
+	float ReturnSpeed = 10.0f;  // Швидкість повернення крил у вихідне положення
+	
+	FVector CurrentLocation = SpawnedWings->GetRelativeLocation();
+	
+	float TargetZ = 0.0f;
+	
+	if (Movement->IsFlying() || Movement->IsFalling())
+	{
+		TargetZ = FMath::Sin(GetGameTimeSinceCreation() * FlySpeed) * WingsLiftOffset;
+	}
+	
+	float NewZ = FMath::FInterpTo(CurrentLocation.Y, TargetZ, DeltaTime, ReturnSpeed);
+	
+	SpawnedWings->SetRelativeLocation(FVector(CurrentLocation.X, CurrentLocation.Y, NewZ));
 }
