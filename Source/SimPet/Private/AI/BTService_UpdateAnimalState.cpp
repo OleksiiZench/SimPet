@@ -21,8 +21,8 @@ void UBTService_UpdateAnimalState::TickNode(UBehaviorTreeComponent &OwnerComp, u
 	
 	if (Animal)
 	{
-		uint8 EnumValue = (uint8)Animal->GetAnimalState();
+		uint8 StateAsByte = (uint8)Animal->GetAnimalState();
 		
-		OwnerComp.GetBlackboardComponent()->SetValueAsEnum(GetSelectedBlackboardKey(), EnumValue);  // Записуємо в BlackBoard
+		OwnerComp.GetBlackboardComponent()->SetValueAsInt(GetSelectedBlackboardKey(), StateAsByte);  // Записуємо в BlackBoard
 	}
 }
