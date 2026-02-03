@@ -51,6 +51,18 @@ void ASimPetCanary::OnConstruction(const FTransform &Transform)
 	}
 }
 
+void ASimPetCanary::SetFlyingMovementMode(const bool IsFlying)
+{
+	if (IsFlying)
+	{
+		Movement->SetMovementMode(MOVE_Flying);
+	}
+	else
+	{
+		Movement->SetMovementMode(MOVE_Walking);  // MOVE_Walking перевірити чи це працивильний режим не польоту!!!!!
+	}
+}
+
 void ASimPetCanary::AnimateWings(float DeltaTime)
 {
 	float FlySpeed = 15.0f;  // частота махів крил
@@ -65,7 +77,7 @@ void ASimPetCanary::AnimateWings(float DeltaTime)
 		TargetZ = FMath::Sin(GetGameTimeSinceCreation() * FlySpeed) * WingsLiftOffset;
 	}
 	
-	float NewZ = FMath::FInterpTo(CurrentLocation.Y, TargetZ, DeltaTime, ReturnSpeed);
+	float NewZ = FMath::FInterpTo(CurrentLocation.Z, TargetZ, DeltaTime, ReturnSpeed);
 	
 	SpawnedWings->SetRelativeLocation(FVector(CurrentLocation.X, CurrentLocation.Y, NewZ));
 }

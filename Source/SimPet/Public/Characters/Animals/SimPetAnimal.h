@@ -24,6 +24,8 @@ public:
 	void ToEat();
 	void ToClean();
 	
+	ESimPetAnimalState GetAnimalState();
+	
 protected:
 
 #pragma region State

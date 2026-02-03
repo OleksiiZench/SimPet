@@ -153,6 +153,11 @@ void ASimPetAnimal::ToClean()
 	UpdateAnimalState();
 }
 
+ESimPetAnimalState ASimPetAnimal::GetAnimalState()
+{
+	return AnimalState;
+}
+
 void ASimPetAnimal::AnimateLegs(float DeltaTime, float CurrentTime)
 {
 	// 1. Отримуємо поточну швидкість

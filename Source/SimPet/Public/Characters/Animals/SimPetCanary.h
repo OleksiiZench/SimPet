@@ -22,6 +22,8 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void OnConstruction(const FTransform &Transform) override;
+	
+	void SetFlyingMovementMode(const bool IsFlying);
 
 protected:
 #pragma region BodyParts
