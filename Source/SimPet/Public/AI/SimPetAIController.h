@@ -17,7 +17,4 @@ class SIMPET_API ASimPetAIController : public AAIController
 
 protected:
 	virtual void OnPossess(APawn *InPawn) override;
-
-	UPROPERTY(EditDefaultsOnly, Category = "AI")
-	UBehaviorTree *BehaviorTreeAsset;
 };

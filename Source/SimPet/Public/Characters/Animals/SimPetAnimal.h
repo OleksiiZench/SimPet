@@ -7,6 +7,8 @@
 
 #include "SimPetAnimal.generated.h"
 
+class UBehaviorTree;
+
 /**
  * 
  */
@@ -25,6 +27,9 @@ public:
 	void ToClean();
 	
 	ESimPetAnimalState GetAnimalState();
+	
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	UBehaviorTree *BehaviorTreeAsset;
 	
 protected:
 
