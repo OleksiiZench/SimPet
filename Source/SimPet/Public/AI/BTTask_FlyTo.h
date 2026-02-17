@@ -5,29 +5,22 @@
 #include "CoreMinimal.h"
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
 
-#include "BTTask_FlyToRandomPoint.generated.h"
+#include "BTTask_FlyTo.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SIMPET_API UBTTask_FlyToRandomPoint : public UBTTask_BlackboardBase
+class SIMPET_API UBTTask_FlyTo : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
 	
 public:
-	UBTTask_FlyToRandomPoint();
-	
+	UBTTask_FlyTo();
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaTime) override;
 	
 protected:
-	UPROPERTY(EditAnywhere)
-	float FlyHeightMin;
-	
-	UPROPERTY(EditAnywhere)
-	float FlyHeightMax;
-	
-	UPROPERTY(EditAnywhere)
-	float FlyRadius;
+	UPROPERTY(EditAnywhere, Category = "AI")
+	float AcceptableRadius;
 };

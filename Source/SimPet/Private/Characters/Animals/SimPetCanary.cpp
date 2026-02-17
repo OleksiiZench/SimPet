@@ -18,8 +18,6 @@ ASimPetCanary::ASimPetCanary()
 void ASimPetCanary::BeginPlay()
 {
 	Super::BeginPlay();
-
-	Movement->SetMovementMode(MOVE_Flying);
 }
 
 void ASimPetCanary::Tick(float DeltaTime)
