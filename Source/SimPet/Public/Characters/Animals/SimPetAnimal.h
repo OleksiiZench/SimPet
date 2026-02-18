@@ -28,8 +28,16 @@ public:
 	
 	ESimPetAnimalState GetAnimalState();
 	
+#pragma region AI
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	UBehaviorTree *BehaviorTreeAsset;
+	
+	UPROPERTY(EditInstanceOnly, Category = "AI")
+	bool bUseCustomHomeLocation;
+	
+	UPROPERTY(EditInstanceOnly, Category = "AI",  meta = (EditCondition = "bUseCustomHomeLocation"))
+	FVector CustomHomeLocation;
+#pragma endregion
 	
 protected:
 

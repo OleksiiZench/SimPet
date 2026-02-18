@@ -37,7 +37,10 @@ ASimPetAnimal::ASimPetAnimal()
 	TailMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TailMesh"));
 	TailMesh->SetupAttachment(BodyMesh);
 
-	// 4. Other
+	// 4. AI
+	bUseCustomHomeLocation = false;
+	
+	// 5. Other
 	TimeAccumulator = 0.0f;
 }
 
