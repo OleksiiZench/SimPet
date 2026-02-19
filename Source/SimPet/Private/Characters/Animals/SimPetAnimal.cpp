@@ -4,6 +4,7 @@
 #include "Characters/Animals/SimPetAnimal.h"
 
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 #include "SimPetDebugHelper.h"
 
@@ -42,6 +43,7 @@ ASimPetAnimal::ASimPetAnimal()
 	
 	// 5. Other
 	TimeAccumulator = 0.0f;
+	Movement = GetCharacterMovement();
 }
 
 void ASimPetAnimal::Tick(float DeltaTime)
@@ -180,8 +182,8 @@ void ASimPetAnimal::AnimateLegs(float DeltaTime, float CurrentTime)
 		
 		float TargetPitch = 0.0f;
 	 	
-		// 2. Рахуємо синусоїду тільки при русі
-		if (CurrentVelocity > 0.0f)
+		// 2. Рахуємо синусоїду при русі або польоті
+		if (CurrentVelocity > 0.0f || Movement->IsFlying())
 		{
 			bool bIsRightLeg = LegSocketName.Contains(TEXT("Right"));
 			float PhaseOffset = bIsRightLeg ? UE_PI : 0.0f;

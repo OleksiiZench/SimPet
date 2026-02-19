@@ -111,7 +111,8 @@ protected:
 	
 	virtual void AnimateLegs(float DeltaTime, float CurrentTime);
 #pragma endregion
-
+	
+	UCharacterMovementComponent *Movement;
 private:
 	float TimeAccumulator;
 

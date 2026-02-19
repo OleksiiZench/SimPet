@@ -44,5 +44,4 @@ private:
 	void AnimateWings(float DeltaTime);
 	
 	float WingsLiftOffset;
-	UCharacterMovementComponent *Movement;
 };
