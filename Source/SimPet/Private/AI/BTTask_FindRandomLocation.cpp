@@ -47,9 +47,9 @@ EBTNodeResult::Type UBTTask_FindRandomLocation::ExecuteTask(UBehaviorTreeCompone
 	if (HomeLocation.Equals(FVector::ZeroVector))
 		HomeLocation = AIPawn->GetActorLocation();
 	
+	// 4. Шукаємо випадкову точка на NavMesh навколо тварини
 	FNavLocation ResultLocation;
 	
-	// 4. Шукаємо випадкову точка на NavMesh навколо тварини
 	bool bFound = NavSys->GetRandomPointInNavigableRadius(
 		HomeLocation,
 		Radius,
