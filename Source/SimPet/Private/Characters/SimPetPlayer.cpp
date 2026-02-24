@@ -17,6 +17,8 @@
 #include "Widgets/SimPetHUD.h"
 #include "Controllers/SimPetPlayerController.h"
 
+#include "SimPetDebugHelper.h"
+
 ASimPetPlayer::ASimPetPlayer()
 {
 	// 1. Налаштування камери
@@ -145,7 +147,9 @@ void ASimPetPlayer::TogglePauseMenu()
 
 void ASimPetPlayer::SetSprint(bool bIsSprint)
 {
-	if (bIsSprint)
+	bool bIsMoving = !(GetVelocity().Size2D() < 5.0f);
+	
+	if (bIsSprint && bIsMoving)
 	{
 		CurrentMovementComp->MaxWalkSpeed = SprintSpeed;
 		bIsSprinting = true;
@@ -163,12 +167,22 @@ void ASimPetPlayer::UpdateStamina(float DeltaTime)
 	
 	if (bIsSprinting)
 	{
-		CurrentStamina -= StaminaDrainRate * DeltaTime;
+		bool bIsMoving = GetVelocity().Size2D();
+		bool bIsFalling = CurrentMovementComp->IsFalling();
 		
-		if (CurrentStamina <= 0.0f)
+		if (!bIsMoving || bIsFalling)
 		{
-			CurrentStamina = 0.0f;
 			SetSprint(false);
+		}
+		else
+		{
+			CurrentStamina -= StaminaDrainRate * DeltaTime;
+		
+			if (CurrentStamina <= 0.0f)
+			{
+				CurrentStamina = 0.0f;
+				SetSprint(false);
+			}
 		}
 	}
 	else if (CurrentStamina < MaxStamina)
