@@ -66,6 +66,7 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	float CurrentStamina;
+	
 private:
 	bool bIsGamePaused = false;
 	bool bIsSprinting = false;
@@ -100,7 +101,7 @@ private:
 	float BobVerticalAmplitude;  // Наскільки сильно коливає вгору/ вниз
 	float BobHorizontalAmplitude;  // Наскільки сильно коливає вліво/ вправо
 	float BobFrequencyMultiplier;  // Множник швидкості коливання
-	float BobTimer;  // Таймер для синумоїди
+	float BobTimer;  // Таймер для синуcоїди
 	FVector DefaultCameraRelativeLocation;  // Координати камери в спокої
 	
 	void UpdateCameraBob(float DeltaTime);
