@@ -16,6 +16,7 @@ class USimPetHUDWidget;
 class USimPetPauseMenuWidget;
 class ASimPetPlayerController;
 class USceneComponent;
+class ASimPetItem;
 
 struct FInputActionValue;
 
@@ -39,14 +40,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void TogglePauseMenu();
 	
-	UFUNCTION(BlueprintCallable)
-	void TakeOrDropItem(AActor *Item);
-	
-	UFUNCTION(BlueprintCallable)
-    void TakeItem(AActor *Item);
-	
-	UFUNCTION(BlueprintCallable)
-	void DropItem(AActor *Item);
+	void TakeOrDropItem(ASimPetItem *Item);
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USceneComponent *ItemHoldPoint;
@@ -84,12 +78,14 @@ private:
 	bool bIsGamePaused = false;
 	bool bIsSprinting = false;
 	bool bHandsFull = false;
-	AActor *CashedTakenItem;
+	ASimPetItem *CashedTakenItem;
 	ASimPetPlayerController *SimPetPC;
 	UCharacterMovementComponent *CurrentMovementComp;
 	
 	void SetSprint(bool bIsSprint);
 	void UpdateStamina(float DeltaTime);
+	void TakeItem(ASimPetItem *Item);
+	void DropItem(ASimPetItem *Item);
 	FAttachmentTransformRules GetRuleForAttachingItems();
 	
 #pragma region Components

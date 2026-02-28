@@ -2,7 +2,6 @@
 
 
 #include "Items/SimPetAnimalFeed.h"
-#include "GameFramework/Character.h"
 
 #include "Characters/SimPetPlayer.h"
 

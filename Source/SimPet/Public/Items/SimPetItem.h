@@ -23,6 +23,9 @@ public:
 	//~ End ISimPetInteractable Interface
 
 	virtual void GetOwnedGameplayTags(FGameplayTagContainer &TagContainer) const override;
+	
+	void EnablePhysics();
+	void DisablePhysics();
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tags")

@@ -17,6 +17,7 @@
 #include "Widgets/SimPetPauseMenuWidget.h"
 #include "Widgets/SimPetHUD.h"
 #include "Controllers/SimPetPlayerController.h"
+#include "Items/SimPetItem.h"
 
 #include "SimPetDebugHelper.h"
 
@@ -150,7 +151,7 @@ void ASimPetPlayer::TogglePauseMenu()
 	}
 }
 
-void ASimPetPlayer::TakeOrDropItem(AActor *Item)
+void ASimPetPlayer::TakeOrDropItem(ASimPetItem *Item)
 {
 	if (bHandsFull && CashedTakenItem == Item)
 	{
@@ -165,24 +166,6 @@ void ASimPetPlayer::TakeOrDropItem(AActor *Item)
 		DropItem(CashedTakenItem);
 		TakeItem(Item);
 	}
-}
-
-void ASimPetPlayer::TakeItem(AActor *Item)
-{
-	Debug::Print(TEXT("ASimPetPlayer::TakeItem()"));
-	
-	Item->AttachToComponent(ItemHoldPoint, GetRuleForAttachingItems());
-	
-	CashedTakenItem = Item;
-	bHandsFull = true;
-}
-
-void ASimPetPlayer::DropItem(AActor *Item)
-{
-	Item->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-	
-	CashedTakenItem = nullptr;
-	bHandsFull = false;
 }
 
 void ASimPetPlayer::SetSprint(bool bIsSprint)
@@ -237,6 +220,26 @@ void ASimPetPlayer::UpdateStamina(float DeltaTime)
 		if (OnStaminaChanged.IsBound())
 			OnStaminaChanged.Broadcast(CurrentStamina, StaminaPercent);
 	}
+}
+
+void ASimPetPlayer::TakeItem(ASimPetItem *Item)
+{
+	Debug::Print(TEXT("ASimPetPlayer::TakeItem()"));
+	
+	Item->AttachToComponent(ItemHoldPoint, GetRuleForAttachingItems());
+	Item->DisablePhysics();
+	
+	CashedTakenItem = Item;
+	bHandsFull = true;
+}
+
+void ASimPetPlayer::DropItem(ASimPetItem *Item)
+{
+	Item->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	Item->EnablePhysics();
+	
+	CashedTakenItem = nullptr;
+	bHandsFull = false;
 }
 
 FAttachmentTransformRules ASimPetPlayer::GetRuleForAttachingItems()

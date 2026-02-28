@@ -16,3 +16,24 @@ void ASimPetItem::GetOwnedGameplayTags(FGameplayTagContainer &TagContainer) cons
 {
 	TagContainer.AppendTags(GameplayTags);
 }
+
+void ASimPetItem::EnablePhysics()
+{
+	UStaticMeshComponent *StaticMeshComp = FindComponentByClass<UStaticMeshComponent>();
+	if (StaticMeshComp)
+	{
+		StaticMeshComp->SetSimulatePhysics(true);
+		StaticMeshComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+		StaticMeshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	}
+}
+
+void ASimPetItem::DisablePhysics()
+{
+	UStaticMeshComponent *StaticMeshComp = FindComponentByClass<UStaticMeshComponent>();
+	if (StaticMeshComp)
+	{
+		StaticMeshComp->SetSimulatePhysics(false);
+		StaticMeshComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	}
+}
