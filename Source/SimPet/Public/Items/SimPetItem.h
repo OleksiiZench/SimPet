@@ -6,15 +6,21 @@
 #include "GameFramework/Actor.h"
 #include "GameplayTagAssetInterface.h"
 
+#include "Interfaces/SimPetInteractable.h"
+
 #include "SimPetItem.generated.h"
 
 UCLASS()
-class SIMPET_API ASimPetItem : public AActor, public IGameplayTagAssetInterface
+class SIMPET_API ASimPetItem : public AActor, public IGameplayTagAssetInterface, public ISimPetInteractable
 {
 	GENERATED_BODY()
 	
 public:	
 	ASimPetItem();
+	
+	//~ Begin ISimPetInteractable Interface
+	virtual void Interact_Implementation(AActor *InstigatorActor) override;
+	//~ End ISimPetInteractable Interface
 
 	virtual void GetOwnedGameplayTags(FGameplayTagContainer &TagContainer) const override;
 

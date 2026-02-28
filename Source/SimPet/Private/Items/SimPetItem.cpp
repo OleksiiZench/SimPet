@@ -8,6 +8,10 @@ ASimPetItem::ASimPetItem()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
+void ASimPetItem::Interact_Implementation(AActor *InstigatorActor)
+{
+}
+
 void ASimPetItem::GetOwnedGameplayTags(FGameplayTagContainer &TagContainer) const
 {
 	TagContainer.AppendTags(GameplayTags);
