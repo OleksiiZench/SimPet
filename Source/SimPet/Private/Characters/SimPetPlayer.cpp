@@ -150,6 +150,34 @@ void ASimPetPlayer::TogglePauseMenu()
 	}
 }
 
+void ASimPetPlayer::TakeOrDropItem(AActor *Item)
+{
+	if (bHandsFull)
+	{
+		DropItem(Item);
+	}
+	else
+	{
+		TakeItem(Item);
+	}
+}
+
+void ASimPetPlayer::TakeItem(AActor *Item)
+{
+	Debug::Print(TEXT("ASimPetPlayer::TakeItem()"));
+	
+	Item->AttachToComponent(ItemHoldPoint, GetRuleForAttachingItems());
+		
+	bHandsFull = true;
+}
+
+void ASimPetPlayer::DropItem(AActor *Item)
+{
+	Item->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	
+	bHandsFull = false;
+}
+
 void ASimPetPlayer::SetSprint(bool bIsSprint)
 {
 	bool bIsMoving = !(GetVelocity().Size2D() < 5.0f);
@@ -202,6 +230,16 @@ void ASimPetPlayer::UpdateStamina(float DeltaTime)
 		if (OnStaminaChanged.IsBound())
 			OnStaminaChanged.Broadcast(CurrentStamina, StaminaPercent);
 	}
+}
+
+FAttachmentTransformRules ASimPetPlayer::GetRuleForAttachingItems()
+{
+	return FAttachmentTransformRules (
+		EAttachmentRule::SnapToTarget,
+		EAttachmentRule::SnapToTarget,
+		EAttachmentRule::KeepWorld,
+		true
+	);
 }
 
 void ASimPetPlayer::Input_Move(const FInputActionValue &InputActionValue)

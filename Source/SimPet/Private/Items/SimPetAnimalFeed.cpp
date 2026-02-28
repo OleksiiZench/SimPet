@@ -19,28 +19,18 @@ void ASimPetAnimalFeed::Interact_Implementation(AActor *InstigatorActor)
 
 void ASimPetAnimalFeed::AttachToPlayer(AActor *InstigatorActor)
 {
-	FAttachmentTransformRules AttachmentRules(
-		EAttachmentRule::SnapToTarget,
-		EAttachmentRule::SnapToTarget,
-		EAttachmentRule::KeepWorld,
-		true
-	);
-	
 	ASimPetPlayer *Player = СastInstigatorToPlayer(InstigatorActor); 
 	
 	if (Player)
-		AttachToComponent(Player->ItemHoldPoint, AttachmentRules);
+	{
+		Player->TakeOrDropItem(this);
+	}
 }
 
 ASimPetPlayer* ASimPetAnimalFeed::СastInstigatorToPlayer(AActor *InstigatorActor)
 {
-	ASimPetPlayer* InstigatorPlayer;
-	
 	if (InstigatorActor)
-	{
-		InstigatorPlayer = Cast<ASimPetPlayer>(InstigatorActor);
-		return InstigatorPlayer;
-	}
+		return Cast<ASimPetPlayer>(InstigatorActor);
 	else
 		return nullptr;
 }

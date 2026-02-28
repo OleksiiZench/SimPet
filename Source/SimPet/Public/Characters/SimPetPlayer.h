@@ -39,6 +39,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void TogglePauseMenu();
 	
+	UFUNCTION(BlueprintCallable)
+	void TakeOrDropItem(AActor *Item);
+	
+	UFUNCTION(BlueprintCallable)
+    void TakeItem(AActor *Item);
+	
+	UFUNCTION(BlueprintCallable)
+	void DropItem(AActor *Item);
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USceneComponent *ItemHoldPoint;
 	
@@ -74,11 +83,13 @@ protected:
 private:
 	bool bIsGamePaused = false;
 	bool bIsSprinting = false;
+	bool bHandsFull = false;
 	ASimPetPlayerController *SimPetPC;
 	UCharacterMovementComponent *CurrentMovementComp;
 	
 	void SetSprint(bool bIsSprint);
 	void UpdateStamina(float DeltaTime);
+	FAttachmentTransformRules GetRuleForAttachingItems();
 	
 #pragma region Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
