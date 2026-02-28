@@ -84,6 +84,7 @@ private:
 	bool bIsGamePaused = false;
 	bool bIsSprinting = false;
 	bool bHandsFull = false;
+	AActor *CashedTakenItem;
 	ASimPetPlayerController *SimPetPC;
 	UCharacterMovementComponent *CurrentMovementComp;
 	

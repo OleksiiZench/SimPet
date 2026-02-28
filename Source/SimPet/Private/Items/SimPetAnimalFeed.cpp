@@ -19,18 +19,10 @@ void ASimPetAnimalFeed::Interact_Implementation(AActor *InstigatorActor)
 
 void ASimPetAnimalFeed::AttachToPlayer(AActor *InstigatorActor)
 {
-	ASimPetPlayer *Player = СastInstigatorToPlayer(InstigatorActor); 
+	ASimPetPlayer *Player = Cast<ASimPetPlayer>(InstigatorActor);
 	
 	if (Player)
 	{
 		Player->TakeOrDropItem(this);
 	}
-}
-
-ASimPetPlayer* ASimPetAnimalFeed::СastInstigatorToPlayer(AActor *InstigatorActor)
-{
-	if (InstigatorActor)
-		return Cast<ASimPetPlayer>(InstigatorActor);
-	else
-		return nullptr;
 }

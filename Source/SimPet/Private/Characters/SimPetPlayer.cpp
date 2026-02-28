@@ -152,12 +152,17 @@ void ASimPetPlayer::TogglePauseMenu()
 
 void ASimPetPlayer::TakeOrDropItem(AActor *Item)
 {
-	if (bHandsFull)
+	if (bHandsFull && CashedTakenItem == Item)
 	{
 		DropItem(Item);
 	}
+	else if (!bHandsFull)
+	{
+		TakeItem(Item);
+	}
 	else
 	{
+		DropItem(CashedTakenItem);
 		TakeItem(Item);
 	}
 }
@@ -167,7 +172,8 @@ void ASimPetPlayer::TakeItem(AActor *Item)
 	Debug::Print(TEXT("ASimPetPlayer::TakeItem()"));
 	
 	Item->AttachToComponent(ItemHoldPoint, GetRuleForAttachingItems());
-		
+	
+	CashedTakenItem = Item;
 	bHandsFull = true;
 }
 
@@ -175,6 +181,7 @@ void ASimPetPlayer::DropItem(AActor *Item)
 {
 	Item->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	
+	CashedTakenItem = nullptr;
 	bHandsFull = false;
 }
 

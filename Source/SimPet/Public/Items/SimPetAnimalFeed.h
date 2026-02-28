@@ -24,5 +24,4 @@ public:
 	
 private:
 	void AttachToPlayer(AActor *InstigatorActor);
-	ASimPetPlayer* СastInstigatorToPlayer(AActor *InstigatorActor);
 };
