@@ -15,6 +15,7 @@ class USimPetInputConfig;
 class USimPetHUDWidget;
 class USimPetPauseMenuWidget;
 class ASimPetPlayerController;
+class USceneComponent;
 
 struct FInputActionValue;
 
@@ -37,6 +38,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void TogglePauseMenu();
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	USceneComponent *ItemHoldPoint;
 	
 #pragma region Delegates
 	UPROPERTY(BlueprintAssignable, Category = "Events")

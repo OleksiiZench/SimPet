@@ -7,6 +7,8 @@
 
 #include "SimPetAnimalFeed.generated.h"
 
+class ASimPetPlayer;
+
 /**
  * 
  */
@@ -19,4 +21,8 @@ public:
 	//~ Begin ISimPetInteractable Interface
 	virtual void Interact_Implementation(AActor *InstigatorActor) override;
 	//~ End ISimPetInteractable Interface
+	
+private:
+	void AttachToPlayer(AActor *InstigatorActor);
+	ASimPetPlayer* СastInstigatorToPlayer(AActor *InstigatorActor);
 };

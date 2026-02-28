@@ -9,6 +9,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/SceneComponent.h"
 
 #include "DataAsset/Input/SimPetInputConfig.h"
 #include "SimPetGameplayTags.h"
@@ -41,6 +42,10 @@ ASimPetPlayer::ASimPetPlayer()
 	StaminaDrainRate = 1.0f;
 	StaminaRegenRate = 1.0f;
 	CurrentStamina = MaxStamina;
+	
+	// 5. Налаштування точки для приєднання items
+	ItemHoldPoint = CreateDefaultSubobject<USceneComponent>(TEXT("ItemHoldPoint"));
+	ItemHoldPoint->SetupAttachment(GetCapsuleComponent());
 }
 
 void ASimPetPlayer::BeginPlay()
