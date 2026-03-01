@@ -20,5 +20,6 @@ namespace SimPetGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Spawn_Point, "Spawn.Point");
 	UE_DEFINE_GAMEPLAY_TAG(Spawn_Point_HasAnimal, "Spawn.Point.HasAnimal");
 	UE_DEFINE_GAMEPLAY_TAG(Spawn_Point_ForAnimal, "Spawn.Point.ForAnimal");
+	UE_DEFINE_GAMEPLAY_TAG(Spawn_Point_HasFeed, "Spawn.Point.HasFeed");
 	UE_DEFINE_GAMEPLAY_TAG(Spawn_Point_ForFeed, "Spawn.Point.ForFeed");
 }
