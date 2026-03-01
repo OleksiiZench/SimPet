@@ -66,8 +66,8 @@ void ASimPetFabricator::RequestSpawnAnimal(ESimPetAnimals AnimalType)
 			if (AnimalSpawnPoint)
 				AnimalSpawnPoint->GetOwnedGameplayTags(TagContainer);
 		
-			// 3. Точка має бути SpawnPoint та не мати тварину
-			if (TagContainer.HasTag(SimPetGameplayTags::Spawn_Point) && !TagContainer.HasTag(SimPetGameplayTags::Spawn_Point_HasAnimal))
+			// 3. Точка має бути SpawnPoint.ForAnimal та не мати тварину
+			if (TagContainer.HasTag(SimPetGameplayTags::Spawn_Point_ForAnimal) && !TagContainer.HasTag(SimPetGameplayTags::Spawn_Point_HasAnimal))
 			{
 				FTransform AnimalTransform = AnimalSpawnPoint->GetTransform();
 
