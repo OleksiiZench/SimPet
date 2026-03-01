@@ -9,51 +9,66 @@
 #include "WorldObjects/SimPetSpawnPoint.h"
 #include "SimPetGameplayTags.h"
 #include "Items/SimPetAnimalFeed.h"
+#include "Characters/SimPetPlayer.h"
 
 #include "SimPetDebugHelper.h"
 
-ASimPetSpawnAnimalFeed::ASimPetSpawnAnimalFeed()
+void ASimPetSpawnAnimalFeed::BeginPlay()
 {
-	GetCollisionComponent()->OnComponentBeginOverlap.AddDynamic(this, &ASimPetSpawnAnimalFeed::OnZoneEntered);
+	Super::BeginPlay();
+	
+	GetCollisionComponent()->OnComponentBeginOverlap.AddUniqueDynamic(this, &ASimPetSpawnAnimalFeed::OnZoneEntered);
+	
+	FindAllSpawnPoints();
 }
 
 void ASimPetSpawnAnimalFeed::OnZoneEntered(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
-	Debug::Print(TEXT("ASimPetSpawnAnimalFeed::OnZoneEntered()"));
+	if (!OtherActor || !OtherActor->IsA(ASimPetPlayer::StaticClass()))
+	{// OtherActor - має бути гравцем
+		return;
+	}
 	
 	if (SpawnFeedClass)
 	{
-		TArray<AActor *> FoundActors;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASimPetSpawnPoint::StaticClass(), FoundActors);
-		
-		// 1. Проходимо по всіх ASimPetSpawnPoint
-		for (AActor *Actor : FoundActors)
+		for (ASimPetSpawnPoint *FeedSpawnPoint : FeedSpawnPoints)
 		{
-			ASimPetSpawnPoint *FeedSpawnPoint = Cast<ASimPetSpawnPoint>(Actor);
-			
 			if (!FeedSpawnPoint)
 				continue;
 			
-			// 2. Отримуємо теги точки
+			// Отримуємо теги точки
 			FGameplayTagContainer TagContainer;
-		
-			if (FeedSpawnPoint)
-				FeedSpawnPoint->GetOwnedGameplayTags(TagContainer);
-		
-			// 3. Точка має бути SpawnPoint.Spawn_Point_ForFeed та не мати іншого корму
-			if (TagContainer.HasTag(SimPetGameplayTags::Spawn_Point_ForFeed) && !TagContainer.HasTag(SimPetGameplayTags::Spawn_Point_HasFeed))
-			{
-				FTransform FeedTransform = FeedSpawnPoint->GetTransform();
-
-				ASimPetAnimalFeed * NewFeed = GetWorld()->SpawnActor<ASimPetAnimalFeed>(*SpawnFeedClass, FeedTransform);
-
-				if (NewFeed)
-				{
-					Debug::Print(TEXT("Spawned: ") + (*SpawnFeedClass)->GetName());
+			FeedSpawnPoint->GetOwnedGameplayTags(TagContainer);
 			
-					FeedSpawnPoint->AddGameplayTags(SimPetGameplayTags::Spawn_Point_HasFeed);
-				}
+			if (!TagContainer.HasTag(SimPetGameplayTags::Spawn_Point_ForFeed) || 
+				 TagContainer.HasTag(SimPetGameplayTags::Spawn_Point_HasFeed))
+			{// Точка має бути SpawnPoint.Spawn_Point_ForFeed та не мати іншого корму
+				continue;
+			}
+			
+			FTransform FeedTransform = FeedSpawnPoint->GetTransform();
+			ASimPetAnimalFeed *NewFeed = GetWorld()->SpawnActor<ASimPetAnimalFeed>(*SpawnFeedClass, FeedTransform);
+
+			if (NewFeed)
+			{
+				FeedSpawnPoint->AddGameplayTags(SimPetGameplayTags::Spawn_Point_HasFeed);
 			}
 		}
+	}
+}
+
+void ASimPetSpawnAnimalFeed::FindAllSpawnPoints()
+{
+	TArray<AActor *> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASimPetSpawnPoint::StaticClass(), FoundActors);
+	
+	for (AActor *Actor : FoundActors)
+	{
+		ASimPetSpawnPoint *FeedSpawnPoint = Cast<ASimPetSpawnPoint>(Actor);
+			
+		if (!FeedSpawnPoint)
+			continue;
+		
+		FeedSpawnPoints.Add(FeedSpawnPoint);
 	}
 }
