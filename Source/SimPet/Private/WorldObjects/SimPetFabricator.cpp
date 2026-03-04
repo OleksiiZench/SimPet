@@ -31,6 +31,7 @@ void ASimPetFabricator::Interact_Implementation(AActor *InstigatorActor)
 			FabricatorUI->InitializeFabricator(this);
 			FabricatorUI->AddToViewport();
 			
+			PC->FlushPressedKeys();
 			PC->SetShowMouseCursor(true);
 			FInputModeUIOnly InputMode;
 			InputMode.SetWidgetToFocus(FabricatorUI->TakeWidget());
