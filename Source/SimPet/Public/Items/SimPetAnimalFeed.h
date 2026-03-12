@@ -9,6 +9,8 @@
 
 class ASimPetPlayer;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFeedPickedUpSignature, ASimPetAnimalFeed *, PickedFeed);
+
 /**
  * 
  */
@@ -21,6 +23,9 @@ public:
 	//~ Begin ISimPetInteractable Interface
 	virtual void Interact_Implementation(AActor *InstigatorActor) override;
 	//~ End ISimPetInteractable Interface
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnFeedPickedUpSignature OnFeedPickedUp;
 	
 private:
 	void AttachToPlayer(AActor *InstigatorActor);

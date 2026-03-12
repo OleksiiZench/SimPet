@@ -52,6 +52,7 @@ void ASimPetSpawnAnimalFeed::OnZoneEntered(UPrimitiveComponent *OverlappedCompon
 			if (NewFeed)
 			{
 				FeedSpawnPoint->AddGameplayTags(SimPetGameplayTags::Spawn_Point_HasFeed);
+				NewFeed->OnFeedPickedUp.AddDynamic(FeedSpawnPoint, &ASimPetSpawnPoint::HandleFeedPickedUp);
 			}
 		}
 	}

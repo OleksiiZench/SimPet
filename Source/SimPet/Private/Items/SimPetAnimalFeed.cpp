@@ -11,9 +11,9 @@ void ASimPetAnimalFeed::Interact_Implementation(AActor *InstigatorActor)
 {
 	Super::Interact_Implementation(InstigatorActor);
 	
-	Debug::Print(TEXT("ASimPetAnimalFeed::Interact_Implementation"));
-	
 	AttachToPlayer(InstigatorActor);
+	
+	OnFeedPickedUp.Broadcast(this);
 }
 
 void ASimPetAnimalFeed::AttachToPlayer(AActor *InstigatorActor)

@@ -21,6 +21,9 @@ public:
 	
 	void AddGameplayTags(const FGameplayTag& Tag);  // Думаю цей метод можна перевизначити з інтерфейсу IGameplayTagAssetInterface
 	
+	UFUNCTION()
+	void HandleFeedPickedUp(ASimPetAnimalFeed *PickedFeed);
+	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tags")
 	FGameplayTagContainer GameplayTags;
