@@ -3,6 +3,8 @@
 
 #include "Items/SimPetItem.h"
 
+#include "Characters/SimPetPlayer.h"
+
 ASimPetItem::ASimPetItem()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -10,6 +12,7 @@ ASimPetItem::ASimPetItem()
 
 void ASimPetItem::Interact_Implementation(AActor *InstigatorActor)
 {
+	AttachToPlayer(InstigatorActor);
 }
 
 void ASimPetItem::GetOwnedGameplayTags(FGameplayTagContainer &TagContainer) const
@@ -35,5 +38,15 @@ void ASimPetItem::DisablePhysics()
 	{
 		StaticMeshComp->SetSimulatePhysics(false);
 		StaticMeshComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	}
+}
+
+void ASimPetItem::AttachToPlayer(AActor *InstigatorActor)
+{
+	ASimPetPlayer *Player = Cast<ASimPetPlayer>(InstigatorActor);
+	
+	if (Player)
+	{
+		Player->TakeOrDropItem(this);
 	}
 }

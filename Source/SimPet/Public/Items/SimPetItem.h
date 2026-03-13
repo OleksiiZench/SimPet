@@ -30,4 +30,7 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tags")
 	FGameplayTagContainer GameplayTags;
+	
+private:
+	void AttachToPlayer(AActor *InstigatorActor);
 };

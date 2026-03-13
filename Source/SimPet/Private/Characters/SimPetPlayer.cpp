@@ -224,10 +224,8 @@ void ASimPetPlayer::UpdateStamina(float DeltaTime)
 
 void ASimPetPlayer::TakeItem(ASimPetItem *Item)
 {
-	Debug::Print(TEXT("ASimPetPlayer::TakeItem()"));
-	
-	Item->AttachToComponent(ItemHoldPoint, GetRuleForAttachingItems());
 	Item->DisablePhysics();
+	Item->AttachToComponent(ItemHoldPoint, GetRuleForAttachingItems());
 	
 	CashedTakenItem = Item;
 	bHandsFull = true;

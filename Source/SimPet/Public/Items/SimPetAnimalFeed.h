@@ -26,7 +26,4 @@ public:
 	
 	UPROPERTY(BlueprintAssignable)
 	FOnFeedPickedUpSignature OnFeedPickedUp;
-	
-private:
-	void AttachToPlayer(AActor *InstigatorActor);
 };
