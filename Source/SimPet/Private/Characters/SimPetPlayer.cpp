@@ -99,6 +99,10 @@ void ASimPetPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputCompon
 		if (InteractAction)
 			EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ASimPetPlayer::Input_Interact);
 		
+		const UInputAction *SecondaryInteractAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_SecondaryInteract);
+		if (SecondaryInteractAction)
+			EnhancedInputComponent->BindAction(SecondaryInteractAction, ETriggerEvent::Started, this, &ASimPetPlayer::Input_SecondaryInteract);
+		
 		const UInputAction *PauseAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_Pause);
 		if (PauseAction)
 			EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &ASimPetPlayer::Input_Pause);
@@ -327,6 +331,11 @@ void ASimPetPlayer::Input_Interact(const FInputActionValue &InputActionValue)
 			ISimPetInteractable::Execute_Interact(HitActor, this);
 		}
 	}
+}
+
+void ASimPetPlayer::Input_SecondaryInteract(const FInputActionValue &InputActionValue)
+{
+	Debug::Print("Input_SecondaryInteract");
 }
 
 void ASimPetPlayer::Input_Pause(const FInputActionValue& InputActionValue)
