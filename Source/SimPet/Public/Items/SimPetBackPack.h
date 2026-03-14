@@ -34,6 +34,8 @@ public:
 private:
 	void HideAndOptimizeItem(ASimPetItem *Item);
 	void AttachItemToBackpack(ASimPetItem *Item);
+	void ShowAndDetachItem(ASimPetItem *Item);
+	void EnablePhysicsAndApplyImpulse(ASimPetItem *Item);
 	
 	UPROPERTY()
 	TArray<ASimPetItem *> StoredItems;

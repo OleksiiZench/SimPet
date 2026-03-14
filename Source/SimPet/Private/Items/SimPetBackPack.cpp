@@ -5,12 +5,8 @@
 
 #include "Items/SimPetItem.h"
 
-#include "SimPetDebugHelper.h"
-
 void ASimPetBackPack::SecondaryInteract_Implementation(AActor *InstigatorActor)
 {
-	Debug::Print("SecondaryInteract_Implementation from backpack");
-	
 	ExtractItem();
 }
 
@@ -39,7 +35,15 @@ bool ASimPetBackPack::TryAddItem(ASimPetItem *Item)
 
 void ASimPetBackPack::ExtractItem()
 {
-	Debug::Print("ExtractItem from backpack");
+	if (StoredItems.IsEmpty())
+	{
+		return;
+	}
+	
+	ASimPetItem *ItemToExtract = StoredItems.Pop();
+	
+	ShowAndDetachItem(ItemToExtract);
+	EnablePhysicsAndApplyImpulse(ItemToExtract);
 }
 
 void ASimPetBackPack::HideAndOptimizeItem(ASimPetItem *Item)
@@ -58,5 +62,30 @@ void ASimPetBackPack::AttachItemToBackpack(ASimPetItem *Item)
 	
 	if (RootCompOfBackpack)
 		Item->AttachToComponent(RootCompOfBackpack, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+}
+
+void ASimPetBackPack::ShowAndDetachItem(ASimPetItem *Item)
+{
+	Item->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+
+	Item->SetActorHiddenInGame(false);
+	Item->SetActorEnableCollision(ECollisionEnabled::QueryAndPhysics);
+	Item->SetActorTickEnabled(true);
+}
+
+void ASimPetBackPack::EnablePhysicsAndApplyImpulse(ASimPetItem *Item)
+{
+	if (UPrimitiveComponent *PrimCompOfItem = Cast<UPrimitiveComponent>(Item->GetRootComponent()))
+	{
+		PrimCompOfItem->SetSimulatePhysics(true);
+		PrimCompOfItem->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+		
+		FVector ThrowDirection = -GetActorRightVector() + FVector(0.0f, 0.0f, 0.5f);
+		ThrowDirection.Normalize();
+		
+		float ThrowForce = 400.0f;
+		
+		PrimCompOfItem->AddImpulse(ThrowDirection * ThrowForce, NAME_None, true);
+	}
 }
 
