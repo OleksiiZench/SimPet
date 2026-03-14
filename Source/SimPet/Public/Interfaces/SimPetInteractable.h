@@ -25,4 +25,7 @@ class SIMPET_API ISimPetInteractable
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
 	void Interact(AActor *InstigatorActor);
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
+	void SecondaryInteract(AActor *InstigatorActor);
 };

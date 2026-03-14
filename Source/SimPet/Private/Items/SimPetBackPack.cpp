@@ -5,6 +5,15 @@
 
 #include "Items/SimPetItem.h"
 
+#include "SimPetDebugHelper.h"
+
+void ASimPetBackPack::SecondaryInteract_Implementation(AActor *InstigatorActor)
+{
+	Debug::Print("SecondaryInteract_Implementation from backpack");
+	
+	ExtractItem();
+}
+
 bool ASimPetBackPack::TryInteractWithAnotherItem(ASimPetItem *TargetItem)
 {
 	return TryAddItem(TargetItem);
@@ -30,6 +39,7 @@ bool ASimPetBackPack::TryAddItem(ASimPetItem *Item)
 
 void ASimPetBackPack::ExtractItem()
 {
+	Debug::Print("ExtractItem from backpack");
 }
 
 void ASimPetBackPack::HideAndOptimizeItem(ASimPetItem *Item)

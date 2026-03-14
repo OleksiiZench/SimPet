@@ -89,6 +89,7 @@ private:
 	void TakeItem(ASimPetItem *Item);
 	void DropItem(ASimPetItem *Item);
 	FAttachmentTransformRules GetRuleForAttachingItems();
+	AActor *DoInteractionTrace(const FInputActionValue &InputActionValue);
 	
 #pragma region Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))

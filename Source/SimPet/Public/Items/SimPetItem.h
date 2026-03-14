@@ -20,6 +20,7 @@ public:
 	
 	//~ Begin ISimPetInteractable Interface
 	virtual void Interact_Implementation(AActor *InstigatorActor) override;
+	virtual void SecondaryInteract_Implementation(AActor *InstigatorActor) override;
 	//~ End ISimPetInteractable Interface
 
 	virtual void GetOwnedGameplayTags(FGameplayTagContainer &TagContainer) const override;

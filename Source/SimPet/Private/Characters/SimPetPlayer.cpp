@@ -275,30 +275,10 @@ FAttachmentTransformRules ASimPetPlayer::GetRuleForAttachingItems()
 	);
 }
 
-void ASimPetPlayer::Input_Move(const FInputActionValue &InputActionValue)
-{
-	FVector2D MovementVector = InputActionValue.Get<FVector2D>();
-	if (Controller)
-	{
-		AddMovementInput(GetActorForwardVector(), MovementVector.Y);
-		AddMovementInput(GetActorRightVector(), MovementVector.X);
-	}
-}
-
-void ASimPetPlayer::Input_Look(const FInputActionValue &InputActionValue)
-{
-	FVector2D LookAxisVector = InputActionValue.Get<FVector2D>();
-	if (Controller)
-	{
-		AddControllerYawInput(LookAxisVector.X);
-		AddControllerPitchInput(LookAxisVector.Y);
-	}
-}
-
-void ASimPetPlayer::Input_Interact(const FInputActionValue &InputActionValue)
+AActor *ASimPetPlayer::DoInteractionTrace(const FInputActionValue &InputActionValue)
 {
 	if (!InputActionValue.Get<bool>())
-		return;
+		return nullptr;
 
 	float InteractionDistance = 250.0f;
 	float InteractionRadius = 15.0f;
@@ -325,17 +305,52 @@ void ASimPetPlayer::Input_Interact(const FInputActionValue &InputActionValue)
 	if (bHit)
 	{
 		AActor *HitActor = HitResult.GetActor();
-
+		
 		if (HitActor && HitActor->Implements<USimPetInteractable>())
-		{
-			ISimPetInteractable::Execute_Interact(HitActor, this);
-		}
+			return HitActor;
+	}
+	
+	return nullptr;
+}
+
+void ASimPetPlayer::Input_Move(const FInputActionValue &InputActionValue)
+{
+	FVector2D MovementVector = InputActionValue.Get<FVector2D>();
+	if (Controller)
+	{
+		AddMovementInput(GetActorForwardVector(), MovementVector.Y);
+		AddMovementInput(GetActorRightVector(), MovementVector.X);
+	}
+}
+
+void ASimPetPlayer::Input_Look(const FInputActionValue &InputActionValue)
+{
+	FVector2D LookAxisVector = InputActionValue.Get<FVector2D>();
+	if (Controller)
+	{
+		AddControllerYawInput(LookAxisVector.X);
+		AddControllerPitchInput(LookAxisVector.Y);
+	}
+}
+
+void ASimPetPlayer::Input_Interact(const FInputActionValue &InputActionValue)
+{
+	AActor *HitActor = DoInteractionTrace(InputActionValue);
+
+	if (HitActor)
+	{
+		ISimPetInteractable::Execute_Interact(HitActor, this);
 	}
 }
 
 void ASimPetPlayer::Input_SecondaryInteract(const FInputActionValue &InputActionValue)
 {
-	Debug::Print("Input_SecondaryInteract");
+	AActor *HitActor = DoInteractionTrace(InputActionValue);
+
+	if (HitActor)
+	{
+		ISimPetInteractable::Execute_SecondaryInteract(HitActor, this);
+	}
 }
 
 void ASimPetPlayer::Input_Pause(const FInputActionValue& InputActionValue)

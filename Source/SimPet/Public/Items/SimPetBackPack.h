@@ -19,6 +19,10 @@ class SIMPET_API ASimPetBackPack : public ASimPetItem
 	GENERATED_BODY()
 	
 public:
+	//~ Begin ISimPetInteractable Interface
+	virtual void SecondaryInteract_Implementation(AActor *InstigatorActor) override;
+	//~ End ISimPetInteractable Interface
+	
 	virtual bool TryInteractWithAnotherItem(ASimPetItem *TargetItem) override;
 	
 	bool TryAddItem(ASimPetItem *Item);
