@@ -40,7 +40,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void TogglePauseMenu();
 	
-	void TakeOrDropItem(ASimPetItem *Item);
+	void InteractWithItem(ASimPetItem *Item);
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USceneComponent *ItemHoldPoint;
@@ -84,6 +84,8 @@ private:
 	
 	void SetSprint(bool bIsSprint);
 	void UpdateStamina(float DeltaTime);
+	bool TryItemInteraction(ASimPetItem *TargetItem);
+	void TakeOrDropItem(ASimPetItem *Item);
 	void TakeItem(ASimPetItem *Item);
 	void DropItem(ASimPetItem *Item);
 	FAttachmentTransformRules GetRuleForAttachingItems();

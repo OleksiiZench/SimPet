@@ -151,22 +151,16 @@ void ASimPetPlayer::TogglePauseMenu()
 	}
 }
 
-void ASimPetPlayer::TakeOrDropItem(ASimPetItem *Item)
+void ASimPetPlayer::InteractWithItem(ASimPetItem *Item)
 {
-	if (bHandsFull && CashedTakenItem == Item)
+	if (TryItemInteraction(Item))
 	{
-		DropItem(Item);
+		return;
 	}
-	else if (!bHandsFull)
-	{
-		TakeItem(Item);
-	}
-	else
-	{
-		DropItem(CashedTakenItem);
-		TakeItem(Item);
-	}
+	
+	TakeOrDropItem(Item);
 }
+
 
 void ASimPetPlayer::SetSprint(bool bIsSprint)
 {
@@ -219,6 +213,33 @@ void ASimPetPlayer::UpdateStamina(float DeltaTime)
 		
 		if (OnStaminaChanged.IsBound())
 			OnStaminaChanged.Broadcast(CurrentStamina, StaminaPercent);
+	}
+}
+
+bool ASimPetPlayer::TryItemInteraction(ASimPetItem *TargetItem)
+{
+	if (!bHandsFull || CashedTakenItem == nullptr || CashedTakenItem == TargetItem)
+	{
+		return false;
+	}
+	
+	return CashedTakenItem->TryInteractWithAnotherItem(TargetItem);
+}
+
+void ASimPetPlayer::TakeOrDropItem(ASimPetItem *Item)
+{
+	if (bHandsFull && CashedTakenItem == Item)
+	{
+		DropItem(Item);
+	}
+	else if (!bHandsFull)
+	{
+		TakeItem(Item);
+	}
+	else
+	{
+		DropItem(CashedTakenItem);
+		TakeItem(Item);
 	}
 }
 
@@ -316,7 +337,6 @@ void ASimPetPlayer::Input_Pause(const FInputActionValue& InputActionValue)
 void ASimPetPlayer::Input_Sprint_Started(const FInputActionValue& InputActionValue)
 {
 	SetSprint(true);
-		
 }
 
 void ASimPetPlayer::Input_Sprint_Completed(const FInputActionValue& InputActionValue)

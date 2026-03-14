@@ -24,6 +24,8 @@ public:
 
 	virtual void GetOwnedGameplayTags(FGameplayTagContainer &TagContainer) const override;
 	
+	virtual bool TryInteractWithAnotherItem(ASimPetItem *TargetItem);
+	
 	void EnablePhysics();
 	void DisablePhysics();
 

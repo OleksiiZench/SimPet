@@ -20,6 +20,11 @@ void ASimPetItem::GetOwnedGameplayTags(FGameplayTagContainer &TagContainer) cons
 	TagContainer.AppendTags(GameplayTags);
 }
 
+bool ASimPetItem::TryInteractWithAnotherItem(ASimPetItem *TargetItem)
+{
+	return false;
+}
+
 void ASimPetItem::EnablePhysics()
 {
 	UStaticMeshComponent *StaticMeshComp = FindComponentByClass<UStaticMeshComponent>();
@@ -47,6 +52,6 @@ void ASimPetItem::AttachToPlayer(AActor *InstigatorActor)
 	
 	if (Player)
 	{
-		Player->TakeOrDropItem(this);
+		Player->InteractWithItem(this);
 	}
 }
