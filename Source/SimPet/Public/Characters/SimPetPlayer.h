@@ -17,6 +17,7 @@ class USimPetPauseMenuWidget;
 class ASimPetPlayerController;
 class USceneComponent;
 class ASimPetItem;
+class USimPetInteractionComponent;
 
 struct FInputActionValue;
 
@@ -36,6 +37,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(UInputComponent *PlayerInputComponent) override;
+	virtual FVector GetPawnViewLocation() const override;
 	
 	void InteractWithItem(ASimPetItem *Item);
 	
@@ -70,23 +72,18 @@ protected:
 	
 private:
 	bool bIsSprinting = false;
-	bool bHandsFull = false;
-	ASimPetItem *CashedTakenItem;
 	ASimPetPlayerController *SimPetPC;
 	UCharacterMovementComponent *CurrentMovementComp;
 	
 	void SetSprint(bool bIsSprint);
 	void UpdateStamina(float DeltaTime);
-	bool TryItemInteraction(ASimPetItem *TargetItem);
-	void TakeOrDropItem(ASimPetItem *Item);
-	void TakeItem(ASimPetItem *Item);
-	void DropItem(ASimPetItem *Item);
-	FAttachmentTransformRules GetRuleForAttachingItems();
-	AActor *DoInteractionTrace(const FInputActionValue &InputActionValue);
 	
 #pragma region Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent *Camera;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	USimPetInteractionComponent *InteractionComponent;
 #pragma endregion
 
 #pragma region Inputs

@@ -6,16 +6,14 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
-#include "Kismet/KismetSystemLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/SceneComponent.h"
 
 #include "DataAsset/Input/SimPetInputConfig.h"
 #include "SimPetGameplayTags.h"
 #include "Interfaces/SimPetInteractable.h"
-#include "Widgets/SimPetPauseMenuWidget.h"
 #include "Controllers/SimPetPlayerController.h"
-#include "Items/SimPetItem.h"
+#include "Components/SimPetInteractionComponent.h"
 
 ASimPetPlayer::ASimPetPlayer()
 {
@@ -43,6 +41,10 @@ ASimPetPlayer::ASimPetPlayer()
 	// 5. Налаштування точки для приєднання items
 	ItemHoldPoint = CreateDefaultSubobject<USceneComponent>(TEXT("ItemHoldPoint"));
 	ItemHoldPoint->SetupAttachment(GetCapsuleComponent());
+	
+	// 6. Налаштування компонента через який відбуваються взаємодії
+	InteractionComponent = CreateDefaultSubobject<USimPetInteractionComponent>(TEXT("InteractionComponent"));
+	InteractionComponent->SetHoldPoint(ItemHoldPoint);
 }
 
 void ASimPetPlayer::BeginPlay()
@@ -108,14 +110,24 @@ void ASimPetPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputCompon
 	}
 }
 
+FVector ASimPetPlayer::GetPawnViewLocation() const
+{
+	if (Camera)
+	{
+		return Camera->GetComponentLocation();
+	}
+	
+	return Super::GetPawnViewLocation();
+}
+
 void ASimPetPlayer::InteractWithItem(ASimPetItem *Item)
 {
-	if (TryItemInteraction(Item))
+	if (InteractionComponent->TryItemInteraction(Item))
 	{
 		return;
 	}
 	
-	TakeOrDropItem(Item);
+	InteractionComponent->TakeOrDropItem(Item);
 }
 
 void ASimPetPlayer::SetSprint(bool bIsSprint)
@@ -172,99 +184,6 @@ void ASimPetPlayer::UpdateStamina(float DeltaTime)
 	}
 }
 
-bool ASimPetPlayer::TryItemInteraction(ASimPetItem *TargetItem)
-{
-	if (!bHandsFull || CashedTakenItem == nullptr || CashedTakenItem == TargetItem)
-	{
-		return false;
-	}
-	
-	return CashedTakenItem->TryInteractWithAnotherItem(TargetItem);
-}
-
-void ASimPetPlayer::TakeOrDropItem(ASimPetItem *Item)
-{
-	if (bHandsFull && CashedTakenItem == Item)
-	{
-		DropItem(Item);
-	}
-	else if (!bHandsFull)
-	{
-		TakeItem(Item);
-	}
-	else
-	{
-		DropItem(CashedTakenItem);
-		TakeItem(Item);
-	}
-}
-
-void ASimPetPlayer::TakeItem(ASimPetItem *Item)
-{
-	Item->DisablePhysics();
-	Item->AttachToComponent(ItemHoldPoint, GetRuleForAttachingItems());
-	
-	CashedTakenItem = Item;
-	bHandsFull = true;
-}
-
-void ASimPetPlayer::DropItem(ASimPetItem *Item)
-{
-	Item->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-	Item->EnablePhysics();
-	
-	CashedTakenItem = nullptr;
-	bHandsFull = false;
-}
-
-FAttachmentTransformRules ASimPetPlayer::GetRuleForAttachingItems()
-{
-	return FAttachmentTransformRules (
-		EAttachmentRule::SnapToTarget,
-		EAttachmentRule::SnapToTarget,
-		EAttachmentRule::KeepWorld,
-		true
-	);
-}
-
-AActor *ASimPetPlayer::DoInteractionTrace(const FInputActionValue &InputActionValue)
-{
-	if (!InputActionValue.Get<bool>())
-		return nullptr;
-
-	float InteractionDistance = 250.0f;
-	float InteractionRadius = 15.0f;
-	FHitResult HitResult;
-	FVector StartLocation = Camera->GetComponentLocation();
-	FVector EndLocation = StartLocation + Camera->GetForwardVector() * InteractionDistance;
-
-	TArray<AActor *> ActorsToIgnore;
-	ActorsToIgnore.Add(this);
-
-	bool bHit = UKismetSystemLibrary::SphereTraceSingle(
-		GetWorld(),
-		StartLocation,
-		EndLocation,
-		InteractionRadius,
-		ETraceTypeQuery::TraceTypeQuery2,
-		false,
-		ActorsToIgnore,
-		EDrawDebugTrace::None,
-		HitResult,
-		true
-	);
-
-	if (bHit)
-	{
-		AActor *HitActor = HitResult.GetActor();
-		
-		if (HitActor && HitActor->Implements<USimPetInteractable>())
-			return HitActor;
-	}
-	
-	return nullptr;
-}
-
 void ASimPetPlayer::Input_Move(const FInputActionValue &InputActionValue)
 {
 	FVector2D MovementVector = InputActionValue.Get<FVector2D>();
@@ -287,7 +206,7 @@ void ASimPetPlayer::Input_Look(const FInputActionValue &InputActionValue)
 
 void ASimPetPlayer::Input_Interact(const FInputActionValue &InputActionValue)
 {
-	AActor *HitActor = DoInteractionTrace(InputActionValue);
+	AActor *HitActor = InteractionComponent->DoInteractionTrace();
 
 	if (HitActor)
 	{
@@ -297,7 +216,7 @@ void ASimPetPlayer::Input_Interact(const FInputActionValue &InputActionValue)
 
 void ASimPetPlayer::Input_SecondaryInteract(const FInputActionValue &InputActionValue)
 {
-	AActor *HitActor = DoInteractionTrace(InputActionValue);
+	AActor *HitActor = InteractionComponent->DoInteractionTrace();
 
 	if (HitActor)
 	{
