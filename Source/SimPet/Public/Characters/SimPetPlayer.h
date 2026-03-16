@@ -37,9 +37,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(UInputComponent *PlayerInputComponent) override;
 	
-	UFUNCTION(BlueprintCallable)
-	void TogglePauseMenu();
-	
 	void InteractWithItem(ASimPetItem *Item);
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
@@ -51,9 +48,6 @@ public:
 #pragma endregion
 
 protected:
-	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<USimPetPauseMenuWidget> PauseMenuWidgetClass;
-	
 	/* Налаштування швидкості персонажа */
 	UPROPERTY(EditDefaultsOnly, Category = "Movement")
 	float WalkSpeed;
@@ -75,7 +69,6 @@ protected:
 	float CurrentStamina;
 	
 private:
-	bool bIsGamePaused = false;
 	bool bIsSprinting = false;
 	bool bHandsFull = false;
 	ASimPetItem *CashedTakenItem;
@@ -94,9 +87,6 @@ private:
 #pragma region Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent *Camera;
-	
-	UPROPERTY()
-	USimPetPauseMenuWidget *CurrentPauseMenuWidget;
 #pragma endregion
 
 #pragma region Inputs
@@ -107,7 +97,6 @@ private:
 	void Input_Look(const FInputActionValue &InputActionValue);
 	void Input_Interact(const FInputActionValue &InputActionValue);
 	void Input_SecondaryInteract(const FInputActionValue &InputActionValue);
-	void Input_Pause(const FInputActionValue &InputActionValue);
 	void Input_Sprint_Started(const FInputActionValue &InputActionValue);
 	void Input_Sprint_Completed(const FInputActionValue &InputActionValue);
 

@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "Characters/SimPetPlayer.h"
+#include "Controllers/SimPetPlayerController.h"
 
 void USimPetPauseMenuWidget::NativeConstruct()
 {
@@ -23,9 +24,10 @@ void USimPetPauseMenuWidget::NativeConstruct()
 void USimPetPauseMenuWidget::OnResumeClicked()
 {
 	ACharacter *PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	if (ASimPetPlayer *SimPetPlayerCharacter = Cast<ASimPetPlayer>(PlayerCharacter))
+	
+	if (ASimPetPlayerController *SimPetPC = Cast<ASimPetPlayerController>(PlayerCharacter->GetController()))
 	{
-		SimPetPlayerCharacter->TogglePauseMenu();
+		SimPetPC->TogglePauseMenu();
 	}
 }
 

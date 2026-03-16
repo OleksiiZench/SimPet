@@ -8,7 +8,11 @@
 #include "SimPetPlayerController.generated.h"
 
 class UInputMappingContext;
+class USimPetInputConfig;
 class UUserWidget;
+class USimPetPauseMenuWidget;
+
+struct FInputActionValue;
 
 /**
  * 
@@ -20,11 +24,28 @@ class SIMPET_API ASimPetPlayerController : public APlayerController
 	
 public:
 	virtual void BeginPlay() override;
+	virtual void SetupInputComponent() override;
 	
 	void SetInputMode_Game();
 	void SetInputMode_UI(UUserWidget *FocusWidget = nullptr);
 	
+	UFUNCTION(BlueprintCallable)
+	void TogglePauseMenu();
+	
 private:
+	bool bIsGamePaused = false;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext *DefaultMappingContext;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	USimPetInputConfig *InputConfigDataAsset;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<USimPetPauseMenuWidget> PauseMenuWidgetClass;
+	
+	UPROPERTY()
+	USimPetPauseMenuWidget *CurrentPauseMenuWidget;
+	
+	void Input_Pause(const FInputActionValue &InputActionValue);
 };

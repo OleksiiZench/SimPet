@@ -8,18 +8,14 @@
 #include "EnhancedInputComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Kismet/GameplayStatics.h"
 #include "Components/SceneComponent.h"
 
 #include "DataAsset/Input/SimPetInputConfig.h"
 #include "SimPetGameplayTags.h"
 #include "Interfaces/SimPetInteractable.h"
 #include "Widgets/SimPetPauseMenuWidget.h"
-#include "Widgets/SimPetHUD.h"
 #include "Controllers/SimPetPlayerController.h"
 #include "Items/SimPetItem.h"
-
-#include "SimPetDebugHelper.h"
 
 ASimPetPlayer::ASimPetPlayer()
 {
@@ -103,55 +99,12 @@ void ASimPetPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputCompon
 		if (SecondaryInteractAction)
 			EnhancedInputComponent->BindAction(SecondaryInteractAction, ETriggerEvent::Started, this, &ASimPetPlayer::Input_SecondaryInteract);
 		
-		const UInputAction *PauseAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_Pause);
-		if (PauseAction)
-			EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &ASimPetPlayer::Input_Pause);
-		
 		const UInputAction *SprintAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_Sprint);
 		if (SprintAction)
 		{
 			EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &ASimPetPlayer::Input_Sprint_Started);
 			EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &ASimPetPlayer::Input_Sprint_Completed);
 		}
-	}
-}
-
-void ASimPetPlayer::TogglePauseMenu()
-{
-	if (!SimPetPC)
-		return;
-	
-	bIsGamePaused = !bIsGamePaused;
-	
-	// 1. Ставимо/ Знімаємо паузу гри
-	UGameplayStatics::SetGamePaused(GetWorld(), bIsGamePaused);
-	
-	// 2. Логіка відображення
-	if (bIsGamePaused)
-	{
-		if (ASimPetHUD *CurrentHUD = Cast<ASimPetHUD>(SimPetPC->GetHUD()))
-			CurrentHUD->SetHUDVisibility(false);
-		
-		if (!CurrentPauseMenuWidget && PauseMenuWidgetClass)
-		{
-			CurrentPauseMenuWidget = CreateWidget<USimPetPauseMenuWidget>(SimPetPC, PauseMenuWidgetClass);
-			CurrentPauseMenuWidget->AddToViewport(10);
-		}
-		
-		if (CurrentPauseMenuWidget)
-			CurrentPauseMenuWidget->SetVisibility(ESlateVisibility::Visible);
-		
-		SimPetPC->SetInputMode_UI();
-	}
-	else
-	{
-		if (CurrentPauseMenuWidget)
-			CurrentPauseMenuWidget->SetVisibility(ESlateVisibility::Hidden);
-		
-		if (ASimPetHUD *CurrentHUD = Cast<ASimPetHUD>(SimPetPC->GetHUD()))
-			CurrentHUD->SetHUDVisibility(true);
-		
-		SimPetPC->SetInputMode_Game();
 	}
 }
 
@@ -164,7 +117,6 @@ void ASimPetPlayer::InteractWithItem(ASimPetItem *Item)
 	
 	TakeOrDropItem(Item);
 }
-
 
 void ASimPetPlayer::SetSprint(bool bIsSprint)
 {
@@ -351,11 +303,6 @@ void ASimPetPlayer::Input_SecondaryInteract(const FInputActionValue &InputAction
 	{
 		ISimPetInteractable::Execute_SecondaryInteract(HitActor, this);
 	}
-}
-
-void ASimPetPlayer::Input_Pause(const FInputActionValue& InputActionValue)
-{
-	TogglePauseMenu();
 }
 
 void ASimPetPlayer::Input_Sprint_Started(const FInputActionValue& InputActionValue)
