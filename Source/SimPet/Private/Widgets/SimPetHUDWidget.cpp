@@ -11,6 +11,7 @@
 #include "Characters/Animals/SimPetCanary.h"
 #include "Characters/Animals/SimPetLizard.h"
 #include "Characters/SimPetPlayer.h"
+#include "Components/SimPetStaminaComponent.h"
 
 void USimPetHUDWidget::NativeConstruct()
 {
@@ -26,7 +27,11 @@ void USimPetHUDWidget::NativeConstruct()
 	if (ASimPetPlayer *SimPetPlayer = Cast<ASimPetPlayer>(GetOwningPlayerPawn()))
 	{
 		StaminaProgressBar->SetPercent(1.0f);
-		SimPetPlayer->OnStaminaChanged.AddDynamic(this, &USimPetHUDWidget::UpdateStaminaBar);
+		
+		if (USimPetStaminaComponent *PlayerStaminaComponent = SimPetPlayer->GetStaminaComponent())
+		{
+			PlayerStaminaComponent->OnStaminaChanged.AddDynamic(this, &USimPetHUDWidget::UpdateStaminaBar);
+		}
 	}
 }
 

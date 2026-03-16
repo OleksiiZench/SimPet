@@ -6,7 +6,6 @@
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
 #include "Components/SceneComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
 
 #include "DataAsset/Input/SimPetInputConfig.h"
 #include "SimPetGameplayTags.h"
@@ -14,6 +13,7 @@
 #include "Controllers/SimPetPlayerController.h"
 #include "Components/SimPetInteractionComponent.h"
 #include "Components/SimPetCameraComponent.h"
+#include "Components/SimPetStaminaComponent.h"
 
 ASimPetPlayer::ASimPetPlayer()
 {
@@ -22,23 +22,16 @@ ASimPetPlayer::ASimPetPlayer()
 	CameraComponent->SetupAttachment(GetCapsuleComponent());
 	CameraComponent->bUsePawnControlRotation = true;
 	
-	// 2. Налаштування швидкості
-	WalkSpeed = 500.0f;
-	SprintSpeed = 800.0f;
-	
-	// 3. Налаштування стаміни
-	MaxStamina = 3.0f;
-	StaminaDrainRate = 1.0f;
-	StaminaRegenRate = 1.0f;
-	CurrentStamina = MaxStamina;
-	
-	// 4. Налаштування точки для приєднання items
+	// 2. Налаштування точки для приєднання items
 	ItemHoldPoint = CreateDefaultSubobject<USceneComponent>(TEXT("ItemHoldPoint"));
 	ItemHoldPoint->SetupAttachment(GetCapsuleComponent());
 	
-	// 5. Налаштування компонента через який відбуваються взаємодії
+	// 3. Налаштування компонента через який відбуваються взаємодії
 	InteractionComponent = CreateDefaultSubobject<USimPetInteractionComponent>(TEXT("InteractionComponent"));
 	InteractionComponent->SetHoldPoint(ItemHoldPoint);
+	
+	// 4. Налаштування компонента стаміни
+	StaminaComponent = CreateDefaultSubobject<USimPetStaminaComponent>(TEXT("StaminaComponent"));
 }
 
 void ASimPetPlayer::BeginPlay()
@@ -50,16 +43,6 @@ void ASimPetPlayer::BeginPlay()
 	
 	// 2. Отримуємо MovementComponent
 	CurrentMovementComp = GetCharacterMovement();
-	
-	// 3. Встановлюємо стартову швидкість
-	CurrentMovementComp->MaxWalkSpeed = WalkSpeed;
-}
-
-void ASimPetPlayer::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	
-	UpdateStamina(DeltaTime);
 }
 
 void ASimPetPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
@@ -67,7 +50,7 @@ void ASimPetPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputCompon
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	
 	if (UEnhancedInputComponent *EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
-	{// Configure EnhancedInputComponent
+	{
 		if (!InputConfigDataAsset)
 			return;
 
@@ -116,58 +99,12 @@ void ASimPetPlayer::InteractWithItem(ASimPetItem *Item)
 	InteractionComponent->TakeOrDropItem(Item);
 }
 
-void ASimPetPlayer::SetSprint(bool bIsSprint)
+USimPetStaminaComponent *ASimPetPlayer::GetStaminaComponent()
 {
-	bool bIsMoving = !(GetVelocity().Size2D() < 5.0f);
+	if (StaminaComponent)
+		return StaminaComponent;
 	
-	if (bIsSprint && bIsMoving)
-	{
-		CurrentMovementComp->MaxWalkSpeed = SprintSpeed;
-		bIsSprinting = true;
-	}
-	else
-	{
-		CurrentMovementComp->MaxWalkSpeed = WalkSpeed;
-		bIsSprinting = false;
-	}
-}
-
-void ASimPetPlayer::UpdateStamina(float DeltaTime)
-{
-	float OldStamina = CurrentStamina;
-	
-	if (bIsSprinting)
-	{
-		bool bIsMoving = GetVelocity().Size2D();
-		bool bIsFalling = CurrentMovementComp->IsFalling();
-		
-		if (!bIsMoving || bIsFalling)
-		{
-			SetSprint(false);
-		}
-		else
-		{
-			CurrentStamina -= StaminaDrainRate * DeltaTime;
-		
-			if (CurrentStamina <= 0.0f)
-			{
-				CurrentStamina = 0.0f;
-				SetSprint(false);
-			}
-		}
-	}
-	else if (CurrentStamina < MaxStamina)
-	{
-		CurrentStamina += StaminaRegenRate * DeltaTime;
-	}
-	
-	if (!FMath::IsNearlyEqual(OldStamina, CurrentStamina))
-	{
-		float StaminaPercent = FMath::Clamp(CurrentStamina / MaxStamina, 0.0f, 1.0f);
-		
-		if (OnStaminaChanged.IsBound())
-			OnStaminaChanged.Broadcast(CurrentStamina, StaminaPercent);
-	}
+	return nullptr;
 }
 
 void ASimPetPlayer::Input_Move(const FInputActionValue &InputActionValue)
@@ -212,10 +149,10 @@ void ASimPetPlayer::Input_SecondaryInteract(const FInputActionValue &InputAction
 
 void ASimPetPlayer::Input_Sprint_Started(const FInputActionValue& InputActionValue)
 {
-	SetSprint(true);
+	StaminaComponent->SetSprint(true);
 }
 
 void ASimPetPlayer::Input_Sprint_Completed(const FInputActionValue& InputActionValue)
 {
-	SetSprint(false);
+	StaminaComponent->SetSprint(false);
 }

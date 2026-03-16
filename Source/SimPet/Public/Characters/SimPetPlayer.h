@@ -9,19 +9,15 @@
 #include "SimPetPlayer.generated.h"
 
 class UInputComponent;
-class UInputMappingContext;
 class USimPetInputConfig;
-class USimPetHUDWidget;
-class USimPetPauseMenuWidget;
 class ASimPetPlayerController;
 class USceneComponent;
 class ASimPetItem;
 class USimPetInteractionComponent;
 class USimPetCameraComponent;
+class USimPetStaminaComponent;
 
 struct FInputActionValue;
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStaminaChanged, float, CurrentValue, float, Precent);
 
 /**
  * 
@@ -35,48 +31,18 @@ public:
 	ASimPetPlayer();
 	
 	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(UInputComponent *PlayerInputComponent) override;
 	virtual FVector GetPawnViewLocation() const override;
 	
 	void InteractWithItem(ASimPetItem *Item);
+	USimPetStaminaComponent *GetStaminaComponent();
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USceneComponent *ItemHoldPoint;
 	
-#pragma region Delegates
-	UPROPERTY(BlueprintAssignable, Category = "Events")
-	FOnStaminaChanged OnStaminaChanged;
-#pragma endregion
-
-protected:
-	/* Налаштування швидкості персонажа */
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float WalkSpeed;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float SprintSpeed;
-	
-	/* Налаштування стаміни персонажа */
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float MaxStamina;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float StaminaDrainRate;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float StaminaRegenRate;
-	
-	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	float CurrentStamina;
-	
 private:
-	bool bIsSprinting = false;
 	ASimPetPlayerController *SimPetPC;
 	UCharacterMovementComponent *CurrentMovementComp;
-	
-	void SetSprint(bool bIsSprint);
-	void UpdateStamina(float DeltaTime);
 	
 #pragma region Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
@@ -84,6 +50,9 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USimPetInteractionComponent *InteractionComponent;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	USimPetStaminaComponent *StaminaComponent;
 #pragma endregion
 
 #pragma region Inputs
