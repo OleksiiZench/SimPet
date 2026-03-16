@@ -9,7 +9,6 @@
 #include "SimPetPlayer.generated.h"
 
 class UInputComponent;
-class UCameraComponent;
 class UInputMappingContext;
 class USimPetInputConfig;
 class USimPetHUDWidget;
@@ -18,6 +17,7 @@ class ASimPetPlayerController;
 class USceneComponent;
 class ASimPetItem;
 class USimPetInteractionComponent;
+class USimPetCameraComponent;
 
 struct FInputActionValue;
 
@@ -80,7 +80,7 @@ private:
 	
 #pragma region Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	UCameraComponent *Camera;
+	USimPetCameraComponent *CameraComponent;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USimPetInteractionComponent *InteractionComponent;
@@ -97,15 +97,5 @@ private:
 	void Input_Sprint_Started(const FInputActionValue &InputActionValue);
 	void Input_Sprint_Completed(const FInputActionValue &InputActionValue);
 
-#pragma endregion
-	
-#pragma region Bobbing
-	float BobVerticalAmplitude;  // Наскільки сильно коливає вгору/ вниз
-	float BobHorizontalAmplitude;  // Наскільки сильно коливає вліво/ вправо
-	float BobFrequencyMultiplier;  // Множник швидкості коливання
-	float BobTimer;  // Таймер для синуcоїди
-	FVector DefaultCameraRelativeLocation;  // Координати камери в спокої
-	
-	void UpdateCameraBob(float DeltaTime);
 #pragma endregion
 };

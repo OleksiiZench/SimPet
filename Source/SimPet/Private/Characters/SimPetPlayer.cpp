@@ -3,46 +3,40 @@
 
 #include "Characters/SimPetPlayer.h"
 
-#include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "Components/SceneComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 #include "DataAsset/Input/SimPetInputConfig.h"
 #include "SimPetGameplayTags.h"
 #include "Interfaces/SimPetInteractable.h"
 #include "Controllers/SimPetPlayerController.h"
 #include "Components/SimPetInteractionComponent.h"
+#include "Components/SimPetCameraComponent.h"
 
 ASimPetPlayer::ASimPetPlayer()
 {
 	// 1. Налаштування камери
-	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	Camera->SetupAttachment(GetCapsuleComponent());
-	Camera->bUsePawnControlRotation = true;
+	CameraComponent = CreateDefaultSubobject<USimPetCameraComponent>(TEXT("CameraComponent"));
+	CameraComponent->SetupAttachment(GetCapsuleComponent());
+	CameraComponent->bUsePawnControlRotation = true;
 	
 	// 2. Налаштування швидкості
 	WalkSpeed = 500.0f;
 	SprintSpeed = 800.0f;
 	
-	// 3. Налаштування коливання камери
-	BobVerticalAmplitude = 10.0f;
-	BobHorizontalAmplitude = 5.0f;
-	BobFrequencyMultiplier = 0.015f;
-	BobTimer = 0.0f;
-	
-	// 4. Налаштування стаміни
+	// 3. Налаштування стаміни
 	MaxStamina = 3.0f;
 	StaminaDrainRate = 1.0f;
 	StaminaRegenRate = 1.0f;
 	CurrentStamina = MaxStamina;
 	
-	// 5. Налаштування точки для приєднання items
+	// 4. Налаштування точки для приєднання items
 	ItemHoldPoint = CreateDefaultSubobject<USceneComponent>(TEXT("ItemHoldPoint"));
 	ItemHoldPoint->SetupAttachment(GetCapsuleComponent());
 	
-	// 6. Налаштування компонента через який відбуваються взаємодії
+	// 5. Налаштування компонента через який відбуваються взаємодії
 	InteractionComponent = CreateDefaultSubobject<USimPetInteractionComponent>(TEXT("InteractionComponent"));
 	InteractionComponent->SetHoldPoint(ItemHoldPoint);
 }
@@ -59,20 +53,12 @@ void ASimPetPlayer::BeginPlay()
 	
 	// 3. Встановлюємо стартову швидкість
 	CurrentMovementComp->MaxWalkSpeed = WalkSpeed;
-	
-	// 4. Записуємо стартову позицію камери (відносно персонажу)
-	if (Camera)
-		DefaultCameraRelativeLocation = Camera->GetRelativeLocation();
 }
 
 void ASimPetPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	// 1. Оновлюємо коливання камери
-	UpdateCameraBob(DeltaTime);
-	
-	// 2. Оновлення стаміни
 	UpdateStamina(DeltaTime);
 }
 
@@ -112,9 +98,9 @@ void ASimPetPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputCompon
 
 FVector ASimPetPlayer::GetPawnViewLocation() const
 {
-	if (Camera)
+	if (CameraComponent)
 	{
-		return Camera->GetComponentLocation();
+		return CameraComponent->GetComponentLocation();
 	}
 	
 	return Super::GetPawnViewLocation();
@@ -232,46 +218,4 @@ void ASimPetPlayer::Input_Sprint_Started(const FInputActionValue& InputActionVal
 void ASimPetPlayer::Input_Sprint_Completed(const FInputActionValue& InputActionValue)
 {
 	SetSprint(false);
-}
-
-void ASimPetPlayer::UpdateCameraBob(float DeltaTime)
-{
-	if (!Camera || !CurrentMovementComp)
-		return;
-	
-	FVector Velocity = GetVelocity();
-	float Speed = Velocity.Size();
-	
-	bool bIsMovingOnGround = Speed > 10.0f && CurrentMovementComp->IsMovingOnGround();
-	
-	if (bIsMovingOnGround)
-	{
-		BobTimer += Speed *DeltaTime * BobFrequencyMultiplier;  // Збільшуємо таймер залежно від швидкості
-		
-		float ZOffset = FMath::Sin(BobTimer * 2.0f) * BobVerticalAmplitude;  // Вертикальний зсув
-		
-		float YOffset = FMath::Cos(BobTimer) * BobHorizontalAmplitude;  // Горизонтальний зсув
-		
-		// Створюємо нову відносну позицію
-		FVector NewBobLocation = DefaultCameraRelativeLocation;
-		NewBobLocation.Z += ZOffset;
-		NewBobLocation.Y += YOffset;
-		
-		// Застосовуємо нову позицію
-		FVector SmoothLocation = FMath::VInterpTo(Camera->GetRelativeLocation(), NewBobLocation, DeltaTime, 10.0f);
-		Camera->SetRelativeLocation(SmoothLocation);
-	}
-	else
-	{// Коли зупинились
-		FVector SmoothReturn = FMath::VInterpTo(Camera->GetRelativeLocation(), DefaultCameraRelativeLocation, DeltaTime, 5.0f);
-	
-		if (FVector::DistSquared(SmoothReturn, DefaultCameraRelativeLocation) < 1.0f)
-		{
-			Camera->SetRelativeLocation(DefaultCameraRelativeLocation);
-		}
-		else
-		{
-			Camera->SetRelativeLocation(SmoothReturn);
-		}
-	}
 }
