@@ -39,11 +39,17 @@ protected:
 	
 	UPROPERTY(meta = (BindWidget))
 	UProgressBar *StaminaProgressBar;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *PointsText;
 #pragma endregion
 	
 #pragma region Logic
 	UFUNCTION()
 	void UpdateStaminaBar(float Percent);
+	
+	UFUNCTION()
+	void UpdatePointsText(int32 Points);
 	
 	UFUNCTION()
 	void UpdateAnimalStats();  // Функція для оновлення статистики (за таймером)

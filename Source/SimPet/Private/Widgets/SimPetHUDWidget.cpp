@@ -12,6 +12,7 @@
 #include "Characters/Animals/SimPetLizard.h"
 #include "Characters/SimPetPlayer.h"
 #include "Components/SimPetStaminaComponent.h"
+#include "Core/SimPetPlayerState.h"
 
 void USimPetHUDWidget::NativeConstruct()
 {
@@ -31,6 +32,13 @@ void USimPetHUDWidget::NativeConstruct()
 		if (USimPetStaminaComponent *PlayerStaminaComponent = SimPetPlayer->GetStaminaComponent())
 		{
 			PlayerStaminaComponent->OnStaminaChanged.AddDynamic(this, &USimPetHUDWidget::UpdateStaminaBar);
+		}
+		
+		UpdatePointsText(0);
+		
+		if (ASimPetPlayerState *PlayerState = Cast<ASimPetPlayerState>(SimPetPlayer->GetPlayerState()))
+		{
+			PlayerState->OnPointsChanged.AddDynamic(this, &USimPetHUDWidget::UpdatePointsText);
 		}
 	}
 }
@@ -56,6 +64,16 @@ void USimPetHUDWidget::UpdateStaminaBar(float Percent)
 	if (StaminaProgressBar)
 	{
 		StaminaProgressBar->SetPercent(Percent);
+	}
+}
+
+void USimPetHUDWidget::UpdatePointsText(int32 Points)
+{
+	FString FormattedString = FString::Printf(TEXT("Points: %d"), Points);
+	
+	if (PointsText)
+	{
+		PointsText->SetText(FText::FromString(FormattedString));
 	}
 }
 
