@@ -17,31 +17,13 @@
 
 ASimPetPlayer::ASimPetPlayer()
 {
-	// 1. Налаштування камери
-	CameraComponent = CreateDefaultSubobject<USimPetCameraComponent>(TEXT("CameraComponent"));
-	CameraComponent->SetupAttachment(GetCapsuleComponent());
-	CameraComponent->bUsePawnControlRotation = true;
-	
-	// 2. Налаштування точки для приєднання items
-	ItemHoldPoint = CreateDefaultSubobject<USceneComponent>(TEXT("ItemHoldPoint"));
-	ItemHoldPoint->SetupAttachment(GetCapsuleComponent());
-	
-	// 3. Налаштування компонента через який відбуваються взаємодії
-	InteractionComponent = CreateDefaultSubobject<USimPetInteractionComponent>(TEXT("InteractionComponent"));
-	InteractionComponent->SetHoldPoint(ItemHoldPoint);
-	
-	// 4. Налаштування компонента стаміни
-	StaminaComponent = CreateDefaultSubobject<USimPetStaminaComponent>(TEXT("StaminaComponent"));
+	SetupComponents();
 }
 
 void ASimPetPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// 1. Ініціалізуємо PC
-	SimPetPC = Cast<ASimPetPlayerController>(GetController());
-	
-	// 2. Отримуємо MovementComponent
 	CurrentMovementComp = GetCharacterMovement();
 }
 
@@ -101,10 +83,22 @@ void ASimPetPlayer::InteractWithItem(ASimPetItem *Item)
 
 USimPetStaminaComponent *ASimPetPlayer::GetStaminaComponent()
 {
-	if (StaminaComponent)
-		return StaminaComponent;
+	return StaminaComponent;
+}
+
+void ASimPetPlayer::SetupComponents()
+{
+	CameraComponent = CreateDefaultSubobject<USimPetCameraComponent>(TEXT("CameraComponent"));
+	CameraComponent->SetupAttachment(GetCapsuleComponent());
+	CameraComponent->bUsePawnControlRotation = true;
 	
-	return nullptr;
+	ItemHoldPoint = CreateDefaultSubobject<USceneComponent>(TEXT("ItemHoldPoint"));
+	ItemHoldPoint->SetupAttachment(GetCapsuleComponent());
+	
+	InteractionComponent = CreateDefaultSubobject<USimPetInteractionComponent>(TEXT("InteractionComponent"));
+	InteractionComponent->SetHoldPoint(ItemHoldPoint);
+	
+	StaminaComponent = CreateDefaultSubobject<USimPetStaminaComponent>(TEXT("StaminaComponent"));
 }
 
 void ASimPetPlayer::Input_Move(const FInputActionValue &InputActionValue)

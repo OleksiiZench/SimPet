@@ -37,14 +37,13 @@ public:
 	void InteractWithItem(ASimPetItem *Item);
 	USimPetStaminaComponent *GetStaminaComponent();
 	
+private:	
+#pragma region Components
+	UCharacterMovementComponent *CurrentMovementComp;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USceneComponent *ItemHoldPoint;
 	
-private:
-	ASimPetPlayerController *SimPetPC;
-	UCharacterMovementComponent *CurrentMovementComp;
-	
-#pragma region Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USimPetCameraComponent *CameraComponent;
 	
@@ -53,6 +52,8 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USimPetStaminaComponent *StaminaComponent;
+	
+	void SetupComponents();
 #pragma endregion
 
 #pragma region Inputs

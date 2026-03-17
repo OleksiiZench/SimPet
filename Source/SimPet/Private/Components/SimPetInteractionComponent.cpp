@@ -34,7 +34,7 @@ AActor *USimPetInteractionComponent::DoInteractionTrace()
 		ETraceTypeQuery::TraceTypeQuery2,
 		false,
 		ActorsToIgnore,
-		EDrawDebugTrace::ForDuration,
+		EDrawDebugTrace::None,
 		HitResult,
 		true
 	);
