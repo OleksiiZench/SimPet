@@ -6,6 +6,8 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
+#include "Components/SimPetPointsTransactionComponent.h"
+
 #include "SimPetDebugHelper.h"
 
 ASimPetAnimal::ASimPetAnimal()
@@ -20,7 +22,7 @@ ASimPetAnimal::ASimPetAnimal()
 	AnimalState = ESimPetAnimalState::Happy;
 
 	// 2. Config
-	GameSpeed = 8.0f;
+	GameSpeed = 0.5f;
 	TiredThresholdHours = 8.0f;
 	DeathThresholdHours = 24.0f;
 	DirtyThresholdHours = 24.0f;
@@ -42,41 +44,9 @@ ASimPetAnimal::ASimPetAnimal()
 	bUseCustomHomeLocation = false;
 	
 	// 5. Other
-	TimeAccumulator = 0.0f;
 	Movement = GetCharacterMovement();
-}
-
-void ASimPetAnimal::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	// 1. Симуляція метаболізму та життєвого циклу
-	if (AnimalState == ESimPetAnimalState::Dead)
-		return;
-
-	TimeAccumulator += DeltaTime;
-
-	if (TimeAccumulator >= GameSpeed)
-	{
-		TimeSinceLastMeal++;
-		TimeSinceLastClean++;
-
-		TimeAccumulator -= GameSpeed;
-
-		if (bIsClean && TimeSinceLastClean >= DirtyThresholdHours)
-			ToDirty();
-
-		if (TimeSinceLastMeal >= DeathThresholdHours)
-		{
-			ToDie();
-			return;
-		}
-
-		UpdateAnimalState();
-	}
 	
-	// 2. Рух ніг
-	AnimateLegs(DeltaTime, GetGameTimeSinceCreation());
+	PointsTransactionComponent = CreateDefaultSubobject<USimPetPointsTransactionComponent>(TEXT("PointsTransactionComponent"));
 }
 
 void ASimPetAnimal::OnConstruction(const FTransform &Transform)
@@ -136,6 +106,20 @@ void ASimPetAnimal::OnConstruction(const FTransform &Transform)
 			SpawnedLegs.Add(NewComp);
 		}
 	}
+}
+
+void ASimPetAnimal::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	StartMetabolismTimer();
+}
+
+void ASimPetAnimal::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	
+	AnimateLegs(DeltaTime, GetGameTimeSinceCreation());
 }
 
 void ASimPetAnimal::ToEat()
@@ -198,9 +182,69 @@ void ASimPetAnimal::AnimateLegs(float DeltaTime, float CurrentTime)
 	}
 }
 
+void ASimPetAnimal::OnMetabolismTick()
+{
+	if (AnimalState == ESimPetAnimalState::Dead)
+	{
+		return;
+	}
+
+	TimeSinceLastMeal++;
+	TimeSinceLastClean++;
+
+	CheckPhysicalAnimalState();
+	UpdateAnimalState();
+	
+	GeneratePointsIfAnimalIsHappy();
+}
+
+void ASimPetAnimal::CheckPhysicalAnimalState()
+{
+	if (TimeSinceLastMeal >= DeathThresholdHours)
+	{
+		ToDie();
+		return;
+	}
+	
+	if (bIsClean && TimeSinceLastClean >= DirtyThresholdHours)
+		ToDirty();
+}
+
+void ASimPetAnimal::UpdateAnimalState()
+{
+	if (AnimalState == ESimPetAnimalState::Dead)
+		return;
+	
+	if (TimeSinceLastMeal >= TiredThresholdHours || !bIsClean)
+	{
+		if (AnimalState != ESimPetAnimalState::Tired)
+		{
+			AnimalState = ESimPetAnimalState::Tired;
+			Debug::Print("Animal state changed to Tired");
+		}
+		
+		return;
+	}
+	
+	if (AnimalState != ESimPetAnimalState::Happy)
+	{
+		AnimalState = ESimPetAnimalState::Happy;
+		Debug::Print("Animal state changed to Happy");
+	}
+}
+
+void ASimPetAnimal::GeneratePointsIfAnimalIsHappy()
+{
+	if (AnimalState == ESimPetAnimalState::Happy)
+		PointsTransactionComponent->GeneratePassivePoints();
+}
+
 void ASimPetAnimal::ToDie()
 {
 	AnimalState = ESimPetAnimalState::Dead;
+	PointsTransactionComponent->GeneratePenaltyPoints();
+	
+	StopMetabolismTimer();
 
 	Debug::Print(TEXT("The animal died"));
 
@@ -215,23 +259,14 @@ void ASimPetAnimal::ToDirty()
 	bIsClean = false;
 
 	Debug::Print(TEXT("The animal got dirty"));
-
-	UpdateAnimalState();
 }
 
-void ASimPetAnimal::UpdateAnimalState()
+void ASimPetAnimal::StartMetabolismTimer()
 {
-	if (AnimalState == ESimPetAnimalState::Dead)
-		return;
+	GetWorld()->GetTimerManager().SetTimer(MetabolismTimerHandle, this, &ASimPetAnimal::OnMetabolismTick, GameSpeed, true);
+}
 
-	if (AnimalState != ESimPetAnimalState::Happy && TimeSinceLastMeal < TiredThresholdHours && bIsClean == true)
-	{
-		AnimalState = ESimPetAnimalState::Happy;
-		Debug::Print("Animal state changed to Happy");
-	}
-	else if (AnimalState != ESimPetAnimalState::Tired && ((TimeSinceLastMeal >= TiredThresholdHours && TimeSinceLastMeal < DeathThresholdHours) || !bIsClean))
-	{
-		AnimalState = ESimPetAnimalState::Tired;
-		Debug::Print("Animal state changed to Tired");
-	}
+void ASimPetAnimal::StopMetabolismTimer()
+{
+	GetWorld()->GetTimerManager().ClearTimer(MetabolismTimerHandle);
 }

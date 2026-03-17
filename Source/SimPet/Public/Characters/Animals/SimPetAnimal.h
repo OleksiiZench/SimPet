@@ -8,6 +8,7 @@
 #include "SimPetAnimal.generated.h"
 
 class UBehaviorTree;
+class USimPetPointsTransactionComponent;
 
 /**
  * 
@@ -20,8 +21,9 @@ class SIMPET_API ASimPetAnimal : public ASimPetBaseCharacter
 public:
 	ASimPetAnimal();
 
-	virtual void Tick(float DeltaTime) override;
 	virtual void OnConstruction(const FTransform &Transform) override;
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 
 	void ToEat();
 	void ToClean();
@@ -114,9 +116,16 @@ protected:
 	
 	UCharacterMovementComponent *Movement;
 private:
-	float TimeAccumulator;
-
+	FTimerHandle MetabolismTimerHandle;
+	
+	USimPetPointsTransactionComponent *PointsTransactionComponent;
+	
+	void OnMetabolismTick();
+	void CheckPhysicalAnimalState();
+	void UpdateAnimalState();
+	void GeneratePointsIfAnimalIsHappy();
 	void ToDie();
 	void ToDirty();
-	void UpdateAnimalState();
+	void StartMetabolismTimer();
+	void StopMetabolismTimer();
 };
