@@ -81,7 +81,7 @@ void USimPetStaminaComponent::UpdateStamina(float DeltaTime)
 		float StaminaPercent = FMath::Clamp(CurrentStamina / MaxStamina, 0.0f, 1.0f);
 		
 		if (OnStaminaChanged.IsBound())
-			OnStaminaChanged.Broadcast(CurrentStamina, StaminaPercent);
+			OnStaminaChanged.Broadcast(StaminaPercent);
 	}
 }
 

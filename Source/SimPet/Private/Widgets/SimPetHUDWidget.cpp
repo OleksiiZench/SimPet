@@ -51,7 +51,7 @@ void USimPetHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime
 	}
 }
 
-void USimPetHUDWidget::UpdateStaminaBar(float NewValue, float Percent)
+void USimPetHUDWidget::UpdateStaminaBar(float Percent)
 {
 	if (StaminaProgressBar)
 	{

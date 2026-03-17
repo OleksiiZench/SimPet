@@ -43,7 +43,7 @@ protected:
 	
 #pragma region Logic
 	UFUNCTION()
-	void UpdateStaminaBar(float NewValue, float Percent);
+	void UpdateStaminaBar(float Percent);
 	
 	UFUNCTION()
 	void UpdateAnimalStats();  // Функція для оновлення статистики (за таймером)
