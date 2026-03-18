@@ -5,8 +5,10 @@
 
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/WidgetComponent.h"
 
 #include "Components/SimPetPointsTransactionComponent.h"
+#include "Widgets/SimPetAnimalStatusWidget.h"
 
 #include "SimPetDebugHelper.h"
 
@@ -27,26 +29,16 @@ ASimPetAnimal::ASimPetAnimal()
 	DeathThresholdHours = 24.0f;
 	DirtyThresholdHours = 24.0f;
 
-	// 3. BodyParts
-	EyesCount = 0;
-	LegsCount = 0;
-
-	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BodyMesh"));
-	BodyMesh->SetupAttachment(GetRootComponent());
-
-	HeadMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HeadMesh"));
-	HeadMesh->SetupAttachment(BodyMesh);
-
-	TailMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TailMesh"));
-	TailMesh->SetupAttachment(BodyMesh);
+	SetupBody();
 
 	// 4. AI
 	bUseCustomHomeLocation = false;
 	
-	// 5. Other
-	Movement = GetCharacterMovement();
-	
-	PointsTransactionComponent = CreateDefaultSubobject<USimPetPointsTransactionComponent>(TEXT("PointsTransactionComponent"));
+	SetupComponent();
+
+	// AnimalStatusWidget->SetDirtyIconVisible(false);
+	// AnimalStatusWidget->SetHungryIconVisible(false);
+	// AnimalStatusWidget->SetSadIconVisible(false);
 }
 
 void ASimPetAnimal::OnConstruction(const FTransform &Transform)
@@ -112,6 +104,8 @@ void ASimPetAnimal::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	CacheAnimalStatusWidget();
+	
 	StartMetabolismTimer();
 }
 
@@ -167,7 +161,7 @@ void ASimPetAnimal::AnimateLegs(float DeltaTime, float CurrentTime)
 		float TargetPitch = 0.0f;
 	 	
 		// 2. Рахуємо синусоїду при русі або польоті
-		if (CurrentVelocity > 0.0f || Movement->IsFlying())
+		if (CurrentVelocity > 0.0f || MovementComponent->IsFlying())
 		{
 			bool bIsRightLeg = LegSocketName.Contains(TEXT("Right"));
 			float PhaseOffset = bIsRightLeg ? UE_PI : 0.0f;
@@ -180,6 +174,40 @@ void ASimPetAnimal::AnimateLegs(float DeltaTime, float CurrentTime)
 		
 		Leg->SetRelativeRotation(FRotator(NewPitch, CurrentRotation.Yaw, CurrentRotation.Roll));
 	}
+}
+
+void ASimPetAnimal::SetupBody()
+{
+	EyesCount = 0;
+	LegsCount = 0;
+
+	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BodyMesh"));
+	BodyMesh->SetupAttachment(GetRootComponent());
+
+	HeadMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HeadMesh"));
+	HeadMesh->SetupAttachment(BodyMesh);
+
+	TailMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TailMesh"));
+	TailMesh->SetupAttachment(BodyMesh);
+}
+
+void ASimPetAnimal::SetupComponent()
+{
+	MovementComponent = GetCharacterMovement();
+	
+	PointsTransactionComponent = CreateDefaultSubobject<USimPetPointsTransactionComponent>(TEXT("PointsTransactionComponent"));
+	
+	StatusWidhetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("StatusWidhetComponent"));
+	StatusWidhetComponent->SetupAttachment(GetRootComponent());
+	StatusWidhetComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f));
+	StatusWidhetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+	StatusWidhetComponent->SetDrawSize(FVector2D(150.0f, 50.0f));
+}
+
+void ASimPetAnimal::CacheAnimalStatusWidget()
+{
+	if (AnimalStatusWidget)
+		AnimalStatusWidget = Cast<USimPetAnimalStatusWidget>(StatusWidhetComponent->GetUserWidgetObject());
 }
 
 void ASimPetAnimal::OnMetabolismTick()
@@ -220,6 +248,8 @@ void ASimPetAnimal::UpdateAnimalState()
 		if (AnimalState != ESimPetAnimalState::Tired)
 		{
 			AnimalState = ESimPetAnimalState::Tired;
+			
+			AnimalStatusWidget->SetSadIconVisible(true);
 			Debug::Print("Animal state changed to Tired");
 		}
 		
@@ -257,6 +287,8 @@ void ASimPetAnimal::ToDie()
 void ASimPetAnimal::ToDirty()
 {
 	bIsClean = false;
+	
+	AnimalStatusWidget->SetDirtyIconVisible(true);
 
 	Debug::Print(TEXT("The animal got dirty"));
 }

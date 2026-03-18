@@ -9,6 +9,8 @@
 
 class UBehaviorTree;
 class USimPetPointsTransactionComponent;
+class UWidgetComponent;
+class USimPetAnimalStatusWidget;
 
 /**
  * 
@@ -114,11 +116,20 @@ protected:
 	virtual void AnimateLegs(float DeltaTime, float CurrentTime);
 #pragma endregion
 	
-	UCharacterMovementComponent *Movement;
+	UCharacterMovementComponent *MovementComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SimPet|UI")
+	UWidgetComponent *StatusWidhetComponent;
+	
 private:
 	FTimerHandle MetabolismTimerHandle;
 	
 	USimPetPointsTransactionComponent *PointsTransactionComponent;
+	USimPetAnimalStatusWidget *AnimalStatusWidget;
+	
+	void SetupBody();
+	void SetupComponent();
+	void CacheAnimalStatusWidget();
 	
 	void OnMetabolismTick();
 	void CheckPhysicalAnimalState();

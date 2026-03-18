@@ -7,10 +7,10 @@
 
 ASimPetCanary::ASimPetCanary()
 {
-	Movement = GetCharacterMovement();
+	MovementComponent = GetCharacterMovement();
 	
-	Movement->BrakingDecelerationFlying = 2000.0f;
-	Movement->MaxFlySpeed = 600.0f;
+	MovementComponent->BrakingDecelerationFlying = 2000.0f;
+	MovementComponent->MaxFlySpeed = 600.0f;
 	
 	WingsLiftOffset = 15.0f;
 }
@@ -53,11 +53,11 @@ void ASimPetCanary::SetFlyingMovementMode(const bool IsFlying)
 {
 	if (IsFlying)
 	{
-		Movement->SetMovementMode(MOVE_Flying);
+		MovementComponent->SetMovementMode(MOVE_Flying);
 	}
 	else
 	{
-		Movement->SetMovementMode(MOVE_Walking);  // MOVE_Walking перевірити чи це працивильний режим не польоту!!!!!
+		MovementComponent->SetMovementMode(MOVE_Walking);  // MOVE_Walking перевірити чи це працивильний режим не польоту!!!!!
 	}
 }
 
@@ -70,7 +70,7 @@ void ASimPetCanary::AnimateWings(float DeltaTime)
 	
 	float TargetZ = 0.0f;
 	
-	if (Movement->IsFlying() || Movement->IsFalling())
+	if (MovementComponent->IsFlying() || MovementComponent->IsFalling())
 	{
 		TargetZ = FMath::Sin(GetGameTimeSinceCreation() * FlySpeed) * WingsLiftOffset;
 	}
