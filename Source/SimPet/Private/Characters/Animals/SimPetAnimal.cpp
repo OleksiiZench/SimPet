@@ -35,10 +35,6 @@ ASimPetAnimal::ASimPetAnimal()
 	bUseCustomHomeLocation = false;
 	
 	SetupComponent();
-
-	// AnimalStatusWidget->SetDirtyIconVisible(false);
-	// AnimalStatusWidget->SetHungryIconVisible(false);
-	// AnimalStatusWidget->SetSadIconVisible(false);
 }
 
 void ASimPetAnimal::OnConstruction(const FTransform &Transform)
@@ -206,8 +202,10 @@ void ASimPetAnimal::SetupComponent()
 
 void ASimPetAnimal::CacheAnimalStatusWidget()
 {
-	if (AnimalStatusWidget)
+	if (!AnimalStatusWidget)
+	{
 		AnimalStatusWidget = Cast<USimPetAnimalStatusWidget>(StatusWidhetComponent->GetUserWidgetObject());
+	}
 }
 
 void ASimPetAnimal::OnMetabolismTick()
@@ -249,7 +247,12 @@ void ASimPetAnimal::UpdateAnimalState()
 		{
 			AnimalState = ESimPetAnimalState::Tired;
 			
-			AnimalStatusWidget->SetSadIconVisible(true);
+			if (AnimalStatusWidget)
+				AnimalStatusWidget->SetSadIconVisible(true);
+			
+			if (AnimalStatusWidget)
+				AnimalStatusWidget->SetHungryIconVisible(true);
+			
 			Debug::Print("Animal state changed to Tired");
 		}
 		

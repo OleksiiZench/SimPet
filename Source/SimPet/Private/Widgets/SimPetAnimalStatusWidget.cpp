@@ -5,6 +5,15 @@
 
 #include "Components/Image.h"
 
+void USimPetAnimalStatusWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+	
+	SetDirtyIconVisible(false);
+	SetHungryIconVisible(false);
+	SetSadIconVisible(false);
+}
+
 void USimPetAnimalStatusWidget::SetDirtyIconVisible(bool bVisible)
 {
 	ESlateVisibility Visibility = GetVisibilityFromBool(bVisible);
@@ -28,10 +37,10 @@ void USimPetAnimalStatusWidget::SetSadIconVisible(bool bVisible)
 
 ESlateVisibility USimPetAnimalStatusWidget::GetVisibilityFromBool(bool bVisible) const
 {
-	ESlateVisibility Visibility = ESlateVisibility::Collapsed;
+	ESlateVisibility Visibility = ESlateVisibility::Visible;
 	
 	if (!bVisible)
-		Visibility = ESlateVisibility::Hidden;
+		Visibility = ESlateVisibility::Collapsed;
 	
 	return Visibility;
 }
