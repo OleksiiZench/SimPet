@@ -27,8 +27,8 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
-	void ToEat();
-	void ToClean();
+	void Feed();
+	void Wash();
 	
 	ESimPetAnimalState GetAnimalState();
 	
@@ -127,6 +127,9 @@ private:
 	USimPetPointsTransactionComponent *PointsTransactionComponent;
 	USimPetAnimalStatusWidget *AnimalStatusWidget;
 	
+	void Die();
+	void BecomeDirty();
+	
 	void SetupBody();
 	void SetupComponent();
 	void CacheAnimalStatusWidget();
@@ -135,8 +138,6 @@ private:
 	void CheckPhysicalAnimalState();
 	void UpdateAnimalState();
 	void GeneratePointsIfAnimalIsHappy();
-	void ToDie();
-	void ToDirty();
 	void StartMetabolismTimer();
 	void StopMetabolismTimer();
 };

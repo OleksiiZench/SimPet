@@ -112,7 +112,7 @@ void ASimPetAnimal::Tick(float DeltaTime)
 	AnimateLegs(DeltaTime, GetGameTimeSinceCreation());
 }
 
-void ASimPetAnimal::ToEat()
+void ASimPetAnimal::Feed()
 {
 	TimeSinceLastMeal = 0.0f;
 	MealPerDay++;
@@ -122,7 +122,7 @@ void ASimPetAnimal::ToEat()
 	UpdateAnimalState();
 }
 
-void ASimPetAnimal::ToClean()
+void ASimPetAnimal::Wash()
 {
 	TimeSinceLastClean = 0.0f;
 	bIsClean = true;
@@ -170,6 +170,30 @@ void ASimPetAnimal::AnimateLegs(float DeltaTime, float CurrentTime)
 		
 		Leg->SetRelativeRotation(FRotator(NewPitch, CurrentRotation.Yaw, CurrentRotation.Roll));
 	}
+}
+
+void ASimPetAnimal::Die()
+{
+	AnimalState = ESimPetAnimalState::Dead;
+	PointsTransactionComponent->GeneratePenaltyPoints();
+	
+	StopMetabolismTimer();
+
+	Debug::Print(TEXT("The animal died"));
+
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
+	GetMesh()->SetSimulatePhysics(true);
+}
+
+void ASimPetAnimal::BecomeDirty()
+{
+	bIsClean = false;
+	
+	AnimalStatusWidget->SetDirtyIconVisible(true);
+
+	Debug::Print(TEXT("The animal got dirty"));
 }
 
 void ASimPetAnimal::SetupBody()
@@ -228,12 +252,12 @@ void ASimPetAnimal::CheckPhysicalAnimalState()
 {
 	if (TimeSinceLastMeal >= DeathThresholdHours)
 	{
-		ToDie();
+		Die();
 		return;
 	}
 	
 	if (bIsClean && TimeSinceLastClean >= DirtyThresholdHours)
-		ToDirty();
+		BecomeDirty();
 }
 
 void ASimPetAnimal::UpdateAnimalState()
@@ -270,30 +294,6 @@ void ASimPetAnimal::GeneratePointsIfAnimalIsHappy()
 {
 	if (AnimalState == ESimPetAnimalState::Happy)
 		PointsTransactionComponent->GeneratePassivePoints();
-}
-
-void ASimPetAnimal::ToDie()
-{
-	AnimalState = ESimPetAnimalState::Dead;
-	PointsTransactionComponent->GeneratePenaltyPoints();
-	
-	StopMetabolismTimer();
-
-	Debug::Print(TEXT("The animal died"));
-
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
-	GetMesh()->SetSimulatePhysics(true);
-}
-
-void ASimPetAnimal::ToDirty()
-{
-	bIsClean = false;
-	
-	AnimalStatusWidget->SetDirtyIconVisible(true);
-
-	Debug::Print(TEXT("The animal got dirty"));
 }
 
 void ASimPetAnimal::StartMetabolismTimer()
