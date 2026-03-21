@@ -13,7 +13,7 @@
 #include "Controllers/SimPetPlayerController.h"
 #include "Components/SimPetInteractionComponent.h"
 #include "Components/SimPetCameraComponent.h"
-#include "Components/SimPetStaminaComponent.h"
+#include "Components/Attributes/SimPetStaminaComponent.h"
 
 ASimPetPlayer::ASimPetPlayer()
 {

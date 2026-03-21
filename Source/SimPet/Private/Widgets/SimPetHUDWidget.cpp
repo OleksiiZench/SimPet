@@ -11,7 +11,7 @@
 #include "Characters/Animals/SimPetCanary.h"
 #include "Characters/Animals/SimPetLizard.h"
 #include "Characters/SimPetPlayer.h"
-#include "Components/SimPetStaminaComponent.h"
+#include "Components/Attributes/SimPetStaminaComponent.h"
 #include "Core/SimPetPlayerState.h"
 
 void USimPetHUDWidget::NativeConstruct()

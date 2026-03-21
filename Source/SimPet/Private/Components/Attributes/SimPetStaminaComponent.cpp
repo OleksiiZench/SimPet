@@ -1,7 +1,7 @@
 // Copyright (c) 2025 Oleksii Zenchenko. All Rights Reserved.
 
 
-#include "Components/SimPetStaminaComponent.h"
+#include "Components/Attributes/SimPetStaminaComponent.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 
