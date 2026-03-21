@@ -47,7 +47,10 @@ protected:
 
 #pragma region State
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|State")
-	bool bIsClean;
+	bool bNeedsCleaning;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|State")
+	bool bNeedsFeed;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|State")
 	int32 MealPerDay;  // Скільки разів за день тварина поїла
@@ -67,7 +70,7 @@ protected:
 	float GameSpeed;  // За скільки секунд проходить ігрова година
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|Config")
-	float TiredThresholdHours;
+	float HungryThresholdHours;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|Config")
 	float DeathThresholdHours;
@@ -111,7 +114,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|BodyParts")
 	TArray<FName> LegsSockets;
 	
-	float LegLiftAngle = 45.0f;
+	float LegLiftAngle;
+	
+	void RebuildBodyParts();
 	
 	virtual void AnimateLegs(float DeltaTime, float CurrentTime);
 #pragma endregion
@@ -130,8 +135,8 @@ private:
 	void Die();
 	void BecomeDirty();
 	
-	void SetupBody();
-	void SetupComponent();
+	void InitializeBaseBody();
+	void SetupComponents();
 	void CacheAnimalStatusWidget();
 	
 	void OnMetabolismTick();

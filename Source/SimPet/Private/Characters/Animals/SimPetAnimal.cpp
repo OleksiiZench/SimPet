@@ -16,31 +16,86 @@ ASimPetAnimal::ASimPetAnimal()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	// 1. State
-	bIsClean = true;
+	// 1. AI
+	bUseCustomHomeLocation = false;
+	
+	// 2. State
+	bNeedsCleaning = false;
+	bNeedsFeed = false;
 	MealPerDay = 0;
 	TimeSinceLastMeal = 0.0f;
 	TimeSinceLastClean = 0.0f;
 	AnimalState = ESimPetAnimalState::Happy;
 
-	// 2. Config
+	// 3. Config
 	GameSpeed = 0.5f;
-	TiredThresholdHours = 8.0f;
+	HungryThresholdHours = 8.0f;
 	DeathThresholdHours = 24.0f;
 	DirtyThresholdHours = 24.0f;
-
-	SetupBody();
-
-	// 4. AI
-	bUseCustomHomeLocation = false;
 	
-	SetupComponent();
+	// 4. BodyParts
+	EyesCount = 0;
+	LegsCount = 0;
+	LegLiftAngle = 45.0f;
+
+	// Other
+	InitializeBaseBody();
+	
+	SetupComponents();
 }
 
 void ASimPetAnimal::OnConstruction(const FTransform &Transform)
 {
 	Super::OnConstruction(Transform);
 
+	RebuildBodyParts();
+}
+
+void ASimPetAnimal::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	CacheAnimalStatusWidget();
+	
+	StartMetabolismTimer();
+}
+
+void ASimPetAnimal::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	
+	AnimateLegs(DeltaTime, GetGameTimeSinceCreation());
+}
+
+void ASimPetAnimal::Feed()
+{
+	TimeSinceLastMeal = 0.0f;
+	MealPerDay++;
+	
+	bNeedsFeed = false;
+
+	Debug::Print("Animal ate.");
+
+	UpdateAnimalState();
+}
+
+void ASimPetAnimal::Wash()
+{
+	TimeSinceLastClean = 0.0f;
+	bNeedsCleaning = false;
+
+	Debug::Print("Animal is clean now!");
+
+	UpdateAnimalState();
+}
+
+ESimPetAnimalState ASimPetAnimal::GetAnimalState()
+{
+	return AnimalState;
+}
+
+void ASimPetAnimal::RebuildBodyParts()
+{
 	for (UStaticMeshComponent *SpawnedEye : SpawnedEyes)
 	{
 		if (SpawnedEye)
@@ -96,47 +151,6 @@ void ASimPetAnimal::OnConstruction(const FTransform &Transform)
 	}
 }
 
-void ASimPetAnimal::BeginPlay()
-{
-	Super::BeginPlay();
-	
-	CacheAnimalStatusWidget();
-	
-	StartMetabolismTimer();
-}
-
-void ASimPetAnimal::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	
-	AnimateLegs(DeltaTime, GetGameTimeSinceCreation());
-}
-
-void ASimPetAnimal::Feed()
-{
-	TimeSinceLastMeal = 0.0f;
-	MealPerDay++;
-
-	Debug::Print("Animal ate.");
-
-	UpdateAnimalState();
-}
-
-void ASimPetAnimal::Wash()
-{
-	TimeSinceLastClean = 0.0f;
-	bIsClean = true;
-
-	Debug::Print("Animal is clean now!");
-
-	UpdateAnimalState();
-}
-
-ESimPetAnimalState ASimPetAnimal::GetAnimalState()
-{
-	return AnimalState;
-}
-
 void ASimPetAnimal::AnimateLegs(float DeltaTime, float CurrentTime)
 {
 	// 1. Отримуємо поточну швидкість
@@ -189,18 +203,15 @@ void ASimPetAnimal::Die()
 
 void ASimPetAnimal::BecomeDirty()
 {
-	bIsClean = false;
+	bNeedsCleaning = true;
 	
 	AnimalStatusWidget->SetDirtyIconVisible(true);
 
 	Debug::Print(TEXT("The animal got dirty"));
 }
 
-void ASimPetAnimal::SetupBody()
+void ASimPetAnimal::InitializeBaseBody()
 {
-	EyesCount = 0;
-	LegsCount = 0;
-
 	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BodyMesh"));
 	BodyMesh->SetupAttachment(GetRootComponent());
 
@@ -211,7 +222,7 @@ void ASimPetAnimal::SetupBody()
 	TailMesh->SetupAttachment(BodyMesh);
 }
 
-void ASimPetAnimal::SetupComponent()
+void ASimPetAnimal::SetupComponents()
 {
 	MovementComponent = GetCharacterMovement();
 	
@@ -256,7 +267,7 @@ void ASimPetAnimal::CheckPhysicalAnimalState()
 		return;
 	}
 	
-	if (bIsClean && TimeSinceLastClean >= DirtyThresholdHours)
+	if (!bNeedsCleaning && TimeSinceLastClean >= DirtyThresholdHours)
 		BecomeDirty();
 }
 
@@ -265,7 +276,7 @@ void ASimPetAnimal::UpdateAnimalState()
 	if (AnimalState == ESimPetAnimalState::Dead)
 		return;
 	
-	if (TimeSinceLastMeal >= TiredThresholdHours || !bIsClean)
+	if (TimeSinceLastMeal >= HungryThresholdHours || bNeedsCleaning)
 	{
 		if (AnimalState != ESimPetAnimalState::Tired)
 		{
