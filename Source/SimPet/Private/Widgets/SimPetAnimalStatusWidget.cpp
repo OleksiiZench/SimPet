@@ -11,7 +11,6 @@ void USimPetAnimalStatusWidget::NativeConstruct()
 	
 	SetDirtyIconVisible(false);
 	SetHungryIconVisible(false);
-	SetSadIconVisible(false);
 }
 
 void USimPetAnimalStatusWidget::SetDirtyIconVisible(bool bVisible)
@@ -26,13 +25,6 @@ void USimPetAnimalStatusWidget::SetHungryIconVisible(bool bVisible)
 	ESlateVisibility Visibility = GetVisibilityFromBool(bVisible);
 	
 	HungryIcon->SetVisibility(Visibility);
-}
-
-void USimPetAnimalStatusWidget::SetSadIconVisible(bool bVisible)
-{
-	ESlateVisibility Visibility = GetVisibilityFromBool(bVisible);
-	
-	SadIcon->SetVisibility(Visibility);
 }
 
 ESlateVisibility USimPetAnimalStatusWidget::GetVisibilityFromBool(bool bVisible) const

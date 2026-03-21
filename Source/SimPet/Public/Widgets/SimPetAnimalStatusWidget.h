@@ -22,7 +22,6 @@ public:
 	
 	void SetDirtyIconVisible(bool bVisible);
 	void SetHungryIconVisible(bool bVisible);
-	void SetSadIconVisible(bool bVisible);
 	
 protected:
 	UPROPERTY(meta = (BindWidget))
@@ -30,9 +29,6 @@ protected:
 	
 	UPROPERTY(meta = (BindWidget))
 	UImage *HungryIcon;
-	
-	UPROPERTY(meta = (BindWidget))
-	UImage *SadIcon;
 	
 	ESlateVisibility GetVisibilityFromBool(bool bVisible) const;
 };

@@ -272,9 +272,6 @@ void ASimPetAnimal::UpdateAnimalState()
 			AnimalState = ESimPetAnimalState::Tired;
 			
 			if (AnimalStatusWidget)
-				AnimalStatusWidget->SetSadIconVisible(true);
-			
-			if (AnimalStatusWidget)
 				AnimalStatusWidget->SetHungryIconVisible(true);
 			
 			Debug::Print("Animal state changed to Tired");
