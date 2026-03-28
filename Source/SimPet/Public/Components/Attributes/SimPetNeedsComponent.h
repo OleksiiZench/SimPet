@@ -35,50 +35,54 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "SimPet|Needs|Events")
 	FOnHappyTickSignature OnHappyTick;
 	
+	ESimPetAnimalState GetAnimalState();
+	
 	void StartNeedsTimer();
 	void StopNeedsTimer();
 	
-	ESimPetAnimalState GetAnimalState();
+	void Feed();
+	void Wash();
+	
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Config")
 	float SecondsPerGameHour;
 	
-	UPROPERTY(VisibleAnywhere, /*BlueprintReadWrite,*/ Category = "SimPet|State")
+	UPROPERTY(VisibleAnywhere, Category = "SimPet|State")
 	bool bNeedsCleaning;
 	
-	UPROPERTY(VisibleAnywhere, /*BlueprintReadWrite,*/ Category = "SimPet|State")
+	UPROPERTY(VisibleAnywhere, Category = "SimPet|State")
 	bool bNeedsFeed;
 
-	UPROPERTY(VisibleAnywhere, /*BlueprintReadWrite,*/ Category = "SimPet|State")
-	int32 MealPerDay;  // Скільки разів за день тварина поїла
-
-	UPROPERTY(VisibleAnywhere, /*BlueprintReadWrite,*/ Category = "SimPet|State")
+	UPROPERTY(VisibleAnywhere, Category = "SimPet|State")
 	float TimeSinceLastMeal;  // Час з останнього харчування
 
-	UPROPERTY(VisibleAnywhere, /*BlueprintReadWrite,*/ Category = "SimPet|State")
+	UPROPERTY(VisibleAnywhere, Category = "SimPet|State")
 	float TimeSinceLastClean;  // Час з останнього прибирання
 
-	UPROPERTY(EditDefaultsOnly, /*BlueprintReadWrite,*/ Category = "SimPet|State")
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|State")
 	ESimPetAnimalState AnimalState;
 	
-	UPROPERTY(EditDefaultsOnly, /*BlueprintReadOnly,*/ Category = "SimPet|Config")
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Config")
 	float HungryThresholdHours;
 
-	UPROPERTY(EditDefaultsOnly, /*BlueprintReadOnly,*/ Category = "SimPet|Config")
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Config")
 	float DeathThresholdHours;
 
-	UPROPERTY(EditDefaultsOnly, /*BlueprintReadOnly,*/ Category = "SimPet|Config")
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Config")
 	float DirtyThresholdHours;
 	
 	FTimerHandle NeedsTimerHandle;
 	
-	void Feed();
-	void Wash();
+	void OnNeedsTick();
+	
+	void CheckPhysicalCharacterState();
+	
 	void Die();
 	void BecomeDirty();
-	void OnMetabolismTick();
-	void CheckPhysicalAnimalState();
-	void UpdateAnimalState();
+	void BecomeHungry();
 	
-	void OnNeedsTick();
+	void TryEnterHappyState();
+	void EnterHappyState();
+	void EnterTiredState();
+	void EnterDeadState();
 };

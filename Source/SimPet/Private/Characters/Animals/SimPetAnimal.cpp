@@ -17,7 +17,7 @@ ASimPetAnimal::ASimPetAnimal()
 	// 1. AI
 	bUseCustomHomeLocation = false;
 	
-	// 4. BodyParts
+	// 2. BodyParts
 	EyesCount = 0;
 	LegsCount = 0;
 	LegLiftAngle = 45.0f;
@@ -41,6 +41,7 @@ void ASimPetAnimal::BeginPlay()
 	
 	CacheAnimalStatusWidget();
 	
+	BindNeedsEvents();
 	NeedsComponent->StartNeedsTimer();
 }
 
@@ -183,8 +184,44 @@ void ASimPetAnimal::CacheAnimalStatusWidget()
 	}
 }
 
+void ASimPetAnimal::BindNeedsEvents()
+{
+	NeedsComponent->OnHappyTick.AddDynamic(this, &ASimPetAnimal::HandleHappyTick);
+	NeedsComponent->OnDied.AddDynamic(this, &ASimPetAnimal::HandleDied);
+	NeedsComponent->OnGotDirty.AddDynamic(this, &ASimPetAnimal::HandleGotDirty);
+	NeedsComponent->OnGotHungry.AddDynamic(this, &ASimPetAnimal::HandleGotHungry);
+}
+
+void ASimPetAnimal::HandleHappyTick()
+{
+	GeneratePointsIfAnimalIsHappy();
+}
+
+void ASimPetAnimal::HandleDied()
+{
+	GeneratePenaltyPointsWhenAnimalDied();
+	
+	// Також звідси буде йти логіка регдолу, знищення обєкту тварини і тд...
+}
+
+void ASimPetAnimal::HandleGotDirty()
+{
+	if (AnimalStatusWidget)
+		AnimalStatusWidget->SetDirtyIconVisible(true);
+}
+
+void ASimPetAnimal::HandleGotHungry()
+{
+	if (AnimalStatusWidget)
+		AnimalStatusWidget->SetHungryIconVisible(true);
+}
+
 void ASimPetAnimal::GeneratePointsIfAnimalIsHappy()
 {
-	if (/*AnimalState == ESimPetAnimalState::Happy*/false)  // Це буде реагування на бродкаст з SimPetNeedsComponet OnHappyTick
-		PointsTransactionComponent->GeneratePassivePoints();
+	PointsTransactionComponent->GeneratePassivePoints();
+}
+
+void ASimPetAnimal::GeneratePenaltyPointsWhenAnimalDied()
+{
+	PointsTransactionComponent->GeneratePenaltyPoints();
 }

@@ -11,14 +11,18 @@ USimPetNeedsComponent::USimPetNeedsComponent()
 	
 	bNeedsCleaning = false;
 	bNeedsFeed = false;
-	MealPerDay = 0;
 	TimeSinceLastMeal = 0.0f;
 	TimeSinceLastClean = 0.0f;
 	AnimalState = ESimPetAnimalState::Happy;
 
 	HungryThresholdHours = 8.0f;
 	DeathThresholdHours = 24.0f;
-	DirtyThresholdHours = 24.0f;
+	DirtyThresholdHours = 12.0f;
+}
+
+ESimPetAnimalState USimPetNeedsComponent::GetAnimalState()
+{
+	return AnimalState;
 }
 
 void USimPetNeedsComponent::StartNeedsTimer()
@@ -31,72 +35,47 @@ void USimPetNeedsComponent::StopNeedsTimer()
 	GetWorld()->GetTimerManager().ClearTimer(NeedsTimerHandle);
 }
 
-ESimPetAnimalState USimPetNeedsComponent::GetAnimalState()
-{
-	return AnimalState;
-}
-
 void USimPetNeedsComponent::Feed()
 {
-	TimeSinceLastMeal = 0.0f;
-	MealPerDay++;
+	if (AnimalState == ESimPetAnimalState::Dead)
+		return;
 	
+	TimeSinceLastMeal = 0.0f;	
 	bNeedsFeed = false;
 
 	Debug::Print("Character ate.");
 
-	UpdateAnimalState();
+	TryEnterHappyState();
 }
 
 void USimPetNeedsComponent::Wash()
 {
+	if (AnimalState == ESimPetAnimalState::Dead)
+		return;
+	
 	TimeSinceLastClean = 0.0f;
 	bNeedsCleaning = false;
 
 	Debug::Print("Character is clean now!");
 
-	UpdateAnimalState();
+	TryEnterHappyState();
 }
 
-void USimPetNeedsComponent::Die()
-{
-	AnimalState = ESimPetAnimalState::Dead;
-	// PointsTransactionComponent->GeneratePenaltyPoints();  // - Мабуть це буде реагування на делегат OnDied в SimPetAnimal	
-	StopNeedsTimer();
-
-	OnDied.Broadcast();  // ?????????
-}
-
-void USimPetNeedsComponent::BecomeDirty()
-{
-	bNeedsCleaning = true;
-	
-	// AnimalStatusWidget->SetDirtyIconVisible(true);  // - Мабуть це буде реагування на делегат OnGotDirty в SimPetAnimal	
-
-	OnGotDirty.Broadcast();
-	
-	Debug::Print(TEXT("Character got dirty"));
-}
-
-void USimPetNeedsComponent::OnMetabolismTick()
+void USimPetNeedsComponent::OnNeedsTick()
 {
 	if (AnimalState == ESimPetAnimalState::Dead)
-	{
 		return;
-	}
 
 	TimeSinceLastMeal++;
 	TimeSinceLastClean++;
 
-	CheckPhysicalAnimalState();
-	UpdateAnimalState();
+	CheckPhysicalCharacterState();
 	
-	OnHappyTick.Broadcast();
-	
-	// GeneratePointsIfAnimalIsHappy();  // - Мабуть це буде реагування на делегат OnGotDirty в SimPetAnimal
+	if (AnimalState == ESimPetAnimalState::Happy)
+		OnHappyTick.Broadcast();
 }
 
-void USimPetNeedsComponent::CheckPhysicalAnimalState()
+void USimPetNeedsComponent::CheckPhysicalCharacterState()
 {
 	if (TimeSinceLastMeal >= DeathThresholdHours)
 	{
@@ -104,37 +83,82 @@ void USimPetNeedsComponent::CheckPhysicalAnimalState()
 		return;
 	}
 	
-	if (!bNeedsCleaning && TimeSinceLastClean >= DirtyThresholdHours)
-		BecomeDirty();
-}
-
-void USimPetNeedsComponent::UpdateAnimalState()
-{
-	if (AnimalState == ESimPetAnimalState::Dead)
-		return;
-	
-	if (TimeSinceLastMeal >= HungryThresholdHours || bNeedsCleaning)
+	if (!bNeedsFeed && TimeSinceLastMeal >= HungryThresholdHours)
 	{
-		if (AnimalState != ESimPetAnimalState::Tired)
-		{
-			AnimalState = ESimPetAnimalState::Tired;
-			
-			// if (AnimalStatusWidget)
-			// 	AnimalStatusWidget->SetHungryIconVisible(true);  // - мабуть це буде варто винести в окремий метод типу 'Got Hungry' і звідти бродкастити делегат OnGotHungry що тварина проголодалася і реагувати на нього в SimPetAnimal для зміни іконок
-			
-			Debug::Print("Character state changed to Tired");
-		}
-		
-		return;
+		BecomeHungry();
 	}
 	
-	if (AnimalState != ESimPetAnimalState::Happy)
+	if (!bNeedsCleaning && TimeSinceLastClean >= DirtyThresholdHours)
+	{
+		BecomeDirty();
+	}
+}
+
+void USimPetNeedsComponent::Die()
+{
+	EnterDeadState();
+	
+	StopNeedsTimer();
+
+	OnDied.Broadcast();
+}
+
+void USimPetNeedsComponent::BecomeDirty()
+{
+	bNeedsCleaning = true;
+	
+	Debug::Print(TEXT("Character got dirty"));
+	
+	OnGotDirty.Broadcast();
+	
+	EnterTiredState();
+}
+
+void USimPetNeedsComponent::BecomeHungry()
+{
+	bNeedsFeed = true;
+	
+	Debug::Print(TEXT("Character is hungry"));
+	
+	OnGotHungry.Broadcast();
+	
+	EnterTiredState();
+}
+
+void USimPetNeedsComponent::TryEnterHappyState()
+{
+	if (bNeedsFeed == true || bNeedsCleaning == true)
+		return;
+	
+	EnterHappyState();
+}
+
+void USimPetNeedsComponent::EnterHappyState()
+{
+	if (AnimalState == ESimPetAnimalState::Tired)
 	{
 		AnimalState = ESimPetAnimalState::Happy;
+		
 		Debug::Print("Character state changed to Happy");
 	}
 }
 
-void USimPetNeedsComponent::OnNeedsTick()
+void USimPetNeedsComponent::EnterTiredState()
 {
+	if (AnimalState == ESimPetAnimalState::Happy)
+	{
+		AnimalState = ESimPetAnimalState::Tired;
+		
+		Debug::Print("Character state changed to Tired");
+	}
+}
+
+void USimPetNeedsComponent::EnterDeadState()
+{
+	if (AnimalState == ESimPetAnimalState::Dead)
+	{
+		AnimalState = ESimPetAnimalState::Dead;
+		
+		Debug::Print("Character state changed to Dead");
+	}
 }

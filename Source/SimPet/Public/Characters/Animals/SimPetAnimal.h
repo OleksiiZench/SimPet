@@ -42,12 +42,6 @@ public:
 #pragma endregion
 	
 protected:
-#pragma region Config
-
-
-
-#pragma endregion
-
 #pragma region BodyParts
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|BodyParts")
 	UStaticMeshComponent *BodyMesh;
@@ -108,5 +102,20 @@ private:
 	void SetupComponents();
 	void CacheAnimalStatusWidget();
 	
+	void BindNeedsEvents();
+	
+	UFUNCTION()
+	void HandleHappyTick();
+	
+	UFUNCTION()
+	void HandleDied();
+	
+	UFUNCTION()
+	void HandleGotDirty();
+	
+	UFUNCTION()
+	void HandleGotHungry();
+	
 	void GeneratePointsIfAnimalIsHappy();
+	void GeneratePenaltyPointsWhenAnimalDied();
 };
