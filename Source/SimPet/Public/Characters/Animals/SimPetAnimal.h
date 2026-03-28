@@ -27,9 +27,6 @@ public:
 	virtual void OnConstruction(const FTransform &Transform) override;
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-
-	void Feed();
-	void Wash();
 	
 	ESimPetAnimalState GetAnimalState();
 	
@@ -45,38 +42,10 @@ public:
 #pragma endregion
 	
 protected:
-
-#pragma region State
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|State")
-	bool bNeedsCleaning;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|State")
-	bool bNeedsFeed;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|State")
-	int32 MealPerDay;  // Скільки разів за день тварина поїла
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|State")
-	float TimeSinceLastMeal;  // Час з останнього харчування
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|State")
-	float TimeSinceLastClean;  // Час з останнього прибирання
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "SimPet|State")
-	ESimPetAnimalState AnimalState;
-#pragma endregion
-
 #pragma region Config
 
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|Config")
-	float HungryThresholdHours;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|Config")
-	float DeathThresholdHours;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|Config")
-	float DirtyThresholdHours;
 #pragma endregion
 
 #pragma region BodyParts
@@ -135,15 +104,9 @@ private:
 	
 	USimPetAnimalStatusWidget *AnimalStatusWidget;
 	
-	void Die();
-	void BecomeDirty();
-	
 	void InitializeBaseBody();
 	void SetupComponents();
 	void CacheAnimalStatusWidget();
 	
-	void OnMetabolismTick();
-	void CheckPhysicalAnimalState();
-	void UpdateAnimalState();
 	void GeneratePointsIfAnimalIsHappy();
 };

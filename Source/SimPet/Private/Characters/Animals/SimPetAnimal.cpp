@@ -3,7 +3,6 @@
 
 #include "Characters/Animals/SimPetAnimal.h"
 
-#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/WidgetComponent.h"
 
@@ -11,27 +10,12 @@
 #include "Widgets/SimPetAnimalStatusWidget.h"
 #include "Components/Attributes/SimPetNeedsComponent.h"
 
-#include "SimPetDebugHelper.h"
-
 ASimPetAnimal::ASimPetAnimal()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
 	// 1. AI
 	bUseCustomHomeLocation = false;
-	
-	// 2. State
-	bNeedsCleaning = false;
-	bNeedsFeed = false;
-	MealPerDay = 0;
-	TimeSinceLastMeal = 0.0f;
-	TimeSinceLastClean = 0.0f;
-	AnimalState = ESimPetAnimalState::Happy;
-
-	// 3. Config
-	HungryThresholdHours = 8.0f;
-	DeathThresholdHours = 24.0f;
-	DirtyThresholdHours = 24.0f;
 	
 	// 4. BodyParts
 	EyesCount = 0;
@@ -67,31 +51,9 @@ void ASimPetAnimal::Tick(float DeltaTime)
 	AnimateLegs(DeltaTime, GetGameTimeSinceCreation());
 }
 
-void ASimPetAnimal::Feed()
-{
-	TimeSinceLastMeal = 0.0f;
-	MealPerDay++;
-	
-	bNeedsFeed = false;
-
-	Debug::Print("Animal ate.");
-
-	UpdateAnimalState();
-}
-
-void ASimPetAnimal::Wash()
-{
-	TimeSinceLastClean = 0.0f;
-	bNeedsCleaning = false;
-
-	Debug::Print("Animal is clean now!");
-
-	UpdateAnimalState();
-}
-
 ESimPetAnimalState ASimPetAnimal::GetAnimalState()
 {
-	return AnimalState;
+	return NeedsComponent->GetAnimalState();
 }
 
 void ASimPetAnimal::RebuildBodyParts()
@@ -186,30 +148,6 @@ void ASimPetAnimal::AnimateLegs(float DeltaTime, float CurrentTime)
 	}
 }
 
-void ASimPetAnimal::Die()
-{
-	AnimalState = ESimPetAnimalState::Dead;
-	PointsTransactionComponent->GeneratePenaltyPoints();
-	
-	NeedsComponent->StopNeedsTimer();
-
-	Debug::Print(TEXT("The animal died"));
-
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
-	GetMesh()->SetSimulatePhysics(true);
-}
-
-void ASimPetAnimal::BecomeDirty()
-{
-	bNeedsCleaning = true;
-	
-	AnimalStatusWidget->SetDirtyIconVisible(true);
-
-	Debug::Print(TEXT("The animal got dirty"));
-}
-
 void ASimPetAnimal::InitializeBaseBody()
 {
 	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BodyMesh"));
@@ -245,63 +183,8 @@ void ASimPetAnimal::CacheAnimalStatusWidget()
 	}
 }
 
-void ASimPetAnimal::OnMetabolismTick()
-{
-	if (AnimalState == ESimPetAnimalState::Dead)
-	{
-		return;
-	}
-
-	TimeSinceLastMeal++;
-	TimeSinceLastClean++;
-
-	CheckPhysicalAnimalState();
-	UpdateAnimalState();
-	
-	GeneratePointsIfAnimalIsHappy();
-}
-
-void ASimPetAnimal::CheckPhysicalAnimalState()
-{
-	if (TimeSinceLastMeal >= DeathThresholdHours)
-	{
-		Die();
-		return;
-	}
-	
-	if (!bNeedsCleaning && TimeSinceLastClean >= DirtyThresholdHours)
-		BecomeDirty();
-}
-
-void ASimPetAnimal::UpdateAnimalState()
-{
-	if (AnimalState == ESimPetAnimalState::Dead)
-		return;
-	
-	if (TimeSinceLastMeal >= HungryThresholdHours || bNeedsCleaning)
-	{
-		if (AnimalState != ESimPetAnimalState::Tired)
-		{
-			AnimalState = ESimPetAnimalState::Tired;
-			
-			if (AnimalStatusWidget)
-				AnimalStatusWidget->SetHungryIconVisible(true);
-			
-			Debug::Print("Animal state changed to Tired");
-		}
-		
-		return;
-	}
-	
-	if (AnimalState != ESimPetAnimalState::Happy)
-	{
-		AnimalState = ESimPetAnimalState::Happy;
-		Debug::Print("Animal state changed to Happy");
-	}
-}
-
 void ASimPetAnimal::GeneratePointsIfAnimalIsHappy()
 {
-	if (AnimalState == ESimPetAnimalState::Happy)
+	if (/*AnimalState == ESimPetAnimalState::Happy*/false)  // Це буде реагування на бродкаст з SimPetNeedsComponet OnHappyTick
 		PointsTransactionComponent->GeneratePassivePoints();
 }
