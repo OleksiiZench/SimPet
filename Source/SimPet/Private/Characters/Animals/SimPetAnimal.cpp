@@ -9,6 +9,7 @@
 
 #include "Components/SimPetPointsTransactionComponent.h"
 #include "Widgets/SimPetAnimalStatusWidget.h"
+#include "Components/Attributes/SimPetNeedsComponent.h"
 
 #include "SimPetDebugHelper.h"
 
@@ -28,7 +29,6 @@ ASimPetAnimal::ASimPetAnimal()
 	AnimalState = ESimPetAnimalState::Happy;
 
 	// 3. Config
-	GameSpeed = 0.5f;
 	HungryThresholdHours = 8.0f;
 	DeathThresholdHours = 24.0f;
 	DirtyThresholdHours = 24.0f;
@@ -57,7 +57,7 @@ void ASimPetAnimal::BeginPlay()
 	
 	CacheAnimalStatusWidget();
 	
-	StartMetabolismTimer();
+	NeedsComponent->StartNeedsTimer();
 }
 
 void ASimPetAnimal::Tick(float DeltaTime)
@@ -191,7 +191,7 @@ void ASimPetAnimal::Die()
 	AnimalState = ESimPetAnimalState::Dead;
 	PointsTransactionComponent->GeneratePenaltyPoints();
 	
-	StopMetabolismTimer();
+	NeedsComponent->StopNeedsTimer();
 
 	Debug::Print(TEXT("The animal died"));
 
@@ -226,20 +226,22 @@ void ASimPetAnimal::SetupComponents()
 {
 	MovementComponent = GetCharacterMovement();
 	
+	NeedsComponent = CreateDefaultSubobject<USimPetNeedsComponent>(TEXT("NeedsComponent"));
+	
 	PointsTransactionComponent = CreateDefaultSubobject<USimPetPointsTransactionComponent>(TEXT("PointsTransactionComponent"));
 	
-	StatusWidhetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("StatusWidhetComponent"));
-	StatusWidhetComponent->SetupAttachment(GetRootComponent());
-	StatusWidhetComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f));
-	StatusWidhetComponent->SetWidgetSpace(EWidgetSpace::Screen);
-	StatusWidhetComponent->SetDrawSize(FVector2D(150.0f, 50.0f));
+	StatusWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("StatusWidgetComponent"));
+	StatusWidgetComponent->SetupAttachment(GetRootComponent());
+	StatusWidgetComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f));
+	StatusWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+	StatusWidgetComponent->SetDrawSize(FVector2D(150.0f, 50.0f));
 }
 
 void ASimPetAnimal::CacheAnimalStatusWidget()
 {
 	if (!AnimalStatusWidget)
 	{
-		AnimalStatusWidget = Cast<USimPetAnimalStatusWidget>(StatusWidhetComponent->GetUserWidgetObject());
+		AnimalStatusWidget = Cast<USimPetAnimalStatusWidget>(StatusWidgetComponent->GetUserWidgetObject());
 	}
 }
 
@@ -302,14 +304,4 @@ void ASimPetAnimal::GeneratePointsIfAnimalIsHappy()
 {
 	if (AnimalState == ESimPetAnimalState::Happy)
 		PointsTransactionComponent->GeneratePassivePoints();
-}
-
-void ASimPetAnimal::StartMetabolismTimer()
-{
-	GetWorld()->GetTimerManager().SetTimer(MetabolismTimerHandle, this, &ASimPetAnimal::OnMetabolismTick, GameSpeed, true);
-}
-
-void ASimPetAnimal::StopMetabolismTimer()
-{
-	GetWorld()->GetTimerManager().ClearTimer(MetabolismTimerHandle);
 }

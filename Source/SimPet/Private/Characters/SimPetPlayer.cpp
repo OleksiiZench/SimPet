@@ -10,7 +10,6 @@
 #include "DataAsset/Input/SimPetInputConfig.h"
 #include "SimPetGameplayTags.h"
 #include "Interfaces/SimPetInteractable.h"
-#include "Controllers/SimPetPlayerController.h"
 #include "Components/SimPetInteractionComponent.h"
 #include "Components/SimPetCameraComponent.h"
 #include "Components/Attributes/SimPetStaminaComponent.h"

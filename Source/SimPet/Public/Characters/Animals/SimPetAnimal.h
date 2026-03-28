@@ -11,6 +11,7 @@ class UBehaviorTree;
 class USimPetPointsTransactionComponent;
 class UWidgetComponent;
 class USimPetAnimalStatusWidget;
+class USimPetNeedsComponent;
 
 /**
  * 
@@ -66,8 +67,7 @@ protected:
 #pragma endregion
 
 #pragma region Config
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|Config")
-	float GameSpeed;  // За скільки секунд проходить ігрова година
+
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|Config")
 	float HungryThresholdHours;
@@ -124,12 +124,15 @@ protected:
 	UCharacterMovementComponent *MovementComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SimPet|UI")
-	UWidgetComponent *StatusWidhetComponent;
+	UWidgetComponent *StatusWidgetComponent;
 	
 private:
-	FTimerHandle MetabolismTimerHandle;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	USimPetNeedsComponent *NeedsComponent;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USimPetPointsTransactionComponent *PointsTransactionComponent;
+	
 	USimPetAnimalStatusWidget *AnimalStatusWidget;
 	
 	void Die();
@@ -143,6 +146,4 @@ private:
 	void CheckPhysicalAnimalState();
 	void UpdateAnimalState();
 	void GeneratePointsIfAnimalIsHappy();
-	void StartMetabolismTimer();
-	void StopMetabolismTimer();
 };
