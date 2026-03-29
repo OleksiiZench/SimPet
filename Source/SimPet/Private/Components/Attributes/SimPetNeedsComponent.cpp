@@ -7,7 +7,7 @@
 
 USimPetNeedsComponent::USimPetNeedsComponent()
 {
-	SecondsPerGameHour = 0.5f;
+	SecondsPerGameHour = 1.0f;
 	
 	bNeedsCleaning = false;
 	bNeedsFeed = false;

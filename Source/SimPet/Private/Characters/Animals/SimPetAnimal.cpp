@@ -169,11 +169,11 @@ void ASimPetAnimal::SetupComponents()
 	
 	PointsTransactionComponent = CreateDefaultSubobject<USimPetPointsTransactionComponent>(TEXT("PointsTransactionComponent"));
 	
-	StatusWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("StatusWidgetComponent"));
+	StatusWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("StatusWidgetComp"));
 	StatusWidgetComponent->SetupAttachment(GetRootComponent());
-	StatusWidgetComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f));
+	StatusWidgetComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 	StatusWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
-	StatusWidgetComponent->SetDrawSize(FVector2D(150.0f, 50.0f));
+	StatusWidgetComponent->SetDrawSize(FVector2D(200.0f, 100.0f));
 }
 
 void ASimPetAnimal::CacheAnimalStatusWidget()

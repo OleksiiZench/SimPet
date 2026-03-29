@@ -9,8 +9,8 @@ void USimPetAnimalStatusWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 	
-	SetDirtyIconVisible(false);
-	SetHungryIconVisible(false);
+	SetDirtyIconVisible(true);
+	SetHungryIconVisible(true);
 }
 
 void USimPetAnimalStatusWidget::SetDirtyIconVisible(bool bVisible)
