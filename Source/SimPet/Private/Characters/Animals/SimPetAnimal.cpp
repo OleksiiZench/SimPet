@@ -4,11 +4,13 @@
 #include "Characters/Animals/SimPetAnimal.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Components/WidgetComponent.h"
 
 #include "Components/SimPetPointsTransactionComponent.h"
 #include "Widgets/SimPetAnimalStatusWidget.h"
 #include "Components/Attributes/SimPetNeedsComponent.h"
+#include "Components/Widgets/SimPetAutoHidingWidgetComponent.h"
+
+#include "SimPetDebugHelper.h"
 
 ASimPetAnimal::ASimPetAnimal()
 {
@@ -169,7 +171,7 @@ void ASimPetAnimal::SetupComponents()
 	
 	PointsTransactionComponent = CreateDefaultSubobject<USimPetPointsTransactionComponent>(TEXT("PointsTransactionComponent"));
 	
-	StatusWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("StatusWidgetComp"));
+	StatusWidgetComponent = CreateDefaultSubobject<USimPetAutoHidingWidgetComponent>(TEXT("StatusWidgetComponent"));
 	StatusWidgetComponent->SetupAttachment(GetRootComponent());
 	StatusWidgetComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 	StatusWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
@@ -178,7 +180,7 @@ void ASimPetAnimal::SetupComponents()
 
 void ASimPetAnimal::CacheAnimalStatusWidget()
 {
-	if (!AnimalStatusWidget)
+	if (!AnimalStatusWidget && StatusWidgetComponent)
 	{
 		AnimalStatusWidget = Cast<USimPetAnimalStatusWidget>(StatusWidgetComponent->GetUserWidgetObject());
 	}

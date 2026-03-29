@@ -12,6 +12,7 @@ class USimPetPointsTransactionComponent;
 class UWidgetComponent;
 class USimPetAnimalStatusWidget;
 class USimPetNeedsComponent;
+class USimPetAutoHidingWidgetComponent;
 
 /**
  * 
@@ -86,8 +87,8 @@ protected:
 	
 	UCharacterMovementComponent *MovementComponent;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SimPet|UI")
-	UWidgetComponent *StatusWidgetComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|UI")
+	USimPetAutoHidingWidgetComponent *StatusWidgetComponent;
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
