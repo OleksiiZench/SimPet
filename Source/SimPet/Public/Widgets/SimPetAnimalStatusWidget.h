@@ -18,7 +18,7 @@ class SIMPET_API USimPetAnimalStatusWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	virtual void NativeConstruct() override;
+	virtual void NativeOnInitialized() override;
 	
 	void SetDirtyIconVisible(bool bVisible);
 	void SetHungryIconVisible(bool bVisible);

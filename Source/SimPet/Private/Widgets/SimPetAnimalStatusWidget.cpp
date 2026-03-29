@@ -5,16 +5,16 @@
 
 #include "Components/Image.h"
 
-void USimPetAnimalStatusWidget::NativeConstruct()
+void USimPetAnimalStatusWidget::NativeOnInitialized()
 {
-	Super::NativeConstruct();
+	Super::NativeOnInitialized();
 	
-	SetDirtyIconVisible(true);
-	SetHungryIconVisible(true);
+	SetHungryIconVisible(false);
+	SetDirtyIconVisible(false);
 }
 
 void USimPetAnimalStatusWidget::SetDirtyIconVisible(bool bVisible)
-{
+{	
 	ESlateVisibility Visibility = GetVisibilityFromBool(bVisible);
 	
 	DirtyIcon->SetVisibility(Visibility);

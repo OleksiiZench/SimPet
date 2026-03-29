@@ -14,4 +14,22 @@ UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class SIMPET_API USimPetAutoHidingWidgetComponent : public UWidgetComponent
 {
 	GENERATED_BODY()
+	
+public:
+	USimPetAutoHidingWidgetComponent();
+	
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	
+private:
+	float MaxVisibleDistance;
+	
+	float SecondsPerCheck;
+	
+	FTimerHandle CheckDistanceTimerHandle;
+	
+	void StartCheckDistanceTimer();
+	void StopCheckDistanceTimer();
+	
+	void CheckDistanceToPlayer();
 };

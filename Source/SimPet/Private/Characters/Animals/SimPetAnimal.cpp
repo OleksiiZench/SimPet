@@ -10,8 +10,6 @@
 #include "Components/Attributes/SimPetNeedsComponent.h"
 #include "Components/Widgets/SimPetAutoHidingWidgetComponent.h"
 
-#include "SimPetDebugHelper.h"
-
 ASimPetAnimal::ASimPetAnimal()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -180,7 +178,7 @@ void ASimPetAnimal::SetupComponents()
 
 void ASimPetAnimal::CacheAnimalStatusWidget()
 {
-	if (!AnimalStatusWidget && StatusWidgetComponent)
+	if (!AnimalStatusWidget)
 	{
 		AnimalStatusWidget = Cast<USimPetAnimalStatusWidget>(StatusWidgetComponent->GetUserWidgetObject());
 	}
