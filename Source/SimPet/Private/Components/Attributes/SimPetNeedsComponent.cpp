@@ -105,6 +105,9 @@ void USimPetNeedsComponent::Die()
 
 void USimPetNeedsComponent::BecomeDirty()
 {
+	if (bNeedsCleaning == true)
+		return;
+	
 	bNeedsCleaning = true;
 	
 	Debug::Print(TEXT("Character got dirty"));

@@ -13,6 +13,7 @@ class UWidgetComponent;
 class USimPetAnimalStatusWidget;
 class USimPetNeedsComponent;
 class USimPetAutoHidingWidgetComponent;
+class ASimPetAnimalWaste;
 
 /**
  * 
@@ -87,6 +88,9 @@ protected:
 	
 	UCharacterMovementComponent *MovementComponent;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Needs")
+	TSubclassOf<ASimPetAnimalWaste> WasteClass;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|UI")
 	USimPetAutoHidingWidgetComponent *StatusWidgetComponent;
 	
@@ -105,6 +109,9 @@ private:
 	
 	void BindNeedsEvents();
 	
+	void SpawnAnimalWaste();
+	FVector GetLocationAboveGround();
+	
 	UFUNCTION()
 	void HandleHappyTick();
 	
@@ -116,6 +123,11 @@ private:
 	
 	UFUNCTION()
 	void HandleGotHungry();
+	
+	UFUNCTION()
+	void HandleWasteCleaned();
+	
+	void CleanAnimal();
 	
 	void GeneratePointsIfAnimalIsHappy();
 	void GeneratePenaltyPointsWhenAnimalDied();

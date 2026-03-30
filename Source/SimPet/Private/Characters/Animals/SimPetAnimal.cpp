@@ -9,6 +9,9 @@
 #include "Widgets/SimPetAnimalStatusWidget.h"
 #include "Components/Attributes/SimPetNeedsComponent.h"
 #include "Components/Widgets/SimPetAutoHidingWidgetComponent.h"
+#include "Items/SimPetAnimalWaste.h"
+
+#include "SimPetDebugHelper.h"
 
 ASimPetAnimal::ASimPetAnimal()
 {
@@ -192,6 +195,49 @@ void ASimPetAnimal::BindNeedsEvents()
 	NeedsComponent->OnGotHungry.AddDynamic(this, &ASimPetAnimal::HandleGotHungry);
 }
 
+void ASimPetAnimal::SpawnAnimalWaste()
+{
+	if (!WasteClass && !GetWorld())
+		return;
+	
+	FVector SpawnLocation = GetLocationAboveGround();
+	
+	float SpawnLocationZ = SpawnLocation.Z;
+	
+	Debug::Print(TEXT("SpawnLocation"), SpawnLocationZ);
+	
+	ASimPetAnimalWaste *SpawnedAnimalWaste = GetWorld()->SpawnActor<ASimPetAnimalWaste>(WasteClass, SpawnLocation, FRotator::ZeroRotator);
+
+	if (SpawnedAnimalWaste)
+	{
+		SpawnedAnimalWaste->OnWasteCleaned.AddDynamic(this, &ASimPetAnimal::HandleWasteCleaned);
+	}
+}
+
+FVector ASimPetAnimal::GetLocationAboveGround()
+{
+	FVector StartTraceLocation = GetActorLocation();
+	FVector EndTraceLocation = StartTraceLocation - FVector(0.0f, 0.0f, 500.0f);
+	
+	FHitResult HitResult;
+	FCollisionQueryParams TraceParams(FName(TEXT("WasteSpawnTrace")), true, this);
+	
+	bool bHitGround = GetWorld()->LineTraceSingleByChannel(HitResult, StartTraceLocation, EndTraceLocation, ECollisionChannel::ECC_Visibility);
+	
+	FVector SpawnLocation;
+	
+	if (bHitGround)
+	{
+		SpawnLocation = HitResult.ImpactPoint + FVector(0.0f, 0.0f, 3.0f);
+	}
+	else
+	{
+		SpawnLocation = GetActorLocation();
+	}
+	
+	return SpawnLocation;
+}
+
 void ASimPetAnimal::HandleHappyTick()
 {
 	GeneratePointsIfAnimalIsHappy();
@@ -208,12 +254,30 @@ void ASimPetAnimal::HandleGotDirty()
 {
 	if (AnimalStatusWidget)
 		AnimalStatusWidget->SetDirtyIconVisible(true);
+	
+	SpawnAnimalWaste();
 }
 
 void ASimPetAnimal::HandleGotHungry()
 {
 	if (AnimalStatusWidget)
 		AnimalStatusWidget->SetHungryIconVisible(true);
+}
+
+void ASimPetAnimal::HandleWasteCleaned()
+{
+	CleanAnimal();
+}
+
+void ASimPetAnimal::CleanAnimal()
+{
+	if (NeedsComponent)
+	{
+		NeedsComponent->Wash();
+		
+		if (AnimalStatusWidget)
+			AnimalStatusWidget->SetDirtyIconVisible(false);
+	}
 }
 
 void ASimPetAnimal::GeneratePointsIfAnimalIsHappy()
