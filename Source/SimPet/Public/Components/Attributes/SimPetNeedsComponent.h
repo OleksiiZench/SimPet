@@ -23,29 +23,37 @@ class SIMPET_API USimPetNeedsComponent : public UActorComponent
 public:
 	USimPetNeedsComponent();
 	
-	UPROPERTY(BlueprintAssignable, Category = "SimPet|Needs|Events")
-	FOnGotHungrySignature OnGotHungry;
-	
-	UPROPERTY(BlueprintAssignable, Category = "SimPet|Needs|Events")
-	FOnGotDirtySignature OnGotDirty;
-	
-	UPROPERTY(BlueprintAssignable, Category = "SimPet|Needs|Events")
-	FOnDiedSignature OnDied;
-	
-	UPROPERTY(BlueprintAssignable, Category = "SimPet|Needs|Events")
-	FOnHappyTickSignature OnHappyTick;
+	virtual void BeginPlay() override;
 	
 	ESimPetAnimalState GetAnimalState();
-	
-	void StartNeedsTimer();
-	void StopNeedsTimer();
 	
 	void Feed();
 	void Wash();
 	
+	UPROPERTY()
+	FOnGotHungrySignature OnGotHungry;
+	
+	UPROPERTY()
+	FOnGotDirtySignature OnGotDirty;
+	
+	UPROPERTY()
+	FOnDiedSignature OnDied;
+	
+	UPROPERTY()
+	FOnHappyTickSignature OnHappyTick;
+	
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Config")
 	float SecondsPerGameHour;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Config")
+	float HungryThresholdHours;
+
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Config")
+	float DeathThresholdHours;
+
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Config")
+	float DirtyThresholdHours;
 	
 	UPROPERTY(VisibleAnywhere, Category = "SimPet|State")
 	bool bNeedsCleaning;
@@ -59,22 +67,14 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "SimPet|State")
 	float TimeSinceLastClean;  // Час з останнього прибирання
 
-	UPROPERTY(EditDefaultsOnly, Category = "SimPet|State")
+	UPROPERTY(VisibleAnywhere, Category = "SimPet|State")
 	ESimPetAnimalState AnimalState;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Config")
-	float HungryThresholdHours;
-
-	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Config")
-	float DeathThresholdHours;
-
-	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Config")
-	float DirtyThresholdHours;
 	
 	FTimerHandle NeedsTimerHandle;
 	
+	void StartNeedsTimer();
+	void StopNeedsTimer();
 	void OnNeedsTick();
-	
 	void CheckPhysicalCharacterState();
 	
 	void Die();

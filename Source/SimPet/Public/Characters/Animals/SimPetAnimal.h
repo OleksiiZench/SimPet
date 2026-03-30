@@ -33,60 +33,57 @@ public:
 	ESimPetAnimalState GetAnimalState();
 	
 #pragma region AI
-	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|AI")
 	UBehaviorTree *BehaviorTreeAsset;
 	
-	UPROPERTY(EditInstanceOnly, Category = "AI")
+	UPROPERTY(EditInstanceOnly, Category = "SimPet|AI")
 	bool bUseCustomHomeLocation;
 	
-	UPROPERTY(EditInstanceOnly, Category = "AI",  meta = (EditCondition = "bUseCustomHomeLocation"))
+	UPROPERTY(EditInstanceOnly, Category = "SimPet|AI",  meta = (EditCondition = "bUseCustomHomeLocation"))
 	FVector CustomHomeLocation;
 #pragma endregion
 	
 protected:
 #pragma region BodyParts
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|BodyParts")
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|BodyParts")
 	UStaticMeshComponent *BodyMesh;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|BodyParts")
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|BodyParts")
 	UStaticMeshComponent *HeadMesh;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|BodyParts")
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|BodyParts")
 	UStaticMeshComponent *TailMesh;
-
-	/* Налаштування динамічних частини тіла */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|BodyParts")
-	TArray<UStaticMeshComponent *> SpawnedEyes;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|BodyParts")
-	TArray<UStaticMeshComponent *> SpawnedLegs;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|BodyParts", meta = (ClampMin = "0", ClampMax = "4", UIMin = "0", UIMax = "4"))
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|BodyParts", meta = (ClampMin = "0", ClampMax = "4", UIMin = "0", UIMax = "4"))
 	int32 EyesCount;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|BodyParts", meta = (ClampMin = "0", ClampMax = "4", UIMin = "0", UIMax = "4"))
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|BodyParts", meta = (ClampMin = "0", ClampMax = "4", UIMin = "0", UIMax = "4"))
 	int32 LegsCount;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|BodyParts")
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|BodyParts")
 	UStaticMesh * EyesAsset;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|BodyParts")
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|BodyParts")
 	UStaticMesh * LegsAsset;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|BodyParts")
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|BodyParts")
 	TArray<FName> EyesSockets;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|BodyParts")
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|BodyParts")
 	TArray<FName> LegsSockets;
+	
+	UPROPERTY()
+	TArray<UStaticMeshComponent *> SpawnedEyes;
+
+	UPROPERTY()
+	TArray<UStaticMeshComponent *> SpawnedLegs;
 	
 	float LegLiftAngle;
 	
-	void RebuildBodyParts();
-	
 	virtual void AnimateLegs(float DeltaTime, float CurrentTime);
-#pragma endregion
 	
-	UCharacterMovementComponent *MovementComponent;
+	void RebuildBodyParts();
+#pragma endregion
 	
 	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Needs")
 	TSubclassOf<ASimPetAnimalWaste> WasteClass;
@@ -94,23 +91,17 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|UI")
 	USimPetAutoHidingWidgetComponent *StatusWidgetComponent;
 	
+	UPROPERTY()
+	UCharacterMovementComponent *MovementComponent;
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USimPetNeedsComponent *NeedsComponent;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 	USimPetPointsTransactionComponent *PointsTransactionComponent;
 	
 	USimPetAnimalStatusWidget *AnimalStatusWidget;
-	
-	void InitializeBaseBody();
-	void SetupComponents();
-	void CacheAnimalStatusWidget();
-	
-	void BindNeedsEvents();
-	
-	void SpawnAnimalWaste();
-	FVector GetLocationAboveGround();
 	
 	UFUNCTION()
 	void HandleHappyTick();
@@ -126,6 +117,14 @@ private:
 	
 	UFUNCTION()
 	void HandleWasteCleaned();
+	
+	void InitializeBaseBody();
+	void SetupComponents();
+	void CacheAnimalStatusWidget();
+	void BindNeedsEvents();
+	
+	void SpawnAnimalWaste();
+	FVector GetLocationAboveGround();
 	
 	void CleanAnimal();
 	

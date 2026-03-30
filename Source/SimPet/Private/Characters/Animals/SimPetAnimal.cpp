@@ -45,7 +45,6 @@ void ASimPetAnimal::BeginPlay()
 	CacheAnimalStatusWidget();
 	
 	BindNeedsEvents();
-	NeedsComponent->StartNeedsTimer();
 }
 
 void ASimPetAnimal::Tick(float DeltaTime)
@@ -58,6 +57,41 @@ void ASimPetAnimal::Tick(float DeltaTime)
 ESimPetAnimalState ASimPetAnimal::GetAnimalState()
 {
 	return NeedsComponent->GetAnimalState();
+}
+
+void ASimPetAnimal::AnimateLegs(float DeltaTime, float CurrentTime)
+{
+	// 1. Отримуємо поточну швидкість
+	float CurrentVelocity = GetVelocity().Size();
+	
+	float WalkSpeed = 10.0f;  // Швидкість ходьби, частота кроків
+	float ReturnSpeed = 10.0f;  // Швидкість повернення ніг у вихідне положення
+	
+	for (int32 i = 0; i < SpawnedLegs.Num(); i++)
+	{
+		UStaticMeshComponent *Leg = SpawnedLegs[i];
+		if (!Leg)
+			continue;
+			
+		FString LegSocketName = LegsSockets[i].ToString();
+		FRotator CurrentRotation = Leg->GetRelativeRotation();
+		
+		float TargetPitch = 0.0f;
+	 	
+		// 2. Рахуємо синусоїду при русі або польоті
+		if (CurrentVelocity > 0.0f || MovementComponent->IsFlying())
+		{
+			bool bIsRightLeg = LegSocketName.Contains(TEXT("Right"));
+			float PhaseOffset = bIsRightLeg ? UE_PI : 0.0f;
+			
+			TargetPitch = FMath::Sin((CurrentTime * WalkSpeed) + PhaseOffset) * LegLiftAngle;
+		}	
+		
+		// 3. Інтерполяція
+		float NewPitch = FMath::FInterpTo(CurrentRotation.Pitch, TargetPitch, DeltaTime, ReturnSpeed);
+		
+		Leg->SetRelativeRotation(FRotator(NewPitch, CurrentRotation.Yaw, CurrentRotation.Roll));
+	}
 }
 
 void ASimPetAnimal::RebuildBodyParts()
@@ -117,39 +151,35 @@ void ASimPetAnimal::RebuildBodyParts()
 	}
 }
 
-void ASimPetAnimal::AnimateLegs(float DeltaTime, float CurrentTime)
+void ASimPetAnimal::HandleHappyTick()
 {
-	// 1. Отримуємо поточну швидкість
-	float CurrentVelocity = GetVelocity().Size();
+	GeneratePointsIfAnimalIsHappy();
+}
+
+void ASimPetAnimal::HandleDied()
+{
+	GeneratePenaltyPointsWhenAnimalDied();
 	
-	float WalkSpeed = 10.0f;  // Швидкість ходьби, частота кроків
-	float ReturnSpeed = 10.0f;  // Швидкість повернення ніг у вихідне положення
+	// Також звідси буде йти логіка регдолу, знищення обєкту тварини і тд...
+}
+
+void ASimPetAnimal::HandleGotDirty()
+{
+	if (AnimalStatusWidget)
+		AnimalStatusWidget->SetDirtyIconVisible(true);
 	
-	for (int32 i = 0; i < SpawnedLegs.Num(); i++)
-	{
-		UStaticMeshComponent *Leg = SpawnedLegs[i];
-		if (!Leg)
-			continue;
-			
-		FString LegSocketName = LegsSockets[i].ToString();
-		FRotator CurrentRotation = Leg->GetRelativeRotation();
-		
-		float TargetPitch = 0.0f;
-	 	
-		// 2. Рахуємо синусоїду при русі або польоті
-		if (CurrentVelocity > 0.0f || MovementComponent->IsFlying())
-		{
-			bool bIsRightLeg = LegSocketName.Contains(TEXT("Right"));
-			float PhaseOffset = bIsRightLeg ? UE_PI : 0.0f;
-			
-			TargetPitch = FMath::Sin((CurrentTime * WalkSpeed) + PhaseOffset) * LegLiftAngle;
-		}	
-		
-		// 3. Інтерполяція
-		float NewPitch = FMath::FInterpTo(CurrentRotation.Pitch, TargetPitch, DeltaTime, ReturnSpeed);
-		
-		Leg->SetRelativeRotation(FRotator(NewPitch, CurrentRotation.Yaw, CurrentRotation.Roll));
-	}
+	SpawnAnimalWaste();
+}
+
+void ASimPetAnimal::HandleGotHungry()
+{
+	if (AnimalStatusWidget)
+		AnimalStatusWidget->SetHungryIconVisible(true);
+}
+
+void ASimPetAnimal::HandleWasteCleaned()
+{
+	CleanAnimal();
 }
 
 void ASimPetAnimal::InitializeBaseBody()
@@ -236,37 +266,6 @@ FVector ASimPetAnimal::GetLocationAboveGround()
 	}
 	
 	return SpawnLocation;
-}
-
-void ASimPetAnimal::HandleHappyTick()
-{
-	GeneratePointsIfAnimalIsHappy();
-}
-
-void ASimPetAnimal::HandleDied()
-{
-	GeneratePenaltyPointsWhenAnimalDied();
-	
-	// Також звідси буде йти логіка регдолу, знищення обєкту тварини і тд...
-}
-
-void ASimPetAnimal::HandleGotDirty()
-{
-	if (AnimalStatusWidget)
-		AnimalStatusWidget->SetDirtyIconVisible(true);
-	
-	SpawnAnimalWaste();
-}
-
-void ASimPetAnimal::HandleGotHungry()
-{
-	if (AnimalStatusWidget)
-		AnimalStatusWidget->SetHungryIconVisible(true);
-}
-
-void ASimPetAnimal::HandleWasteCleaned()
-{
-	CleanAnimal();
 }
 
 void ASimPetAnimal::CleanAnimal()

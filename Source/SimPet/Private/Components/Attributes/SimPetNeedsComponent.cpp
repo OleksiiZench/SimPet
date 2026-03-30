@@ -20,19 +20,16 @@ USimPetNeedsComponent::USimPetNeedsComponent()
 	DirtyThresholdHours = 12.0f;
 }
 
+void USimPetNeedsComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	StartNeedsTimer();
+}
+
 ESimPetAnimalState USimPetNeedsComponent::GetAnimalState()
 {
 	return AnimalState;
-}
-
-void USimPetNeedsComponent::StartNeedsTimer()
-{
-	GetWorld()->GetTimerManager().SetTimer(NeedsTimerHandle, this, &USimPetNeedsComponent::OnNeedsTick, SecondsPerGameHour, true);
-}
-
-void USimPetNeedsComponent::StopNeedsTimer()
-{
-	GetWorld()->GetTimerManager().ClearTimer(NeedsTimerHandle);
 }
 
 void USimPetNeedsComponent::Feed()
@@ -59,6 +56,16 @@ void USimPetNeedsComponent::Wash()
 	Debug::Print("Character is clean now!");
 
 	TryEnterHappyState();
+}
+
+void USimPetNeedsComponent::StartNeedsTimer()
+{
+	GetWorld()->GetTimerManager().SetTimer(NeedsTimerHandle, this, &USimPetNeedsComponent::OnNeedsTick, SecondsPerGameHour, true);
+}
+
+void USimPetNeedsComponent::StopNeedsTimer()
+{
+	GetWorld()->GetTimerManager().ClearTimer(NeedsTimerHandle);
 }
 
 void USimPetNeedsComponent::OnNeedsTick()

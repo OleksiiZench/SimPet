@@ -22,9 +22,9 @@ public:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	
 private:
-	float MaxVisibleDistance;
-	
 	float SecondsPerCheck;
+	
+	float MaxVisibleDistance;
 	
 	FTimerHandle CheckDistanceTimerHandle;
 	
