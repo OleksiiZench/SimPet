@@ -3,9 +3,25 @@
 
 #include "Items/SimPetAnimalFeed.h"
 
+#include "Characters/Animals/SimPetAnimal.h"
+
 void ASimPetAnimalFeed::Interact_Implementation(AActor *InstigatorActor)
 {
 	Super::Interact_Implementation(InstigatorActor);
 	
 	OnFeedPickedUp.Broadcast(this);
+}
+
+bool ASimPetAnimalFeed::TryInteractWithAnotherActor(AActor *TargetActor)
+{
+	if (ASimPetAnimal *Animal = Cast<ASimPetAnimal>(TargetActor))
+	{
+		Animal->FeedAnimal();
+		
+		Destroy();
+		
+		return true;
+	}
+	
+	return false;
 }

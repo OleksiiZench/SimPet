@@ -5,6 +5,8 @@
 #include "Characters/SimPetBaseCharacter.h"
 #include "SimPetEnumTypes.h"
 
+#include "Interfaces/SimPetInteractable.h"
+
 #include "SimPetAnimal.generated.h"
 
 class UBehaviorTree;
@@ -19,7 +21,7 @@ class ASimPetAnimalWaste;
  * 
  */
 UCLASS()
-class SIMPET_API ASimPetAnimal : public ASimPetBaseCharacter
+class SIMPET_API ASimPetAnimal : public ASimPetBaseCharacter, public ISimPetInteractable
 {
 	GENERATED_BODY()
 
@@ -29,6 +31,12 @@ public:
 	virtual void OnConstruction(const FTransform &Transform) override;
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+	
+	//~ Begin ISimPetInteractable Interface
+	virtual void Interact_Implementation(AActor *InstigatorActor) override;
+	//~ End ISimPetInteractable Interface
+	
+	void FeedAnimal();
 	
 	ESimPetAnimalState GetAnimalState();
 	

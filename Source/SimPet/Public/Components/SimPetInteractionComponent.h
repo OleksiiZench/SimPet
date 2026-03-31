@@ -18,13 +18,12 @@ class SIMPET_API USimPetInteractionComponent : public UActorComponent
 public:
 	AActor *DoInteractionTrace();
 	
-	bool TryItemInteraction(ASimPetItem *TargetItem);
-	void TakeOrDropItem(ASimPetItem *Item);
+	bool TryUseEquippedItemOn(AActor *TargetActor);
+	void TakeOrDropItem(AActor *Actor);
 	void SetHoldPoint(USceneComponent *InHoldPoint);
 	
 private:
-	bool bHandsFull = false;
-	ASimPetItem *CashedTakenItem;
+	ASimPetItem *CaсhedTakenItem;
 	USceneComponent *HoldPoint;
 	
 	void TakeItem(ASimPetItem *Item);

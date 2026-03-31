@@ -3,7 +3,7 @@
 
 #include "Items/SimPetItem.h"
 
-#include "Characters/SimPetPlayer.h"
+#include "Components/SimPetInteractionComponent.h"
 
 ASimPetItem::ASimPetItem()
 {
@@ -12,7 +12,10 @@ ASimPetItem::ASimPetItem()
 
 void ASimPetItem::Interact_Implementation(AActor *InstigatorActor)
 {
-	AttachToPlayer(InstigatorActor);
+	if (USimPetInteractionComponent *InteractionComp = InstigatorActor->FindComponentByClass<USimPetInteractionComponent>())
+	{
+		InteractionComp->TakeOrDropItem(this);
+	}
 }
 
 void ASimPetItem::SecondaryInteract_Implementation(AActor *InstigatorActor)
@@ -24,7 +27,7 @@ void ASimPetItem::GetOwnedGameplayTags(FGameplayTagContainer &TagContainer) cons
 	TagContainer.AppendTags(GameplayTags);
 }
 
-bool ASimPetItem::TryInteractWithAnotherItem(ASimPetItem *TargetItem)
+bool ASimPetItem::TryInteractWithAnotherActor(AActor *TargetActor)
 {
 	return false;
 }
@@ -47,15 +50,5 @@ void ASimPetItem::DisablePhysics()
 	{
 		StaticMeshComp->SetSimulatePhysics(false);
 		StaticMeshComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	}
-}
-
-void ASimPetItem::AttachToPlayer(AActor *InstigatorActor)
-{
-	ASimPetPlayer *Player = Cast<ASimPetPlayer>(InstigatorActor);
-	
-	if (Player)
-	{
-		Player->InteractWithItem(this);
 	}
 }

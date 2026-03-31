@@ -10,13 +10,18 @@ void ASimPetBackPack::SecondaryInteract_Implementation(AActor *InstigatorActor)
 	ExtractItem();
 }
 
-bool ASimPetBackPack::TryInteractWithAnotherItem(ASimPetItem *TargetItem)
+bool ASimPetBackPack::TryInteractWithAnotherActor(AActor *TargetActor)
 {
-	return TryAddItem(TargetItem);
+	return TryAddItem(TargetActor);
 }
 
-bool ASimPetBackPack::TryAddItem(ASimPetItem *Item)
+bool ASimPetBackPack::TryAddItem(AActor *ItemActor)
 {
+	if (ItemActor == nullptr)
+		return false;
+	
+	ASimPetItem *Item = Cast<ASimPetItem>(ItemActor);
+	
 	if (Item == nullptr)
 		return false;
 	

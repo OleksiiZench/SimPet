@@ -24,6 +24,8 @@ public:
 	virtual void Interact_Implementation(AActor *InstigatorActor) override;
 	//~ End ISimPetInteractable Interface
 	
+	virtual bool TryInteractWithAnotherActor(AActor *TargetActor) override;
+	
 	UPROPERTY(BlueprintAssignable)
 	FOnFeedPickedUpSignature OnFeedPickedUp;
 };

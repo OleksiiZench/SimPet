@@ -34,7 +34,6 @@ public:
 	virtual void SetupPlayerInputComponent(UInputComponent *PlayerInputComponent) override;
 	virtual FVector GetPawnViewLocation() const override;
 	
-	void InteractWithItem(ASimPetItem *Item);
 	USimPetStaminaComponent *GetStaminaComponent();
 	
 private:	

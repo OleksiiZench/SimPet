@@ -70,16 +70,6 @@ FVector ASimPetPlayer::GetPawnViewLocation() const
 	return Super::GetPawnViewLocation();
 }
 
-void ASimPetPlayer::InteractWithItem(ASimPetItem *Item)
-{
-	if (InteractionComponent->TryItemInteraction(Item))
-	{
-		return;
-	}
-	
-	InteractionComponent->TakeOrDropItem(Item);
-}
-
 USimPetStaminaComponent *ASimPetPlayer::GetStaminaComponent()
 {
 	return StaminaComponent;
@@ -123,9 +113,12 @@ void ASimPetPlayer::Input_Look(const FInputActionValue &InputActionValue)
 void ASimPetPlayer::Input_Interact(const FInputActionValue &InputActionValue)
 {
 	AActor *HitActor = InteractionComponent->DoInteractionTrace();
-
+	
 	if (HitActor)
 	{
+		if (InteractionComponent->TryUseEquippedItemOn(HitActor))
+			return;
+		
 		ISimPetInteractable::Execute_Interact(HitActor, this);
 	}
 }

@@ -23,9 +23,9 @@ public:
 	virtual void SecondaryInteract_Implementation(AActor *InstigatorActor) override;
 	//~ End ISimPetInteractable Interface
 	
-	virtual bool TryInteractWithAnotherItem(ASimPetItem *TargetItem) override;
+	virtual bool TryInteractWithAnotherActor(AActor *TargetActor) override;
 	
-	bool TryAddItem(ASimPetItem *Item);
+	bool TryAddItem(AActor *Item);
 	void ExtractItem();
 	
 	UPROPERTY(EditAnywhere, Category = "Backpack")

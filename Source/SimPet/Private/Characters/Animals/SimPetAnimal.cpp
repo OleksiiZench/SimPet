@@ -11,6 +11,7 @@
 #include "Components/Widgets/SimPetAutoHidingWidgetComponent.h"
 #include "Items/SimPetAnimalWaste.h"
 
+#include "Characters/SimPetPlayer.h"
 #include "SimPetDebugHelper.h"
 
 ASimPetAnimal::ASimPetAnimal()
@@ -52,6 +53,22 @@ void ASimPetAnimal::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	
 	AnimateLegs(DeltaTime, GetGameTimeSinceCreation());
+}
+
+void ASimPetAnimal::Interact_Implementation(AActor *InstigatorActor)
+{	
+	Debug::Print("Interact with animal");
+}
+
+void ASimPetAnimal::FeedAnimal()
+{
+	if (NeedsComponent)
+	{
+		NeedsComponent->Feed();
+		
+		if (AnimalStatusWidget)
+			AnimalStatusWidget->SetHungryIconVisible(false);
+	}
 }
 
 ESimPetAnimalState ASimPetAnimal::GetAnimalState()

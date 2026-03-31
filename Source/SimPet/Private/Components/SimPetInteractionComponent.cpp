@@ -9,6 +9,8 @@
 #include "Interfaces/SimPetInteractable.h"
 #include "Items/SimPetItem.h"
 
+#include "SimPetDebugHelper.h"
+
 AActor *USimPetInteractionComponent::DoInteractionTrace()
 {
 	float InteractionDistance = 250.0f;
@@ -50,29 +52,41 @@ AActor *USimPetInteractionComponent::DoInteractionTrace()
 	return nullptr;
 }
 
-bool USimPetInteractionComponent::TryItemInteraction(ASimPetItem *TargetItem)
+bool USimPetInteractionComponent::TryUseEquippedItemOn(AActor *TargetActor)
 {
-	if (!bHandsFull || CashedTakenItem == nullptr || CashedTakenItem == TargetItem)
+	if (!IsValid(CaсhedTakenItem) || CaсhedTakenItem == TargetActor)
 	{
 		return false;
 	}
 	
-	return CashedTakenItem->TryInteractWithAnotherItem(TargetItem);
+	bool bWasUsed = CaсhedTakenItem->TryInteractWithAnotherActor(TargetActor);
+	
+	if (!IsValid(CaсhedTakenItem))
+	{
+		CaсhedTakenItem = nullptr;
+	}
+	
+	return bWasUsed;
 }
 
-void USimPetInteractionComponent::TakeOrDropItem(ASimPetItem *Item)
+void USimPetInteractionComponent::TakeOrDropItem(AActor *Actor)
 {
-	if (bHandsFull && CashedTakenItem == Item)
+	ASimPetItem *Item = Cast<ASimPetItem>(Actor);
+	
+	if (!Item)
+		return;
+	
+	if (IsValid(CaсhedTakenItem) && CaсhedTakenItem == Item)
 	{
 		DropItem(Item);
 	}
-	else if (!bHandsFull)
+	else if (!IsValid(CaсhedTakenItem))
 	{
 		TakeItem(Item);
 	}
 	else
 	{
-		DropItem(CashedTakenItem);
+		DropItem(CaсhedTakenItem);
 		TakeItem(Item);
 	}
 }
@@ -90,8 +104,7 @@ void USimPetInteractionComponent::TakeItem(ASimPetItem *Item)
 	Item->DisablePhysics();
 	Item->AttachToComponent(HoldPoint, GetRuleForAttachingItems());
 	
-	CashedTakenItem = Item;
-	bHandsFull = true;
+	CaсhedTakenItem = Item;
 }
 
 void USimPetInteractionComponent::DropItem(ASimPetItem *Item)
@@ -99,8 +112,7 @@ void USimPetInteractionComponent::DropItem(ASimPetItem *Item)
 	Item->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	Item->EnablePhysics();
 	
-	CashedTakenItem = nullptr;
-	bHandsFull = false;
+	CaсhedTakenItem = nullptr;
 }
 
 FAttachmentTransformRules USimPetInteractionComponent::GetRuleForAttachingItems()
