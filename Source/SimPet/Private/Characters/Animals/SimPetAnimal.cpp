@@ -234,8 +234,6 @@ void ASimPetAnimal::SpawnAnimalWaste()
 	
 	float SpawnLocationZ = SpawnLocation.Z;
 	
-	Debug::Print(TEXT("SpawnLocation"), SpawnLocationZ);
-	
 	ASimPetAnimalWaste *SpawnedAnimalWaste = GetWorld()->SpawnActor<ASimPetAnimalWaste>(WasteClass, SpawnLocation, FRotator::ZeroRotator);
 
 	if (SpawnedAnimalWaste)
@@ -252,7 +250,7 @@ FVector ASimPetAnimal::GetLocationAboveGround()
 	FHitResult HitResult;
 	FCollisionQueryParams TraceParams(FName(TEXT("WasteSpawnTrace")), true, this);
 	
-	bool bHitGround = GetWorld()->LineTraceSingleByChannel(HitResult, StartTraceLocation, EndTraceLocation, ECollisionChannel::ECC_Visibility);
+	bool bHitGround = GetWorld()->LineTraceSingleByChannel(HitResult, StartTraceLocation, EndTraceLocation, ECollisionChannel::ECC_Visibility, TraceParams);
 	
 	FVector SpawnLocation;
 	
