@@ -37,12 +37,21 @@ void USimPetStaminaComponent::TickComponent(float DeltaTime, enum ELevelTick Tic
 	UpdateStamina(DeltaTime);
 }
 
-bool USimPetStaminaComponent::IsMovingHorizontally()
+void USimPetStaminaComponent::SetSprint(bool bIsSprint)
 {
-	if (!Player)
-		return false;
+	if (!CharacterMovementComp)
+		return;
 	
-	return !(Player->GetVelocity().Size2D() < 5.0f);
+	if (bIsSprint && IsMovingHorizontally())
+	{
+		CharacterMovementComp->MaxWalkSpeed = SprintSpeed;
+		bIsSprinting = true;
+	}
+	else
+	{
+		CharacterMovementComp->MaxWalkSpeed = WalkSpeed;
+		bIsSprinting = false;
+	}
 }
 
 void USimPetStaminaComponent::UpdateStamina(float DeltaTime)
@@ -56,7 +65,7 @@ void USimPetStaminaComponent::UpdateStamina(float DeltaTime)
 	{
 		bool bIsFalling = CharacterMovementComp->IsFalling();
 		
-		if (!IsMovingHorizontally() || bIsFalling)
+		if (!IsMovingHorizontally() || bIsFalling || IsMovingBackward())
 		{
 			SetSprint(false);
 		}
@@ -85,6 +94,34 @@ void USimPetStaminaComponent::UpdateStamina(float DeltaTime)
 	}
 }
 
+bool USimPetStaminaComponent::IsMovingHorizontally()
+{
+	if (!Player)
+		return false;
+	
+	return !(Player->GetVelocity().Size2D() < 5.0f);
+}
+
+bool USimPetStaminaComponent::IsMovingBackward()
+{
+	if (!Player)
+		return false;
+	
+	FVector Velocity = Player->GetVelocity();
+	
+	if (Velocity.SizeSquared2D() < 10.0f)
+	{
+		return false;
+	}
+	
+	FVector MovementDirection = Velocity.GetSafeNormal2D();
+	FVector FacingDirection = Player->GetActorForwardVector().GetSafeNormal2D();
+	
+	float DotProduct = FVector::DotProduct(MovementDirection, FacingDirection);
+	
+	return DotProduct < -0.1f;
+}
+
 void USimPetStaminaComponent::CachePlayerAndCharacterMovementComp()
 {
 	if (ASimPetPlayer *TempPlayer = Cast<ASimPetPlayer>(GetOwner()))
@@ -92,22 +129,5 @@ void USimPetStaminaComponent::CachePlayerAndCharacterMovementComp()
 		Player = TempPlayer;
 		
 		CharacterMovementComp = Player->GetCharacterMovement();
-	}
-}
-
-void USimPetStaminaComponent::SetSprint(bool bIsSprint)
-{
-	if (!CharacterMovementComp)
-		return;
-	
-	if (bIsSprint && IsMovingHorizontally())
-	{
-		CharacterMovementComp->MaxWalkSpeed = SprintSpeed;
-		bIsSprinting = true;
-	}
-	else
-	{
-		CharacterMovementComp->MaxWalkSpeed = WalkSpeed;
-		bIsSprinting = false;
 	}
 }

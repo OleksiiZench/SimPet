@@ -54,6 +54,8 @@ private:
 	UCharacterMovementComponent *CharacterMovementComp;
 	
 	void UpdateStamina(float DeltaTime);
-	void CachePlayerAndCharacterMovementComp();
 	bool IsMovingHorizontally();
+	bool IsMovingBackward();
+	
+	void CachePlayerAndCharacterMovementComp();
 };
