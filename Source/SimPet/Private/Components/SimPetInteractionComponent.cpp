@@ -68,7 +68,7 @@ bool USimPetInteractionComponent::TryUseEquippedItemOn(AActor *TargetActor)
 	
 	bool bWasUsed = CachedTakenItem->TryInteractWithAnotherActor(TargetActor);
 	
-	if (!IsValid(CachedTakenItem))
+	if (!IsValid(CachedTakenItem) || CachedTakenItem->GetAttachParentActor() != GetOwner())
 	{
 		CachedTakenItem = nullptr;
 	}

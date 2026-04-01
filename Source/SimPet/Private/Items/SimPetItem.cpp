@@ -5,6 +5,8 @@
 
 #include "Components/SimPetInteractionComponent.h"
 
+#include "SimPetDebugHelper.h"
+
 ASimPetItem::ASimPetItem()
 {
 	PrimaryActorTick.bCanEverTick = false;

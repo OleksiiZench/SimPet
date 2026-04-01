@@ -28,4 +28,7 @@ public:
 	
 	UPROPERTY(BlueprintAssignable)
 	FOnFeedPickedUpSignature OnFeedPickedUp;
+	
+private:
+	bool TryFeedAnimal(AActor *TargetActor);
 };

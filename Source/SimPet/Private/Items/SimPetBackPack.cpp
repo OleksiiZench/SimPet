@@ -5,23 +5,30 @@
 
 #include "Items/SimPetItem.h"
 
+#include "SimPetDebugHelper.h"
+
 void ASimPetBackPack::SecondaryInteract_Implementation(AActor *InstigatorActor)
 {
 	ExtractItem();
 }
 
-bool ASimPetBackPack::TryInteractWithAnotherActor(AActor *TargetActor)
+bool ASimPetBackPack::TryAddItemToContainer_Implementation(ASimPetItem *Item)
 {
-	return TryAddItem(TargetActor);
+	return TryAddItem(Item);
 }
 
-bool ASimPetBackPack::TryAddItem(AActor *ItemActor)
+bool ASimPetBackPack::TryInteractWithAnotherActor(AActor *TargetActor)
 {
-	if (ItemActor == nullptr)
+	ASimPetItem *Item = Cast<ASimPetItem>(TargetActor);
+	
+	if (Item == nullptr)
 		return false;
 	
-	ASimPetItem *Item = Cast<ASimPetItem>(ItemActor);
-	
+	return TryAddItem(Item);
+}
+
+bool ASimPetBackPack::TryAddItem(ASimPetItem *Item)
+{
 	if (Item == nullptr)
 		return false;
 	
@@ -82,6 +89,7 @@ void ASimPetBackPack::EnablePhysicsAndApplyImpulse(ASimPetItem *Item)
 {
 	if (UPrimitiveComponent *PrimCompOfItem = Cast<UPrimitiveComponent>(Item->GetRootComponent()))
 	{
+		PrimCompOfItem->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		PrimCompOfItem->SetSimulatePhysics(true);
 		PrimCompOfItem->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 		
