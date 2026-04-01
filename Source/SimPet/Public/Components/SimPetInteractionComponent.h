@@ -16,15 +16,18 @@ class SIMPET_API USimPetInteractionComponent : public UActorComponent
 	GENERATED_BODY()
 	
 public:
+	USimPetInteractionComponent();
+	
 	AActor *DoInteractionTrace();
 	
 	bool TryUseEquippedItemOn(AActor *TargetActor);
-	void TakeOrDropItem(AActor *Actor);
+	void TakeOrDropOrSwapItem(AActor *Actor);
 	void SetHoldPoint(USceneComponent *InHoldPoint);
 	
 private:
-	ASimPetItem *CaсhedTakenItem;
+	ASimPetItem *CachedTakenItem;
 	USceneComponent *HoldPoint;
+	TEnumAsByte<ETraceTypeQuery> InteractionTraceChanel;
 	
 	void TakeItem(ASimPetItem *Item);
 	void DropItem(ASimPetItem *Item);

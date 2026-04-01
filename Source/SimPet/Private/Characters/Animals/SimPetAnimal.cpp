@@ -244,12 +244,10 @@ void ASimPetAnimal::BindNeedsEvents()
 
 void ASimPetAnimal::SpawnAnimalWaste()
 {
-	if (!WasteClass && !GetWorld())
+	if (!WasteClass || !GetWorld())
 		return;
 	
 	FVector SpawnLocation = GetLocationAboveGround();
-	
-	float SpawnLocationZ = SpawnLocation.Z;
 	
 	ASimPetAnimalWaste *SpawnedAnimalWaste = GetWorld()->SpawnActor<ASimPetAnimalWaste>(WasteClass, SpawnLocation, FRotator::ZeroRotator);
 

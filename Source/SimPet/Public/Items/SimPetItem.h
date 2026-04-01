@@ -18,6 +18,8 @@ class SIMPET_API ASimPetItem : public AActor, public IGameplayTagAssetInterface,
 public:	
 	ASimPetItem();
 	
+	virtual void BeginPlay() override;
+	
 	//~ Begin ISimPetInteractable Interface
 	virtual void Interact_Implementation(AActor *InstigatorActor) override;
 	virtual void SecondaryInteract_Implementation(AActor *InstigatorActor) override;
@@ -35,5 +37,5 @@ protected:
 	FGameplayTagContainer GameplayTags;
 	
 private:
-	void AttachToPlayer(AActor *InstigatorActor);
+	UStaticMeshComponent *CacheStaticMeshComp;
 };

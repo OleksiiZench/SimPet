@@ -8,16 +8,27 @@
 ASimPetItem::ASimPetItem()
 {
 	PrimaryActorTick.bCanEverTick = false;
+	
+	CacheStaticMeshComp = nullptr;
+}
+
+void ASimPetItem::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	CacheStaticMeshComp = FindComponentByClass<UStaticMeshComponent>();
 }
 
 void ASimPetItem::Interact_Implementation(AActor *InstigatorActor)
 {
 	if (USimPetInteractionComponent *InteractionComp = InstigatorActor->FindComponentByClass<USimPetInteractionComponent>())
 	{
-		InteractionComp->TakeOrDropItem(this);
+		InteractionComp->TakeOrDropOrSwapItem(this);
 	}
 }
 
+// Базова реалізація навмисно залишена порожньою
+// Перевизначте її в підкласах, щоб забезпечити додаткові можливості взаємодії
 void ASimPetItem::SecondaryInteract_Implementation(AActor *InstigatorActor)
 {
 }
@@ -34,21 +45,19 @@ bool ASimPetItem::TryInteractWithAnotherActor(AActor *TargetActor)
 
 void ASimPetItem::EnablePhysics()
 {
-	UStaticMeshComponent *StaticMeshComp = FindComponentByClass<UStaticMeshComponent>();
-	if (StaticMeshComp)
+	if (CacheStaticMeshComp)
 	{
-		StaticMeshComp->SetSimulatePhysics(true);
-		StaticMeshComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
-		StaticMeshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		CacheStaticMeshComp->SetSimulatePhysics(true);
+		CacheStaticMeshComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+		CacheStaticMeshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	}
 }
 
 void ASimPetItem::DisablePhysics()
 {
-	UStaticMeshComponent *StaticMeshComp = FindComponentByClass<UStaticMeshComponent>();
-	if (StaticMeshComp)
+	if (CacheStaticMeshComp)
 	{
-		StaticMeshComp->SetSimulatePhysics(false);
-		StaticMeshComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		CacheStaticMeshComp->SetSimulatePhysics(false);
+		CacheStaticMeshComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	}
 }

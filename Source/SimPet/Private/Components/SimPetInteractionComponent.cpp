@@ -5,18 +5,25 @@
 
 #include "Kismet/KismetSystemLibrary.h"
 
-#include "Characters/SimPetPlayer.h"
 #include "Interfaces/SimPetInteractable.h"
 #include "Items/SimPetItem.h"
 
 #include "SimPetDebugHelper.h"
+
+USimPetInteractionComponent::USimPetInteractionComponent()
+{
+	CachedTakenItem = nullptr;
+	HoldPoint = nullptr;
+	
+	InteractionTraceChanel = TraceTypeQuery2;
+}
 
 AActor *USimPetInteractionComponent::DoInteractionTrace()
 {
 	float InteractionDistance = 250.0f;
 	float InteractionRadius = 15.0f;
 	
-	ASimPetPlayer *Player = Cast<ASimPetPlayer>(GetOwner());
+	APawn *Player = Cast<APawn>(GetOwner());
 	if (!Player)
 		return nullptr;
 	
@@ -33,7 +40,7 @@ AActor *USimPetInteractionComponent::DoInteractionTrace()
 		StartLocation,
 		EndLocation,
 		InteractionRadius,
-		ETraceTypeQuery::TraceTypeQuery2,
+		InteractionTraceChanel,
 		false,
 		ActorsToIgnore,
 		EDrawDebugTrace::None,
@@ -54,39 +61,39 @@ AActor *USimPetInteractionComponent::DoInteractionTrace()
 
 bool USimPetInteractionComponent::TryUseEquippedItemOn(AActor *TargetActor)
 {
-	if (!IsValid(CaсhedTakenItem) || CaсhedTakenItem == TargetActor)
+	if (!IsValid(CachedTakenItem) || CachedTakenItem == TargetActor)
 	{
 		return false;
 	}
 	
-	bool bWasUsed = CaсhedTakenItem->TryInteractWithAnotherActor(TargetActor);
+	bool bWasUsed = CachedTakenItem->TryInteractWithAnotherActor(TargetActor);
 	
-	if (!IsValid(CaсhedTakenItem))
+	if (!IsValid(CachedTakenItem))
 	{
-		CaсhedTakenItem = nullptr;
+		CachedTakenItem = nullptr;
 	}
 	
 	return bWasUsed;
 }
 
-void USimPetInteractionComponent::TakeOrDropItem(AActor *Actor)
+void USimPetInteractionComponent::TakeOrDropOrSwapItem(AActor *Actor)
 {
 	ASimPetItem *Item = Cast<ASimPetItem>(Actor);
 	
 	if (!Item)
 		return;
 	
-	if (IsValid(CaсhedTakenItem) && CaсhedTakenItem == Item)
+	if (IsValid(CachedTakenItem) && CachedTakenItem == Item)
 	{
 		DropItem(Item);
 	}
-	else if (!IsValid(CaсhedTakenItem))
+	else if (!IsValid(CachedTakenItem))
 	{
 		TakeItem(Item);
 	}
 	else
 	{
-		DropItem(CaсhedTakenItem);
+		DropItem(CachedTakenItem);
 		TakeItem(Item);
 	}
 }
@@ -102,9 +109,11 @@ void USimPetInteractionComponent::SetHoldPoint(USceneComponent *InHoldPoint)
 void USimPetInteractionComponent::TakeItem(ASimPetItem *Item)
 {
 	Item->DisablePhysics();
-	Item->AttachToComponent(HoldPoint, GetRuleForAttachingItems());
 	
-	CaсhedTakenItem = Item;
+	if (HoldPoint)
+		Item->AttachToComponent(HoldPoint, GetRuleForAttachingItems());
+	
+	CachedTakenItem = Item;
 }
 
 void USimPetInteractionComponent::DropItem(ASimPetItem *Item)
@@ -112,7 +121,7 @@ void USimPetInteractionComponent::DropItem(ASimPetItem *Item)
 	Item->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	Item->EnablePhysics();
 	
-	CaсhedTakenItem = nullptr;
+	CachedTakenItem = nullptr;
 }
 
 FAttachmentTransformRules USimPetInteractionComponent::GetRuleForAttachingItems()
