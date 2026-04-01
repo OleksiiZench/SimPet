@@ -13,6 +13,7 @@
 
 #include "Characters/SimPetPlayer.h"
 #include "SimPetDebugHelper.h"
+#include "Components/CapsuleComponent.h"
 
 ASimPetAnimal::ASimPetAnimal()
 {
@@ -175,9 +176,7 @@ void ASimPetAnimal::HandleHappyTick()
 
 void ASimPetAnimal::HandleDied()
 {
-	GeneratePenaltyPointsWhenAnimalDied();
-	
-	// Також звідси буде йти логіка регдолу, знищення обєкту тварини і тд...
+	Die();
 }
 
 void ASimPetAnimal::HandleGotDirty()
@@ -289,6 +288,44 @@ void ASimPetAnimal::CleanAnimal()
 		
 		if (AnimalStatusWidget)
 			AnimalStatusWidget->SetDirtyIconVisible(false);
+	}
+}
+
+void ASimPetAnimal::Die()
+{
+	if (AController *AnimalController = GetController())
+	{
+		AnimalController->Destroy();
+	}
+	
+	if (AnimalStatusWidget)
+	{
+		AnimalStatusWidget->SetDirtyIconVisible(false);
+		AnimalStatusWidget->SetHungryIconVisible(false);
+	}
+	
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
+	ScatterMeshParts();
+	
+	SetLifeSpan(4.0f);
+	
+	GeneratePenaltyPointsWhenAnimalDied();
+}
+
+void ASimPetAnimal::ScatterMeshParts()
+{
+	TArray<UStaticMeshComponent *> AllMeshes;
+	GetComponents<UStaticMeshComponent>(AllMeshes);
+	
+	for (UStaticMeshComponent *MeshPart : AllMeshes)
+	{
+		MeshPart->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		MeshPart->SetCollisionProfileName(TEXT("PhysicsActor"));
+		MeshPart->SetSimulatePhysics(true);
+		
+		FVector RandomKick = FVector(FMath::RandRange(-100, 100), FMath::RandRange(-100, 100), FMath::RandRange(100, 600));
+		MeshPart->AddImpulse(RandomKick, NAME_None, true);
 	}
 }
 

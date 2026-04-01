@@ -40,8 +40,6 @@ void USimPetNeedsComponent::Feed()
 	TimeSinceLastMeal = 0.0f;	
 	bNeedsFeed = false;
 
-	Debug::Print("Character ate.");
-
 	TryEnterHappyState();
 }
 
@@ -52,9 +50,7 @@ void USimPetNeedsComponent::Wash()
 	
 	TimeSinceLastClean = 0.0f;
 	bNeedsCleaning = false;
-
-	Debug::Print("Character is clean now!");
-
+	
 	TryEnterHappyState();
 }
 
@@ -117,8 +113,6 @@ void USimPetNeedsComponent::BecomeDirty()
 	
 	bNeedsCleaning = true;
 	
-	Debug::Print(TEXT("Character got dirty"));
-	
 	OnGotDirty.Broadcast();
 	
 	EnterTiredState();
@@ -127,8 +121,6 @@ void USimPetNeedsComponent::BecomeDirty()
 void USimPetNeedsComponent::BecomeHungry()
 {
 	bNeedsFeed = true;
-	
-	Debug::Print(TEXT("Character is hungry"));
 	
 	OnGotHungry.Broadcast();
 	
@@ -148,8 +140,6 @@ void USimPetNeedsComponent::EnterHappyState()
 	if (AnimalState == ESimPetAnimalState::Tired)
 	{
 		AnimalState = ESimPetAnimalState::Happy;
-		
-		Debug::Print("Character state changed to Happy");
 	}
 }
 
@@ -158,8 +148,6 @@ void USimPetNeedsComponent::EnterTiredState()
 	if (AnimalState == ESimPetAnimalState::Happy)
 	{
 		AnimalState = ESimPetAnimalState::Tired;
-		
-		Debug::Print("Character state changed to Tired");
 	}
 }
 
@@ -168,7 +156,5 @@ void USimPetNeedsComponent::EnterDeadState()
 	if (AnimalState == ESimPetAnimalState::Dead)
 	{
 		AnimalState = ESimPetAnimalState::Dead;
-		
-		Debug::Print("Character state changed to Dead");
 	}
 }

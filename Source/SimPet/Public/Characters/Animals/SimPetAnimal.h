@@ -135,6 +135,8 @@ private:
 	FVector GetLocationAboveGround();
 	
 	void CleanAnimal();
+	void Die();
+	void ScatterMeshParts();
 	
 	void GeneratePointsIfAnimalIsHappy();
 	void GeneratePenaltyPointsWhenAnimalDied();
