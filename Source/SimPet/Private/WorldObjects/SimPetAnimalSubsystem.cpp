@@ -61,6 +61,9 @@ void USimPetAnimalSubsystem::SpawnAnimal(ESimPetAnimals AnimalType)
 
 int32 USimPetAnimalSubsystem::GetNumberAnimalsCertainType(ESimPetAnimals AnimalType) const
 {
+	if (OwnerAnimals.IsEmpty())
+		return 0;
+	
 	TSubclassOf<ASimPetAnimal> AnimalClassToFind = GetAnimalClassByAnimalType(AnimalType);
 	if (!AnimalClassToFind)
 	{
@@ -72,6 +75,9 @@ int32 USimPetAnimalSubsystem::GetNumberAnimalsCertainType(ESimPetAnimals AnimalT
 	
 	for (ASimPetAnimal *OwnerAnimal : OwnerAnimals)
 	{
+		if (!IsValid(OwnerAnimal))
+			continue;
+		
 		if (OwnerAnimal->IsA(AnimalClassToFind))
 		{
 			counter++;
@@ -79,6 +85,11 @@ int32 USimPetAnimalSubsystem::GetNumberAnimalsCertainType(ESimPetAnimals AnimalT
 	}
 	
 	return counter;
+}
+
+int32 USimPetAnimalSubsystem::GetNumberWildAnimals() const
+{
+	return WildAnimals.Num();
 }
 
 TSubclassOf<ASimPetAnimal> USimPetAnimalSubsystem::GetAnimalClassByAnimalType(ESimPetAnimals AnimalType) const

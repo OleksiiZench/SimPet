@@ -38,6 +38,9 @@ protected:
 	UTextBlock *LizardCountText;
 	
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock *WildAnimalCountText;
+	
+	UPROPERTY(meta = (BindWidget))
 	UProgressBar *StaminaProgressBar;
 	
 	UPROPERTY(meta = (BindWidget))

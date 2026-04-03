@@ -104,4 +104,11 @@ void USimPetHUDWidget::UpdateAnimalStats()
 		
 		LizardCountText->SetText(FText::AsNumber(NumberOfLizards));
 	}
+	
+	if (WildAnimalCountText)
+	{
+		int NumberOfWildAnimals = AnimalSubsystem->GetNumberWildAnimals();
+		
+		WildAnimalCountText->SetText(FText::AsNumber(NumberOfWildAnimals));
+	}
 }
