@@ -6,18 +6,11 @@
 #include "GameFramework/Actor.h"
 
 #include "Interfaces/SimPetInteractable.h"
+#include "SimPetEnumTypes.h"
 
 #include "SimPetFabricator.generated.h"
 
 class ASimPetAnimal;
-
-UENUM(BlueprintType)
-enum class ESimPetAnimals : uint8
-{
-	EA_Canary	UMETA(DisplayName = "Canary"),
-	EA_Dog		UMETA(DisplayName = "Dog"),
-	EA_Lizard	UMETA(DisplayName = "Lizard"),
-};
 
 UCLASS()
 class SIMPET_API ASimPetFabricator : public AActor, public ISimPetInteractable

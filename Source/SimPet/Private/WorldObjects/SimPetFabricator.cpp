@@ -5,12 +5,11 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "Characters/Animals/SimPetAnimal.h"
-#include "WorldObjects/SimPetSpawnPoint.h"
-#include "SimPetGameplayTags.h"
 
 #include "SimPetDebugHelper.h"
 #include "Blueprint/UserWidget.h"
 #include "Widgets/SimPetFabricatorWidget.h"
+#include "WorldObjects/SimPetAnimalSubsystem.h"
 
 void ASimPetFabricator::Interact_Implementation(AActor *InstigatorActor)
 {
@@ -42,51 +41,16 @@ void ASimPetFabricator::Interact_Implementation(AActor *InstigatorActor)
 
 void ASimPetFabricator::RequestSpawnAnimal(ESimPetAnimals AnimalType)
 {
-	Debug::Print(__func__);
+	if (!GetWorld())
+		return;
 	
 	if (TSubclassOf<ASimPetAnimal> *FoundClassAnimal = AnimalClassMap.Find(AnimalType))
 	{
-		TArray<AActor *> FoundActors;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASimPetSpawnPoint::StaticClass(), FoundActors);
+		USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
 		
-		ASimPetSpawnPoint *AnimalSpawnPoint = nullptr;
+		if (!AnimalSubsystem)
+			return;
 		
-		// 1. Беремо перешу ліпшу ASimPetSpawnPoint
-		for (AActor *Actor : FoundActors)
-		{
-			if (ASimPetSpawnPoint *СastAnimalSpawnPoint = Cast<ASimPetSpawnPoint>(Actor))
-			{
-				AnimalSpawnPoint = СastAnimalSpawnPoint;
-			}
-			else
-				continue;
-			
-			// 2. Отримуємо теги точки
-			FGameplayTagContainer TagContainer;
-		
-			if (AnimalSpawnPoint)
-				AnimalSpawnPoint->GetOwnedGameplayTags(TagContainer);
-		
-			// 3. Точка має бути SpawnPoint.ForAnimal та не мати тварину
-			if (TagContainer.HasTag(SimPetGameplayTags::Spawn_Point_ForAnimal) && !TagContainer.HasTag(SimPetGameplayTags::Spawn_Point_HasAnimal))
-			{
-				FTransform AnimalTransform = AnimalSpawnPoint->GetTransform();
-
-				ASimPetAnimal * NewAnimal = GetWorld()->SpawnActor<ASimPetAnimal>(*FoundClassAnimal, AnimalTransform);
-
-				if (NewAnimal)
-				{
-					Debug::Print(TEXT("Spawned: ") + (*FoundClassAnimal)->GetName());
-			
-					AnimalSpawnPoint->AddGameplayTags(SimPetGameplayTags::Spawn_Point_HasAnimal);
-				
-					break;
-				}
-				else
-					continue;
-			}
-			else
-				continue;
-		}
+		AnimalSubsystem->SpawnAnimal(*FoundClassAnimal);
 	}
 }
