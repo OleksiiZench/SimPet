@@ -4,15 +4,12 @@
 #include "Widgets/SimPetHUDWidget.h"
 
 #include "Components/TextBlock.h"
-#include "Kismet/GameplayStatics.h"
 #include "Components/ProgressBar.h"
 
-#include "Characters/Animals/SimPetDog.h"
-#include "Characters/Animals/SimPetCanary.h"
-#include "Characters/Animals/SimPetLizard.h"
 #include "Characters/SimPetPlayer.h"
 #include "Components/Attributes/SimPetStaminaComponent.h"
 #include "Core/SimPetPlayerState.h"
+#include "WorldObjects/SimPetAnimalSubsystem.h"
 
 void USimPetHUDWidget::NativeConstruct()
 {
@@ -79,26 +76,32 @@ void USimPetHUDWidget::UpdatePointsText(int32 Points)
 
 void USimPetHUDWidget::UpdateAnimalStats()
 {
-	if (!GetWorld()) return;
+	if (!GetWorld())
+		return;
+	
+	USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
+	
+	if (!AnimalSubsystem)
+		return;
 	
 	if (DogCountText)
 	{
-		TArray<AActor *> Dogs;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASimPetDog::StaticClass(), Dogs);
-		DogCountText->SetText(FText::AsNumber(Dogs.Num()));
+		int NumberOfDogs = AnimalSubsystem->GetNumberAnimalsCertainType(ESimPetAnimals::EA_Dog);
+		
+		DogCountText->SetText(FText::AsNumber(NumberOfDogs));
 	}
 	
 	if (CanaryCountText)
 	{
-		TArray<AActor *> Canaries;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASimPetCanary::StaticClass(), Canaries);
-		CanaryCountText->SetText(FText::AsNumber(Canaries.Num()));
+		int NumberOfCanaries = AnimalSubsystem->GetNumberAnimalsCertainType(ESimPetAnimals::EA_Canary);
+		
+		CanaryCountText->SetText(FText::AsNumber(NumberOfCanaries));
 	}
 	
 	if (LizardCountText)
 	{
-		TArray<AActor *> Lizards;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASimPetLizard::StaticClass(), Lizards);
-		LizardCountText->SetText(FText::AsNumber(Lizards.Num()));
+		int NumberOfLizards = AnimalSubsystem->GetNumberAnimalsCertainType(ESimPetAnimals::EA_Lizard);
+		
+		LizardCountText->SetText(FText::AsNumber(NumberOfLizards));
 	}
 }

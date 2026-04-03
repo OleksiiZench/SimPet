@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 
 #include "Interfaces/SimPetInteractable.h"
-#include "SimPetEnumTypes.h"
 
 #include "SimPetFabricator.generated.h"
 
@@ -28,7 +27,4 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<class USimPetFabricatorWidget> FabricatorWidgetClass;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AnimalSettings")
-	TMap<ESimPetAnimals, TSubclassOf<ASimPetAnimal>> AnimalClassMap;
 };

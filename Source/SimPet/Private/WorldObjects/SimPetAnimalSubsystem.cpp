@@ -10,15 +10,18 @@
 
 #include "SimPetDebugHelper.h"
 
-USimPetAnimalSubsystem::USimPetAnimalSubsystem()
-{
-}
-
-void USimPetAnimalSubsystem::SpawnAnimal(TSubclassOf<ASimPetAnimal> SpawnedAnimalClass)
+void USimPetAnimalSubsystem::SpawnAnimal(ESimPetAnimals AnimalType)
 {
 	TArray<AActor *> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASimPetSpawnPoint::StaticClass(), FoundActors);
-		
+	
+	TSubclassOf<ASimPetAnimal> SpawnedAnimalClass = GetAnimalClassByAnimalType(AnimalType);
+	if (!SpawnedAnimalClass)
+	{
+		Debug::Print(TEXT("OwnerAnimals doesn't have a corresponding AnimalType!"));
+		return;
+	}
+	
 	// 1. Беремо першу ліпшу ASimPetSpawnPoint
 	for (AActor *Actor : FoundActors)
 	{
@@ -54,4 +57,36 @@ void USimPetAnimalSubsystem::SpawnAnimal(TSubclassOf<ASimPetAnimal> SpawnedAnima
 			break;
 		}
 	}
+}
+
+int32 USimPetAnimalSubsystem::GetNumberAnimalsCertainType(ESimPetAnimals AnimalType) const
+{
+	TSubclassOf<ASimPetAnimal> AnimalClassToFind = GetAnimalClassByAnimalType(AnimalType);
+	if (!AnimalClassToFind)
+	{
+		Debug::Print(TEXT("OwnerAnimals doesn't have a corresponding AnimalType!"));
+		return -1;
+	}
+	
+	int counter = 0;
+	
+	for (ASimPetAnimal *OwnerAnimal : OwnerAnimals)
+	{
+		if (OwnerAnimal->IsA(AnimalClassToFind))
+		{
+			counter++;
+		}
+	}
+	
+	return counter;
+}
+
+TSubclassOf<ASimPetAnimal> USimPetAnimalSubsystem::GetAnimalClassByAnimalType(ESimPetAnimals AnimalType) const
+{
+	if (const TSubclassOf<ASimPetAnimal> *FoundClassPtr = AnimalClassMap.Find(AnimalType))
+	{
+		return *FoundClassPtr;
+	}
+	
+	return nullptr;
 }

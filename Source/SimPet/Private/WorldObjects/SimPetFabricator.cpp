@@ -44,13 +44,10 @@ void ASimPetFabricator::RequestSpawnAnimal(ESimPetAnimals AnimalType)
 	if (!GetWorld())
 		return;
 	
-	if (TSubclassOf<ASimPetAnimal> *FoundClassAnimal = AnimalClassMap.Find(AnimalType))
-	{
-		USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
-		
-		if (!AnimalSubsystem)
-			return;
-		
-		AnimalSubsystem->SpawnAnimal(*FoundClassAnimal);
-	}
+	USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
+	
+	if (!AnimalSubsystem)
+		return;
+	
+	AnimalSubsystem->SpawnAnimal(AnimalType);
 }

@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Subsystems/WorldSubsystem.h"
 
+#include "SimPetEnumTypes.h"
+
 #include "SimPetAnimalSubsystem.generated.h"
 
 class ASimPetAnimal;
@@ -12,18 +14,23 @@ class ASimPetAnimal;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract, Blueprintable)
 class SIMPET_API USimPetAnimalSubsystem : public UWorldSubsystem
 {
 	GENERATED_BODY()
 	
 public:
-	USimPetAnimalSubsystem();
+	void SpawnAnimal(ESimPetAnimals AnimalType);
 	
-	void SpawnAnimal(TSubclassOf<ASimPetAnimal> AnimalClass);
+	int32 GetNumberAnimalsCertainType(ESimPetAnimals AnimalType) const;
 	
-	int32 GetNumberAnimalsCertainType();
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|AnimalSettings")
+	TMap<ESimPetAnimals, TSubclassOf<ASimPetAnimal>> AnimalClassMap;
 	
 private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|Stats", meta = (AllowPrivateAccess = "true"))
 	TArray<ASimPetAnimal *> OwnerAnimals;
+	
+	TSubclassOf<ASimPetAnimal> GetAnimalClassByAnimalType(ESimPetAnimals AnimalType) const;
 };
