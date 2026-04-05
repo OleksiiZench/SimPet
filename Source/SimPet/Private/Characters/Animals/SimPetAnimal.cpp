@@ -6,7 +6,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "Components/SimPetPointsTransactionComponent.h"
-#include "Widgets/SimPetAnimalStatusWidget.h"
+#include "Widgets/SimPetAnimalNeedsStatusWidget.h"
 #include "Components/Attributes/SimPetNeedsComponent.h"
 #include "Components/Widgets/SimPetAutoHidingWidgetComponent.h"
 #include "Items/SimPetAnimalWaste.h"
@@ -229,7 +229,7 @@ void ASimPetAnimal::CacheAnimalStatusWidget()
 {
 	if (!AnimalStatusWidget)
 	{
-		AnimalStatusWidget = Cast<USimPetAnimalStatusWidget>(StatusWidgetComponent->GetUserWidgetObject());
+		AnimalStatusWidget = Cast<USimPetAnimalNeedsStatusWidget>(StatusWidgetComponent->GetUserWidgetObject());
 	}
 }
 

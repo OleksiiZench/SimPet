@@ -1,11 +1,11 @@
 // Copyright (c) 2025 Oleksii Zenchenko. All Rights Reserved.
 
 
-#include "Widgets/SimPetAnimalStatusWidget.h"
+#include "Widgets/SimPetAnimalNeedsStatusWidget.h"
 
 #include "Components/Image.h"
 
-void USimPetAnimalStatusWidget::NativeOnInitialized()
+void USimPetAnimalNeedsStatusWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 	
@@ -13,27 +13,27 @@ void USimPetAnimalStatusWidget::NativeOnInitialized()
 	SetDirtyIconVisible(false);
 }
 
-void USimPetAnimalStatusWidget::Init(ASimPetAnimal *InAnimal)
+void USimPetAnimalNeedsStatusWidget::Init(USimPetNeedsComponent *InAnimal)
 {
 	if (InAnimal)
-		CacheAnimal = InAnimal;
+		CacheAnimalNeedsComponent = InAnimal;
 }
 
-void USimPetAnimalStatusWidget::SetDirtyIconVisible(bool bVisible)
+void USimPetAnimalNeedsStatusWidget::SetDirtyIconVisible(bool bVisible)
 {	
 	ESlateVisibility Visibility = GetVisibilityFromBool(bVisible);
 	
 	DirtyIcon->SetVisibility(Visibility);
 }
 
-void USimPetAnimalStatusWidget::SetHungryIconVisible(bool bVisible)
+void USimPetAnimalNeedsStatusWidget::SetHungryIconVisible(bool bVisible)
 {
 	ESlateVisibility Visibility = GetVisibilityFromBool(bVisible);
 	
 	HungryIcon->SetVisibility(Visibility);
 }
 
-ESlateVisibility USimPetAnimalStatusWidget::GetVisibilityFromBool(bool bVisible) const
+ESlateVisibility USimPetAnimalNeedsStatusWidget::GetVisibilityFromBool(bool bVisible) const
 {
 	ESlateVisibility Visibility = ESlateVisibility::Visible;
 	
@@ -43,7 +43,3 @@ ESlateVisibility USimPetAnimalStatusWidget::GetVisibilityFromBool(bool bVisible)
 	return Visibility;
 }
 
-void USimPetAnimalStatusWidget::HandleGotHungry()
-{
-	
-}

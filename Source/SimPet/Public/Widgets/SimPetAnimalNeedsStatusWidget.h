@@ -5,22 +5,23 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 
-#include "SimPetAnimalStatusWidget.generated.h"
+#include "SimPetAnimalNeedsStatusWidget.generated.h"
 
 class UImage;
+class USimPetNeedsComponent;
 
 /**
  * 
  */
 UCLASS()
-class SIMPET_API USimPetAnimalStatusWidget : public UUserWidget
+class SIMPET_API USimPetAnimalNeedsStatusWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
 public:
 	virtual void NativeOnInitialized() override;
 	
-	void Init(ASimPetAnimal *InAnimal);
+	void Init(USimPetNeedsComponent *InNeedsComponent);
 	
 	void SetDirtyIconVisible(bool bVisible);
 	void SetHungryIconVisible(bool bVisible);
@@ -35,17 +36,17 @@ protected:
 	ESlateVisibility GetVisibilityFromBool(bool bVisible) const;
 	
 private:
-	ASimPetAnimal *CacheAnimal;
+	USimPetNeedsComponent *CacheAnimalNeedsComponent;
 	
-	UFUNCTION()
-	void HandleDied();
-	
-	UFUNCTION()
-	void HandleGotDirty();
-	
-	UFUNCTION()
-	void HandleGotHungry();
-	
-	UFUNCTION()
-	void HandleWasteCleaned();
+	// UFUNCTION()
+	// void HandleDied();
+	//
+	// UFUNCTION()
+	// void HandleGotDirty();
+	//
+	// UFUNCTION()
+	// void HandleGotHungry();
+	//
+	// UFUNCTION()
+	// void HandleWasteCleaned();
 };

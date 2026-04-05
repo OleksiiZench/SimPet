@@ -12,7 +12,7 @@
 class UBehaviorTree;
 class USimPetPointsTransactionComponent;
 class UWidgetComponent;
-class USimPetAnimalStatusWidget;
+class USimPetAnimalNeedsStatusWidget;
 class USimPetNeedsComponent;
 class USimPetAutoHidingWidgetComponent;
 class ASimPetAnimalWaste;
@@ -109,7 +109,7 @@ private:
 	UPROPERTY()
 	USimPetPointsTransactionComponent *PointsTransactionComponent;
 	
-	USimPetAnimalStatusWidget *AnimalStatusWidget;
+	USimPetAnimalNeedsStatusWidget *AnimalStatusWidget;
 	
 	UFUNCTION()
 	void HandleHappyTick();
