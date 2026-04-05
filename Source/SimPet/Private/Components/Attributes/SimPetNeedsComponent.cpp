@@ -39,6 +39,8 @@ void USimPetNeedsComponent::Feed()
 	
 	TimeSinceLastMeal = 0.0f;	
 	bNeedsFeed = false;
+	
+	OnHungrySatisfied.Broadcast();
 
 	TryEnterHappyState();
 }
@@ -50,6 +52,8 @@ void USimPetNeedsComponent::Wash()
 	
 	TimeSinceLastClean = 0.0f;
 	bNeedsCleaning = false;
+	
+	OnGotClean.Broadcast();
 	
 	TryEnterHappyState();
 }
@@ -153,7 +157,7 @@ void USimPetNeedsComponent::EnterTiredState()
 
 void USimPetNeedsComponent::EnterDeadState()
 {
-	if (AnimalState == ESimPetAnimalState::Dead)
+	if (AnimalState == ESimPetAnimalState::Tired)
 	{
 		AnimalState = ESimPetAnimalState::Dead;
 	}

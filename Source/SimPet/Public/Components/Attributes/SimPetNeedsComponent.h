@@ -10,7 +10,9 @@
 #include "SimPetNeedsComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGotHungrySignature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHungrySatisfied);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGotDirtySignature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGotCleanSignature);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDiedSignature);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHappyTickSignature);
 
@@ -34,7 +36,13 @@ public:
 	FOnGotHungrySignature OnGotHungry;
 	
 	UPROPERTY()
+	FOnHungrySatisfied OnHungrySatisfied;
+	
+	UPROPERTY()
 	FOnGotDirtySignature OnGotDirty;
+	
+	UPROPERTY()
+	FOnGotCleanSignature OnGotClean;
 	
 	UPROPERTY()
 	FOnDiedSignature OnDied;

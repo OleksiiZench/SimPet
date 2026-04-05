@@ -109,8 +109,6 @@ private:
 	UPROPERTY()
 	USimPetPointsTransactionComponent *PointsTransactionComponent;
 	
-	USimPetAnimalNeedsStatusWidget *AnimalStatusWidget;
-	
 	UFUNCTION()
 	void HandleHappyTick();
 	
@@ -121,14 +119,11 @@ private:
 	void HandleGotDirty();
 	
 	UFUNCTION()
-	void HandleGotHungry();
-	
-	UFUNCTION()
 	void HandleWasteCleaned();
 	
 	void InitializeBaseBody();
 	void SetupComponents();
-	void CacheAnimalStatusWidget();
+	void InitializeAnimalStatusWidget();
 	void BindNeedsEvents();
 	
 	void SpawnAnimalWaste();

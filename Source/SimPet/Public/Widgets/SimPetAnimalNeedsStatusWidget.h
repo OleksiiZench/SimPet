@@ -36,17 +36,22 @@ protected:
 	ESlateVisibility GetVisibilityFromBool(bool bVisible) const;
 	
 private:
-	USimPetNeedsComponent *CacheAnimalNeedsComponent;
+	TWeakObjectPtr<USimPetNeedsComponent> CacheAnimalNeedsComponent;
 	
-	// UFUNCTION()
-	// void HandleDied();
-	//
-	// UFUNCTION()
-	// void HandleGotDirty();
-	//
-	// UFUNCTION()
-	// void HandleGotHungry();
-	//
-	// UFUNCTION()
-	// void HandleWasteCleaned();
+	void BindNeedsEvents();
+	
+	UFUNCTION()
+	void HandleDied();
+	
+	UFUNCTION()
+	void HandleGotDirty();
+	
+	UFUNCTION()
+	void HandleGotHungry();
+	
+	UFUNCTION()
+	void HandleGotClean();
+	
+	UFUNCTION()
+	void HandleHungrySatisfied();
 };

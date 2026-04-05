@@ -44,7 +44,7 @@ void ASimPetAnimal::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	CacheAnimalStatusWidget();
+	InitializeAnimalStatusWidget();
 	
 	BindNeedsEvents();
 }
@@ -66,9 +66,6 @@ void ASimPetAnimal::FeedAnimal()
 	if (NeedsComponent)
 	{
 		NeedsComponent->Feed();
-		
-		if (AnimalStatusWidget)
-			AnimalStatusWidget->SetHungryIconVisible(false);
 	}
 }
 
@@ -181,16 +178,7 @@ void ASimPetAnimal::HandleDied()
 
 void ASimPetAnimal::HandleGotDirty()
 {
-	if (AnimalStatusWidget)
-		AnimalStatusWidget->SetDirtyIconVisible(true);
-	
 	SpawnAnimalWaste();
-}
-
-void ASimPetAnimal::HandleGotHungry()
-{
-	if (AnimalStatusWidget)
-		AnimalStatusWidget->SetHungryIconVisible(true);
 }
 
 void ASimPetAnimal::HandleWasteCleaned()
@@ -225,11 +213,13 @@ void ASimPetAnimal::SetupComponents()
 	StatusWidgetComponent->SetDrawSize(FVector2D(200.0f, 100.0f));
 }
 
-void ASimPetAnimal::CacheAnimalStatusWidget()
+void ASimPetAnimal::InitializeAnimalStatusWidget()
 {
-	if (!AnimalStatusWidget)
+	USimPetAnimalNeedsStatusWidget *AnimalStatusWidget = Cast<USimPetAnimalNeedsStatusWidget>(StatusWidgetComponent->GetUserWidgetObject());
+	
+	if (AnimalStatusWidget)
 	{
-		AnimalStatusWidget = Cast<USimPetAnimalNeedsStatusWidget>(StatusWidgetComponent->GetUserWidgetObject());
+		AnimalStatusWidget->Init(NeedsComponent);
 	}
 }
 
@@ -238,7 +228,6 @@ void ASimPetAnimal::BindNeedsEvents()
 	NeedsComponent->OnHappyTick.AddDynamic(this, &ASimPetAnimal::HandleHappyTick);
 	NeedsComponent->OnDied.AddDynamic(this, &ASimPetAnimal::HandleDied);
 	NeedsComponent->OnGotDirty.AddDynamic(this, &ASimPetAnimal::HandleGotDirty);
-	NeedsComponent->OnGotHungry.AddDynamic(this, &ASimPetAnimal::HandleGotHungry);
 }
 
 void ASimPetAnimal::SpawnAnimalWaste()
@@ -285,9 +274,6 @@ void ASimPetAnimal::CleanAnimal()
 	if (NeedsComponent)
 	{
 		NeedsComponent->Wash();
-		
-		if (AnimalStatusWidget)
-			AnimalStatusWidget->SetDirtyIconVisible(false);
 	}
 }
 
@@ -296,12 +282,6 @@ void ASimPetAnimal::Die()
 	if (AController *AnimalController = GetController())
 	{
 		AnimalController->Destroy();
-	}
-	
-	if (AnimalStatusWidget)
-	{
-		AnimalStatusWidget->SetDirtyIconVisible(false);
-		AnimalStatusWidget->SetHungryIconVisible(false);
 	}
 	
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);

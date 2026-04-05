@@ -5,6 +5,10 @@
 
 #include "Components/Image.h"
 
+#include "Components/Attributes/SimPetNeedsComponent.h"
+
+#include "SimPetDebugHelper.h"
+
 void USimPetAnimalNeedsStatusWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
@@ -13,10 +17,18 @@ void USimPetAnimalNeedsStatusWidget::NativeOnInitialized()
 	SetDirtyIconVisible(false);
 }
 
-void USimPetAnimalNeedsStatusWidget::Init(USimPetNeedsComponent *InAnimal)
+void USimPetAnimalNeedsStatusWidget::Init(USimPetNeedsComponent *InNeedsComponent)
 {
-	if (InAnimal)
-		CacheAnimalNeedsComponent = InAnimal;
+	if (InNeedsComponent)
+	{
+		CacheAnimalNeedsComponent = InNeedsComponent;
+		
+		BindNeedsEvents();
+	}
+	else
+	{
+		Debug::Print(TEXT("Filed to cache InNeedsComponent!"));
+	}
 }
 
 void USimPetAnimalNeedsStatusWidget::SetDirtyIconVisible(bool bVisible)
@@ -43,3 +55,40 @@ ESlateVisibility USimPetAnimalNeedsStatusWidget::GetVisibilityFromBool(bool bVis
 	return Visibility;
 }
 
+void USimPetAnimalNeedsStatusWidget::BindNeedsEvents()
+{
+	if (CacheAnimalNeedsComponent.IsValid())
+	{
+		CacheAnimalNeedsComponent->OnDied.AddDynamic(this, &USimPetAnimalNeedsStatusWidget::HandleDied);
+		CacheAnimalNeedsComponent->OnGotDirty.AddDynamic(this, &USimPetAnimalNeedsStatusWidget::HandleGotDirty);
+		CacheAnimalNeedsComponent->OnGotHungry.AddDynamic(this, &USimPetAnimalNeedsStatusWidget::HandleGotHungry);
+		CacheAnimalNeedsComponent->OnGotClean.AddDynamic(this, &USimPetAnimalNeedsStatusWidget::HandleGotClean);
+		CacheAnimalNeedsComponent->OnHungrySatisfied.AddDynamic(this, &USimPetAnimalNeedsStatusWidget::HandleHungrySatisfied);
+	}
+}
+
+void USimPetAnimalNeedsStatusWidget::HandleDied()
+{
+	SetDirtyIconVisible(false);
+	SetHungryIconVisible(false);
+}
+
+void USimPetAnimalNeedsStatusWidget::HandleGotDirty()
+{
+	SetDirtyIconVisible(true);
+}
+
+void USimPetAnimalNeedsStatusWidget::HandleGotHungry()
+{
+	SetHungryIconVisible(true);
+}
+
+void USimPetAnimalNeedsStatusWidget::HandleGotClean()
+{
+	SetDirtyIconVisible(false);
+}
+
+void USimPetAnimalNeedsStatusWidget::HandleHungrySatisfied()
+{
+	SetHungryIconVisible(false);
+}
