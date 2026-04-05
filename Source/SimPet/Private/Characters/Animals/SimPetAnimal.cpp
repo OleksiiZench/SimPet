@@ -4,16 +4,20 @@
 #include "Characters/Animals/SimPetAnimal.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 #include "Components/SimPetPointsTransactionComponent.h"
 #include "Widgets/SimPetAnimalNeedsStatusWidget.h"
 #include "Components/Attributes/SimPetNeedsComponent.h"
 #include "Components/Widgets/SimPetAutoHidingWidgetComponent.h"
 #include "Items/SimPetAnimalWaste.h"
-
 #include "Characters/SimPetPlayer.h"
+#include "AI/SimPetAIController.h"
+#include "WorldObjects/SimPetAnimalSubsystem.h"
+
 #include "SimPetDebugHelper.h"
-#include "Components/CapsuleComponent.h"
+
 
 ASimPetAnimal::ASimPetAnimal()
 {
@@ -59,6 +63,12 @@ void ASimPetAnimal::Tick(float DeltaTime)
 void ASimPetAnimal::Interact_Implementation(AActor *InstigatorActor)
 {	
 	Debug::Print("Interact with animal");
+	
+	USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
+	if (AnimalSubsystem)
+	{
+		AnimalSubsystem->MoveAnimalToForest();
+	}
 }
 
 void ASimPetAnimal::FeedAnimal()
@@ -67,6 +77,22 @@ void ASimPetAnimal::FeedAnimal()
 	{
 		NeedsComponent->Feed();
 	}
+}
+
+void ASimPetAnimal::ApplyForestState()
+{
+	if (NeedsComponent)
+		NeedsComponent->DisableNeedsAndBecomeHappy();
+	
+	UpdateBlackboardForForest();
+}
+
+void ASimPetAnimal::ApplyOwnerState()
+{
+	if (NeedsComponent)
+		NeedsComponent->EnableNeeds();
+	
+	UpdateBlackboardForOwner();
 }
 
 ESimPetAnimalState ASimPetAnimal::GetAnimalState()
@@ -307,6 +333,34 @@ void ASimPetAnimal::ScatterMeshParts()
 		FVector RandomKick = FVector(FMath::RandRange(-100, 100), FMath::RandRange(-100, 100), FMath::RandRange(100, 600));
 		MeshPart->AddImpulse(RandomKick, NAME_None, true);
 	}
+}
+
+void ASimPetAnimal::UpdateBlackboardForForest()
+{
+	SetBlackboardParam(3000.0f, 3000.0f, 3000.0f, true);
+}
+
+void ASimPetAnimal::UpdateBlackboardForOwner()
+{
+	SetBlackboardParam(300.0f, 300.0f, 350.0f, true);
+}
+
+void ASimPetAnimal::SetBlackboardParam(float BaseRadius, float FlyRadius, float ZigZagRadius, bool bChangeHomeLocation)
+{
+	ASimPetAIController *AIController = Cast<ASimPetAIController>(GetController());
+	if (!AIController)
+		return;
+	
+	UBlackboardComponent *BBComponent = AIController->GetBlackboardComponent();
+	if (!BBComponent)
+		return;
+	
+	BBComponent->SetValueAsFloat(FName("BaseRadiusAroundHome"), BaseRadius);
+	BBComponent->SetValueAsFloat(FName("FlyRadiusAroundHome"), FlyRadius);
+	BBComponent->SetValueAsFloat(FName("ZigZagRadiusAroundHome"), ZigZagRadius);
+	
+	if (bChangeHomeLocation)
+		BBComponent->SetValueAsVector(FName("HomeLocation"), GetActorLocation());
 }
 
 void ASimPetAnimal::GeneratePointsIfAnimalIsHappy()

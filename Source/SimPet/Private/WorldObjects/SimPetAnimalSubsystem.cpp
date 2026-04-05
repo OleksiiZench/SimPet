@@ -59,6 +59,24 @@ void USimPetAnimalSubsystem::SpawnAnimal(ESimPetAnimals AnimalType)
 	}
 }
 
+void USimPetAnimalSubsystem::MoveAnimalToForest()
+{
+	ASimPetAnimal *Animal = OwnerAnimals.Pop();
+	WildAnimals.Add(Animal);
+	
+	Animal->SetActorLocation(FVector(125.0f, 2470.0f, 100.0f));
+	Animal->ApplyForestState();
+}
+
+void USimPetAnimalSubsystem::MoveAnimalToOwner()
+{
+	ASimPetAnimal *Animal = WildAnimals.Pop();
+	OwnerAnimals.Add(Animal);
+	
+	Animal->SetActorLocation(FVector(0.0f, 0.0f, 0.0f));
+	Animal->ApplyOwnerState();
+}
+
 int32 USimPetAnimalSubsystem::GetNumberAnimalsCertainType(ESimPetAnimals AnimalType) const
 {
 	if (OwnerAnimals.IsEmpty())

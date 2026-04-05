@@ -38,6 +38,9 @@ public:
 	
 	void FeedAnimal();
 	
+	void ApplyForestState();
+	void ApplyOwnerState();
+	
 	ESimPetAnimalState GetAnimalState();
 	
 #pragma region AI
@@ -132,6 +135,10 @@ private:
 	void CleanAnimal();
 	void Die();
 	void ScatterMeshParts();
+	
+	void UpdateBlackboardForForest();
+	void UpdateBlackboardForOwner();
+	void SetBlackboardParam(float BaseRadius, float FlyRadius, float ZigZagRadius, bool bChangeHomeLocation);
 	
 	void GeneratePointsIfAnimalIsHappy();
 	void GeneratePenaltyPointsWhenAnimalDied();

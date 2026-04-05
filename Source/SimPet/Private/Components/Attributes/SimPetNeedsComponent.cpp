@@ -27,6 +27,19 @@ void USimPetNeedsComponent::BeginPlay()
 	StartNeedsTimer();
 }
 
+void USimPetNeedsComponent::DisableNeedsAndBecomeHappy()
+{
+	Feed();
+	Wash();
+	
+	StopNeedsTimer();
+}
+
+void USimPetNeedsComponent::EnableNeeds()
+{
+	StartNeedsTimer();
+}
+
 ESimPetAnimalState USimPetNeedsComponent::GetAnimalState()
 {
 	return AnimalState;

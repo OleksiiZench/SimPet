@@ -27,6 +27,8 @@ public:
 	
 	virtual void BeginPlay() override;
 	
+	void DisableNeedsAndBecomeHappy();
+	void EnableNeeds();
 	ESimPetAnimalState GetAnimalState();
 	
 	void Feed();
