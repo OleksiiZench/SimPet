@@ -17,8 +17,6 @@ UBTTask_ZigZagMoveTo::UBTTask_ZigZagMoveTo()
 	bNotifyTick = true;
 	
 	HomeLocationKey.AddVectorFilter(this, GET_MEMBER_NAME_CHECKED(UBTTask_ZigZagMoveTo, HomeLocationKey));
-	
-	Radius = 350.0f;
 }
 
 void UBTTask_ZigZagMoveTo::InitializeFromAsset(UBehaviorTree &Asset)
@@ -34,6 +32,8 @@ void UBTTask_ZigZagMoveTo::InitializeFromAsset(UBehaviorTree &Asset)
 
 EBTNodeResult::Type UBTTask_ZigZagMoveTo::ExecuteTask(UBehaviorTreeComponent &OwnerComp, uint8 *NodeMemory)
 {
+	UBlackboardComponent *BB = OwnerComp.GetBlackboardComponent();
+	
 	// 1. Отримуємо котролер та Pawn
 	AAIController *AIController = OwnerComp.GetAIOwner();
 	APawn *AIPawn = AIController ? AIController->GetPawn() : nullptr;
@@ -54,12 +54,14 @@ EBTNodeResult::Type UBTTask_ZigZagMoveTo::ExecuteTask(UBehaviorTreeComponent &Ow
 		HomeLocation = CurrentLocation;
 	
 	// 4. Шукаємо випадкову точка на NavMesh навколо тварини
+	float ActualRadius = BB->GetValueAsFloat(RadiusKey.SelectedKeyName);
+	
 	FNavLocation ResultLocation;
 	FVector TargetLocation;
 	
 	bool bFound = NavSys->GetRandomPointInNavigableRadius(
 		HomeLocation,
-		Radius,
+		ActualRadius,
 		ResultLocation
 	);
 	

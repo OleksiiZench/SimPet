@@ -21,7 +21,7 @@ public:
 	
 protected:
 	UPROPERTY(EditAnywhere, Category = "AI")
-	float FlyRadius;
+	FBlackboardKeySelector FlyRadiusKey;
 	
 	UPROPERTY(EditAnywhere, Category = "AI")
 	float FlyHeightMin;

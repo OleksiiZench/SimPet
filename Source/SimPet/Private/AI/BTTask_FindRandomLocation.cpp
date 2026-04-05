@@ -13,8 +13,6 @@ UBTTask_FindRandomLocation::UBTTask_FindRandomLocation()
 	NodeName = TEXT("Find Random Location");
 	
 	HomeLocationKey.AddVectorFilter(this, GET_MEMBER_NAME_CHECKED(UBTTask_FindRandomLocation, HomeLocationKey));
-	
-	Radius = 300.0f;
 }
 
 void UBTTask_FindRandomLocation::InitializeFromAsset(UBehaviorTree &Asset)
@@ -30,6 +28,8 @@ void UBTTask_FindRandomLocation::InitializeFromAsset(UBehaviorTree &Asset)
 
 EBTNodeResult::Type UBTTask_FindRandomLocation::ExecuteTask(UBehaviorTreeComponent &OwnerComp, uint8 *NodeMemory)
 {
+	UBlackboardComponent *BB = OwnerComp.GetBlackboardComponent();
+	
 	// 1. Отримуємо котролер та пішака
 	AAIController *AIController = OwnerComp.GetAIOwner();
 	APawn *AIPawn = AIController ? AIController->GetPawn() : nullptr;
@@ -48,18 +48,20 @@ EBTNodeResult::Type UBTTask_FindRandomLocation::ExecuteTask(UBehaviorTreeCompone
 		HomeLocation = AIPawn->GetActorLocation();
 	
 	// 4. Шукаємо випадкову точка на NavMesh навколо тварини
+	float ActualRadius = BB->GetValueAsFloat(RadiusKey.SelectedKeyName);
+	
 	FNavLocation ResultLocation;
 	
 	bool bFound = NavSys->GetRandomPointInNavigableRadius(
 		HomeLocation,
-		Radius,
+		ActualRadius,
 		ResultLocation
 	);
 	
 	// 5. Записуємо результат у ключ TargetLocation
 	if (bFound)
 	{
-		OwnerComp.GetBlackboardComponent()->SetValueAsVector(GetSelectedBlackboardKey(), ResultLocation.Location);
+		BB->SetValueAsVector(GetSelectedBlackboardKey(), ResultLocation.Location);
 		return EBTNodeResult::Succeeded;
 	}
 	

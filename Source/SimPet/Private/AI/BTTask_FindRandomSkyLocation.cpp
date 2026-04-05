@@ -10,7 +10,6 @@ UBTTask_FindRandomSkyLocation::UBTTask_FindRandomSkyLocation()
 {
 	NodeName = "Find Random Sky Location";
 	
-	FlyRadius = 500.0f;
 	FlyHeightMin = 300.0f;
 	FlyHeightMax = 600.0f;
 	
@@ -34,7 +33,9 @@ EBTNodeResult::Type UBTTask_FindRandomSkyLocation::ExecuteTask(UBehaviorTreeComp
 	FVector RandomOffset = FMath::VRand();
 	RandomOffset.Z = 0;
 	RandomOffset.Normalize();
-	RandomOffset *= FMath::RandRange(0.0f, FlyRadius);
+	
+	float ActualFlyRadius = BB->GetValueAsFloat(FlyRadiusKey.SelectedKeyName);
+	RandomOffset *= FMath::RandRange(0.0f, ActualFlyRadius);
 	
 	float RandomZ = FMath::RandRange(FlyHeightMin, FlyHeightMax);  // Додаємо випадкову висоту
 	

@@ -24,7 +24,7 @@ public:
 	
 protected:
 	UPROPERTY(EditAnywhere, Category = "AI")
-	float Radius; // Радіус пошуку точки
+	FBlackboardKeySelector RadiusKey; // Радіус пошуку точки
 	
 	UPROPERTY(EditAnywhere, Category = "AI")
 	FBlackboardKeySelector HomeLocationKey;  // Ключ координат дому
