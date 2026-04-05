@@ -13,6 +13,12 @@ void USimPetAnimalStatusWidget::NativeOnInitialized()
 	SetDirtyIconVisible(false);
 }
 
+void USimPetAnimalStatusWidget::Init(ASimPetAnimal *InAnimal)
+{
+	if (InAnimal)
+		CacheAnimal = InAnimal;
+}
+
 void USimPetAnimalStatusWidget::SetDirtyIconVisible(bool bVisible)
 {	
 	ESlateVisibility Visibility = GetVisibilityFromBool(bVisible);
@@ -35,4 +41,9 @@ ESlateVisibility USimPetAnimalStatusWidget::GetVisibilityFromBool(bool bVisible)
 		Visibility = ESlateVisibility::Collapsed;
 	
 	return Visibility;
+}
+
+void USimPetAnimalStatusWidget::HandleGotHungry()
+{
+	
 }

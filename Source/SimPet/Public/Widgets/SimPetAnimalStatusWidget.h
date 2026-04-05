@@ -20,6 +20,8 @@ class SIMPET_API USimPetAnimalStatusWidget : public UUserWidget
 public:
 	virtual void NativeOnInitialized() override;
 	
+	void Init(ASimPetAnimal *InAnimal);
+	
 	void SetDirtyIconVisible(bool bVisible);
 	void SetHungryIconVisible(bool bVisible);
 	
@@ -31,4 +33,19 @@ protected:
 	UImage *HungryIcon;
 	
 	ESlateVisibility GetVisibilityFromBool(bool bVisible) const;
+	
+private:
+	ASimPetAnimal *CacheAnimal;
+	
+	UFUNCTION()
+	void HandleDied();
+	
+	UFUNCTION()
+	void HandleGotDirty();
+	
+	UFUNCTION()
+	void HandleGotHungry();
+	
+	UFUNCTION()
+	void HandleWasteCleaned();
 };
