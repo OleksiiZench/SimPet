@@ -25,42 +25,24 @@ void USimPetAnimalSubsystem::SpawnAnimal(ESimPetAnimals AnimalType)
 		Debug::Print(TEXT("OwnerAnimals doesn't have a corresponding AnimalType!"));
 		return;
 	}
-	
-	// 1. Беремо першу ліпшу ASimPetSpawnPoint
-	for (ASimPetSpawnPoint *SpawnPoint : AllSpawnPoints)
+
+
+	ASimPetSpawnPoint *AnimalSpawnPoint = GetSpawnPointForSpawnAnimal();
+	if (AnimalSpawnPoint == nullptr)
+		return;
+
+	FTransform AnimalTransform = AnimalSpawnPoint->GetTransform();
+	ASimPetAnimal *NewAnimal = GetWorld()->SpawnActor<ASimPetAnimal>(*SpawnedAnimalClass, AnimalTransform);
+
+	if (NewAnimal)
 	{
-		if (!SpawnPoint)
-		{
-			continue;
-		}
-			
-		// 2. Отримуємо теги точки
-		FGameplayTagContainer TagContainer;
-		SpawnPoint->GetOwnedGameplayTags(TagContainer);
-		
-		// 3. Точка має бути SpawnPoint.ForAnimal та не мати тварину
-		if (!TagContainer.HasTag(SimPetGameplayTags::Spawn_Point_ForAnimal) ||
-			TagContainer.HasTag(SimPetGameplayTags::Spawn_Point_HasAnimal))
-		{
-			continue;
-		}
-		
-		ASimPetSpawnPoint *AnimalSpawnPoint = SpawnPoint;
-		
-		FTransform AnimalTransform = AnimalSpawnPoint->GetTransform();		
-		ASimPetAnimal *NewAnimal = GetWorld()->SpawnActor<ASimPetAnimal>(*SpawnedAnimalClass, AnimalTransform);
+		Debug::Print(TEXT("Spawned: ") + (*SpawnedAnimalClass)->GetName());
 
-		if (NewAnimal)
-		{
-			Debug::Print(TEXT("Spawned: ") + (*SpawnedAnimalClass)->GetName());
-			
-			OwnerAnimals.Add(NewAnimal);
-			
-			BindAnimalToSpawnPoint(NewAnimal, AnimalSpawnPoint);
+		OwnerAnimals.Add(NewAnimal);
 
-			break;
-		}
+		BindAnimalToSpawnPoint(NewAnimal, AnimalSpawnPoint);
 	}
+	
 }
 
 void USimPetAnimalSubsystem::MoveAnimalToForest()
@@ -85,7 +67,15 @@ void USimPetAnimalSubsystem::MoveAnimalToOwner()
 
 	OwnerAnimals.Add(Animal);
 	
-	Animal->SetActorLocation(FVector(0.0f, 0.0f, 0.0f));
+	ASimPetSpawnPoint *AnimalSpawnPoint = GetSpawnPointForSpawnAnimal();
+	if (AnimalSpawnPoint == nullptr)
+		return;
+	
+	BindAnimalToSpawnPoint(Animal, AnimalSpawnPoint);
+	
+	FVector LocationSpawnPoint = AnimalSpawnPoint->GetActorLocation();
+	
+	Animal->SetActorLocation(LocationSpawnPoint);
 	Animal->ApplyOwnerState();
 }
 
@@ -120,6 +110,31 @@ int32 USimPetAnimalSubsystem::GetNumberAnimalsCertainType(ESimPetAnimals AnimalT
 int32 USimPetAnimalSubsystem::GetNumberWildAnimals() const
 {
 	return WildAnimals.Num();
+}
+
+ASimPetSpawnPoint * USimPetAnimalSubsystem::GetSpawnPointForSpawnAnimal()
+{
+	for (ASimPetSpawnPoint *SpawnPoint : AllSpawnPoints)
+	{
+		if (!SpawnPoint)
+		{
+			continue;
+		}
+			
+		FGameplayTagContainer TagContainer;
+		SpawnPoint->GetOwnedGameplayTags(TagContainer);
+		
+		if (!TagContainer.HasTag(SimPetGameplayTags::Spawn_Point_ForAnimal) ||
+			TagContainer.HasTag(SimPetGameplayTags::Spawn_Point_HasAnimal))
+		{
+			continue;
+		}
+		
+		return SpawnPoint;
+	}
+	
+	Debug::Print(TEXT("The desired spawn point for the animal was not found!"));
+	return nullptr;
 }
 
 void USimPetAnimalSubsystem::BindAnimalToSpawnPoint(ASimPetAnimal *Animal, ASimPetSpawnPoint *AnimalSpawnPoint)

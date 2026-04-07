@@ -48,6 +48,8 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|Stats", meta = (AllowPrivateAccess = "true"))
 	TArray<ASimPetAnimal *> WildAnimals;
 	
+	ASimPetSpawnPoint *GetSpawnPointForSpawnAnimal();
+	
 	void BindAnimalToSpawnPoint(ASimPetAnimal *Animal, ASimPetSpawnPoint *AnimalSpawnPoint);
 	void UnbindAnimalFromSpawnPoint(ASimPetAnimal *Animal);
 	

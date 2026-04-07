@@ -6,6 +6,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "BrainComponent.h"
 
 #include "Components/SimPetPointsTransactionComponent.h"
 #include "Widgets/SimPetAnimalNeedsStatusWidget.h"
@@ -370,6 +371,13 @@ void ASimPetAnimal::SetBlackboardParam(float BaseRadius, float FlyRadius, float 
 	
 	if (bChangeHomeLocation)
 		BBComponent->SetValueAsVector(FName("HomeLocation"), GetActorLocation());
+	
+	AIController->StopMovement();
+	
+	if (UBrainComponent *BrainComponent = AIController->GetBrainComponent())
+	{
+		BrainComponent->RestartLogic();
+	}
 }
 
 void ASimPetAnimal::GeneratePointsIfAnimalIsHappy()
