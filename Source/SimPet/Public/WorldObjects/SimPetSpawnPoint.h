@@ -17,9 +17,12 @@ class SIMPET_API ASimPetSpawnPoint : public ATargetPoint, public IGameplayTagAss
 	GENERATED_BODY()
 	
 public:
+	virtual void BeginPlay() override;
+	
 	virtual void GetOwnedGameplayTags(FGameplayTagContainer &TagContainer) const override;
 	
 	void AddGameplayTags(const FGameplayTag& Tag);  // Думаю цей метод можна перевизначити з інтерфейсу IGameplayTagAssetInterface
+	void RemoveGameplayTags(const FGameplayTag& Tag);
 	
 	UFUNCTION()
 	void HandleFeedPickedUp(ASimPetAnimalFeed *PickedFeed);
@@ -27,4 +30,7 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tags")
 	FGameplayTagContainer GameplayTags;
+	
+private:
+	void RegisterSpawnPointInAnimaSubsystem();
 };

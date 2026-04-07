@@ -67,7 +67,16 @@ void ASimPetAnimal::Interact_Implementation(AActor *InstigatorActor)
 	USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
 	if (AnimalSubsystem)
 	{
-		AnimalSubsystem->MoveAnimalToForest();
+		if (bAnimalInForest)
+		{
+			AnimalSubsystem->MoveAnimalToOwner();
+			bAnimalInForest = false;
+		}
+		else
+		{
+			AnimalSubsystem->MoveAnimalToForest();
+			bAnimalInForest = true;
+		}
 	}
 }
 

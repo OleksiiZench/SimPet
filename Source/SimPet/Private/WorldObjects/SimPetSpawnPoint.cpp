@@ -5,6 +5,14 @@
 
 #include "SimPetGameplayTags.h"
 #include "Items/SimPetAnimalFeed.h"
+#include "WorldObjects/SimPetAnimalSubsystem.h"
+
+void ASimPetSpawnPoint::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	RegisterSpawnPointInAnimaSubsystem();
+}
 
 void ASimPetSpawnPoint::GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const
 {
@@ -17,10 +25,25 @@ void ASimPetSpawnPoint::AddGameplayTags(const FGameplayTag& Tag)
 		GameplayTags.AddTag(Tag);
 }
 
+void ASimPetSpawnPoint::RemoveGameplayTags(const FGameplayTag &Tag)
+{
+	if (Tag.IsValid())
+		GameplayTags.RemoveTag(Tag);
+}
+
 void ASimPetSpawnPoint::HandleFeedPickedUp(ASimPetAnimalFeed *PickedFeed)
 {
 	GameplayTags.RemoveTag(SimPetGameplayTags::Spawn_Point_HasFeed);
 	
 	if (PickedFeed)
 		PickedFeed->OnFeedPickedUp.RemoveDynamic(this, &ASimPetSpawnPoint::HandleFeedPickedUp);
+}
+
+void ASimPetSpawnPoint::RegisterSpawnPointInAnimaSubsystem()
+{
+	USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
+	if (AnimalSubsystem)
+	{
+		AnimalSubsystem->RegisterSpawnPoint(this);
+	}
 }
