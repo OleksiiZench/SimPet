@@ -16,7 +16,7 @@ class ASimPetSpawnPoint;
 /**
  * 
  */
-UCLASS(Abstract, Blueprintable)
+UCLASS()
 class SIMPET_API USimPetAnimalSubsystem : public UWorldSubsystem
 {
 	GENERATED_BODY()
@@ -31,10 +31,6 @@ public:
 	
 	int32 GetNumberAnimalsCertainType(ESimPetAnimals AnimalType) const;
 	int32 GetNumberWildAnimals() const;
-	
-protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SimPet|AnimalSettings")
-	TMap<ESimPetAnimals, TSubclassOf<ASimPetAnimal>> AnimalClassMap;
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|Stats", meta = (AllowPrivateAccess = "true"))

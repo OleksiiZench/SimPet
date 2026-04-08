@@ -6,8 +6,10 @@
 #include "WorldObjects/SimPetSpawnPoint.h"
 #include "SimPetGameplayTags.h"
 #include "Characters/Animals/SimPetAnimal.h"
+#include "WorldObjects/SimPetAnimalSettings.h"
 
 #include "SimPetDebugHelper.h"
+
 
 void USimPetAnimalSubsystem::RegisterSpawnPoint(ASimPetSpawnPoint *SpawnPoint)
 {
@@ -185,9 +187,14 @@ void USimPetAnimalSubsystem::UnbindAnimalFromSpawnPoint(ASimPetAnimal *Animal)
 
 TSubclassOf<ASimPetAnimal> USimPetAnimalSubsystem::GetAnimalClassByAnimalType(ESimPetAnimals AnimalType) const
 {
-	if (const TSubclassOf<ASimPetAnimal> *FoundClassPtr = AnimalClassMap.Find(AnimalType))
+	const USimPetAnimalSettings *Settings = GetDefault<USimPetAnimalSettings>();
+	
+	if (Settings)
 	{
-		return *FoundClassPtr;
+		if (const TSubclassOf<ASimPetAnimal> *FoundClassPtr = Settings->AnimalClassMap.Find(AnimalType))
+		{
+			return *FoundClassPtr;
+		}
 	}
 	
 	return nullptr;
