@@ -27,7 +27,7 @@ void USimPetAnimalSubsystem::SpawnAnimal(ESimPetAnimals AnimalType)
 	}
 
 
-	ASimPetSpawnPoint *AnimalSpawnPoint = GetSpawnPointForSpawnAnimal();
+	ASimPetSpawnPoint *AnimalSpawnPoint = GetSpawnPointInOwner();
 	if (AnimalSpawnPoint == nullptr)
 		return;
 
@@ -57,8 +57,14 @@ void USimPetAnimalSubsystem::MoveAnimalToForest()
 	WildAnimals.Add(Animal);
 	
 	UnbindAnimalFromSpawnPoint(Animal);
+	
+	ASimPetSpawnPoint *SpawnPoint = GetSpawnPointInForest();
+	if (SpawnPoint == nullptr)
+		return;
+	
+	FVector LocationSpawnPoint = SpawnPoint->GetActorLocation();
 
-	Animal->SetActorLocation(FVector(125.0f, 2470.0f, 100.0f));
+	Animal->SetActorLocation(LocationSpawnPoint);
 	Animal->ApplyForestState();
 }
 
@@ -73,7 +79,7 @@ void USimPetAnimalSubsystem::MoveAnimalToOwner()
 
 	OwnerAnimals.Add(Animal);
 	
-	ASimPetSpawnPoint *AnimalSpawnPoint = GetSpawnPointForSpawnAnimal();
+	ASimPetSpawnPoint *AnimalSpawnPoint = GetSpawnPointInOwner();
 	if (AnimalSpawnPoint == nullptr)
 		return;
 	
@@ -118,7 +124,17 @@ int32 USimPetAnimalSubsystem::GetNumberWildAnimals() const
 	return WildAnimals.Num();
 }
 
-ASimPetSpawnPoint * USimPetAnimalSubsystem::GetSpawnPointForSpawnAnimal()
+ASimPetSpawnPoint * USimPetAnimalSubsystem::GetSpawnPointInOwner()
+{
+	return FindAvailibleSpawnPointByTag(SimPetGameplayTags::Spawn_Point_ForAnimal_InOwner);
+}
+
+ASimPetSpawnPoint * USimPetAnimalSubsystem::GetSpawnPointInForest()
+{
+	return FindAvailibleSpawnPointByTag(SimPetGameplayTags::Spawn_Point_ForAnimal_InForest);
+}
+
+ASimPetSpawnPoint * USimPetAnimalSubsystem::FindAvailibleSpawnPointByTag(const FGameplayTag &LocationTag)
 {
 	for (ASimPetSpawnPoint *SpawnPoint : AllSpawnPoints)
 	{
@@ -130,7 +146,7 @@ ASimPetSpawnPoint * USimPetAnimalSubsystem::GetSpawnPointForSpawnAnimal()
 		FGameplayTagContainer TagContainer;
 		SpawnPoint->GetOwnedGameplayTags(TagContainer);
 		
-		if (!TagContainer.HasTag(SimPetGameplayTags::Spawn_Point_ForAnimal) ||
+		if (!TagContainer.HasTag(LocationTag) ||
 			TagContainer.HasTag(SimPetGameplayTags::Spawn_Point_HasAnimal))
 		{
 			continue;

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/WorldSubsystem.h"
+#include "GameplayTagContainer.h"
 
 #include "SimPetEnumTypes.h"
 
@@ -48,7 +49,9 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|Stats", meta = (AllowPrivateAccess = "true"))
 	TArray<ASimPetAnimal *> WildAnimals;
 	
-	ASimPetSpawnPoint *GetSpawnPointForSpawnAnimal();
+	ASimPetSpawnPoint *GetSpawnPointInOwner();
+	ASimPetSpawnPoint *GetSpawnPointInForest();
+	ASimPetSpawnPoint *FindAvailibleSpawnPointByTag(const FGameplayTag &LocationTag);
 	
 	void BindAnimalToSpawnPoint(ASimPetAnimal *Animal, ASimPetSpawnPoint *AnimalSpawnPoint);
 	void UnbindAnimalFromSpawnPoint(ASimPetAnimal *Animal);
