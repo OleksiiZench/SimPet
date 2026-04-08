@@ -47,6 +47,9 @@ void USimPetAnimalSubsystem::SpawnAnimal(ESimPetAnimals AnimalType)
 
 void USimPetAnimalSubsystem::MoveAnimalToForest()
 {
+	if (OwnerAnimals.IsEmpty())
+		return;
+	
 	ASimPetAnimal *Animal = OwnerAnimals.Pop();
 	if (!Animal)
 		return;
@@ -61,6 +64,9 @@ void USimPetAnimalSubsystem::MoveAnimalToForest()
 
 void USimPetAnimalSubsystem::MoveAnimalToOwner()
 {
+	if (WildAnimals.IsEmpty())
+		return;
+	
 	ASimPetAnimal *Animal = WildAnimals.Pop();
 	if (!Animal)
 		return;
@@ -91,7 +97,7 @@ int32 USimPetAnimalSubsystem::GetNumberAnimalsCertainType(ESimPetAnimals AnimalT
 		return -1;
 	}
 	
-	int counter = 0;
+	int32 Counter = 0;
 	
 	for (ASimPetAnimal *OwnerAnimal : OwnerAnimals)
 	{
@@ -100,11 +106,11 @@ int32 USimPetAnimalSubsystem::GetNumberAnimalsCertainType(ESimPetAnimals AnimalT
 		
 		if (OwnerAnimal->IsA(AnimalClassToFind))
 		{
-			counter++;
+			Counter++;
 		}
 	}
 	
-	return counter;
+	return Counter;
 }
 
 int32 USimPetAnimalSubsystem::GetNumberWildAnimals() const

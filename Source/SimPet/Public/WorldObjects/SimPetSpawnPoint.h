@@ -32,5 +32,5 @@ protected:
 	FGameplayTagContainer GameplayTags;
 	
 private:
-	void RegisterSpawnPointInAnimaSubsystem();
+	void RegisterSpawnPointInAnimalSubsystem();
 };

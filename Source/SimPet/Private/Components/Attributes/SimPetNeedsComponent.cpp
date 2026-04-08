@@ -170,7 +170,7 @@ void USimPetNeedsComponent::EnterTiredState()
 
 void USimPetNeedsComponent::EnterDeadState()
 {
-	if (AnimalState == ESimPetAnimalState::Tired)
+	if (AnimalState != ESimPetAnimalState::Dead)
 	{
 		AnimalState = ESimPetAnimalState::Dead;
 	}

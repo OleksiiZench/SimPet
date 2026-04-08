@@ -11,7 +11,7 @@ void ASimPetSpawnPoint::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	RegisterSpawnPointInAnimaSubsystem();
+	RegisterSpawnPointInAnimalSubsystem();
 }
 
 void ASimPetSpawnPoint::GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const
@@ -39,7 +39,7 @@ void ASimPetSpawnPoint::HandleFeedPickedUp(ASimPetAnimalFeed *PickedFeed)
 		PickedFeed->OnFeedPickedUp.RemoveDynamic(this, &ASimPetSpawnPoint::HandleFeedPickedUp);
 }
 
-void ASimPetSpawnPoint::RegisterSpawnPointInAnimaSubsystem()
+void ASimPetSpawnPoint::RegisterSpawnPointInAnimalSubsystem()
 {
 	USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
 	if (AnimalSubsystem)
