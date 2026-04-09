@@ -41,7 +41,7 @@ private:
 	void BindNeedsEvents();
 	
 	UFUNCTION()
-	void HandleDied();
+	void HandleNeedsDepleted();
 	
 	UFUNCTION()
 	void HandleGotDirty();

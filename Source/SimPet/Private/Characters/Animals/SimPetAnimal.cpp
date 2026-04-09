@@ -207,7 +207,7 @@ void ASimPetAnimal::HandleHappyTick()
 	GeneratePointsIfAnimalIsHappy();
 }
 
-void ASimPetAnimal::HandleDied()
+void ASimPetAnimal::HandleNeedsDepleted()
 {
 	Die();
 }
@@ -262,7 +262,7 @@ void ASimPetAnimal::InitializeAnimalStatusWidget()
 void ASimPetAnimal::BindNeedsEvents()
 {
 	NeedsComponent->OnHappyTick.AddDynamic(this, &ASimPetAnimal::HandleHappyTick);
-	NeedsComponent->OnDied.AddDynamic(this, &ASimPetAnimal::HandleDied);
+	NeedsComponent->OnNeedsDepleted.AddDynamic(this, &ASimPetAnimal::HandleNeedsDepleted);
 	NeedsComponent->OnGotDirty.AddDynamic(this, &ASimPetAnimal::HandleGotDirty);
 }
 
@@ -327,6 +327,8 @@ void ASimPetAnimal::Die()
 	SetLifeSpan(4.0f);
 	
 	GeneratePenaltyPointsWhenAnimalDied();
+	
+	OnAnimalDied.Broadcast(this);
 }
 
 void ASimPetAnimal::ScatterMeshParts()

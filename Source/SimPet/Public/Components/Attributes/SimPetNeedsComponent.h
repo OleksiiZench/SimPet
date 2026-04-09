@@ -13,7 +13,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGotHungrySignature);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHungrySatisfied);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGotDirtySignature);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGotCleanSignature);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDiedSignature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNeedsDepletedSignature);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHappyTickSignature);
 
 
@@ -47,7 +47,7 @@ public:
 	FOnGotCleanSignature OnGotClean;
 	
 	UPROPERTY()
-	FOnDiedSignature OnDied;
+	FOnNeedsDepletedSignature OnNeedsDepleted;
 	
 	UPROPERTY()
 	FOnHappyTickSignature OnHappyTick;

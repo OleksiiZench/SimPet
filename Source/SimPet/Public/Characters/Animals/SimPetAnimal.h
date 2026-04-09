@@ -17,6 +17,8 @@ class USimPetNeedsComponent;
 class USimPetAutoHidingWidgetComponent;
 class ASimPetAnimalWaste;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAnimalDiedSignature, ASimPetAnimal *, DeadAnimal);
+
 /**
  * 
  */
@@ -42,6 +44,9 @@ public:
 	void ApplyOwnerState();
 	
 	ESimPetAnimalState GetAnimalState();
+	
+	UPROPERTY()
+	FOnAnimalDiedSignature OnAnimalDied;
 	
 #pragma region AI
 	UPROPERTY(EditDefaultsOnly, Category = "SimPet|AI")
@@ -118,7 +123,7 @@ private:
 	void HandleHappyTick();
 	
 	UFUNCTION()
-	void HandleDied();
+	void HandleNeedsDepleted();
 	
 	UFUNCTION()
 	void HandleGotDirty();

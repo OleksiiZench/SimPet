@@ -120,7 +120,7 @@ void USimPetNeedsComponent::Die()
 	
 	StopNeedsTimer();
 
-	OnDied.Broadcast();
+	OnNeedsDepleted.Broadcast();
 }
 
 void USimPetNeedsComponent::BecomeDirty()

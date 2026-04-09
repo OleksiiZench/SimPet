@@ -27,8 +27,7 @@ void USimPetAnimalSubsystem::SpawnAnimal(ESimPetAnimals AnimalType)
 		Debug::Print(TEXT("OwnerAnimals doesn't have a corresponding AnimalType!"));
 		return;
 	}
-
-
+	
 	ASimPetSpawnPoint *AnimalSpawnPoint = GetSpawnPointInOwner();
 	if (AnimalSpawnPoint == nullptr)
 		return;
@@ -167,7 +166,9 @@ void USimPetAnimalSubsystem::BindAnimalToSpawnPoint(ASimPetAnimal *Animal, ASimP
 		return;
 
 	AnimalSpawnPoint->AddGameplayTags(SimPetGameplayTags::Spawn_Point_HasAnimal);
-			
+	
+	Animal->OnAnimalDied.AddDynamic(this, &ThisClass::HandleAnimalDied);
+	
 	AnimalToSpawnPointMap.Add(Animal, AnimalSpawnPoint);
 }
 
@@ -182,6 +183,8 @@ void USimPetAnimalSubsystem::UnbindAnimalFromSpawnPoint(ASimPetAnimal *Animal)
 
 	AnimalSpawnPoint->RemoveGameplayTags(SimPetGameplayTags::Spawn_Point_HasAnimal);
 
+	Animal->OnAnimalDied.RemoveDynamic(this, &ThisClass::HandleAnimalDied);
+	
 	AnimalToSpawnPointMap.Remove(Animal);
 }
 
@@ -198,4 +201,15 @@ TSubclassOf<ASimPetAnimal> USimPetAnimalSubsystem::GetAnimalClassByAnimalType(ES
 	}
 	
 	return nullptr;
+}
+
+void USimPetAnimalSubsystem::HandleAnimalDied(ASimPetAnimal *DeadAnimal)
+{
+	if (DeadAnimal == nullptr)
+		return;
+	
+	UnbindAnimalFromSpawnPoint(DeadAnimal);
+	
+	OwnerAnimals.RemoveSingle(DeadAnimal);
+	WildAnimals.RemoveSingle(DeadAnimal);
 }

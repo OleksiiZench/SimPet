@@ -59,7 +59,7 @@ void USimPetAnimalNeedsStatusWidget::BindNeedsEvents()
 {
 	if (CacheAnimalNeedsComponent.IsValid())
 	{
-		CacheAnimalNeedsComponent->OnDied.AddDynamic(this, &USimPetAnimalNeedsStatusWidget::HandleDied);
+		CacheAnimalNeedsComponent->OnNeedsDepleted.AddDynamic(this, &USimPetAnimalNeedsStatusWidget::HandleNeedsDepleted);
 		CacheAnimalNeedsComponent->OnGotDirty.AddDynamic(this, &USimPetAnimalNeedsStatusWidget::HandleGotDirty);
 		CacheAnimalNeedsComponent->OnGotHungry.AddDynamic(this, &USimPetAnimalNeedsStatusWidget::HandleGotHungry);
 		CacheAnimalNeedsComponent->OnGotClean.AddDynamic(this, &USimPetAnimalNeedsStatusWidget::HandleGotClean);
@@ -67,7 +67,7 @@ void USimPetAnimalNeedsStatusWidget::BindNeedsEvents()
 	}
 }
 
-void USimPetAnimalNeedsStatusWidget::HandleDied()
+void USimPetAnimalNeedsStatusWidget::HandleNeedsDepleted()
 {
 	SetDirtyIconVisible(false);
 	SetHungryIconVisible(false);

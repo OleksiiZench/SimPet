@@ -53,4 +53,7 @@ private:
 	void UnbindAnimalFromSpawnPoint(ASimPetAnimal *Animal);
 	
 	TSubclassOf<ASimPetAnimal> GetAnimalClassByAnimalType(ESimPetAnimals AnimalType) const;
+	
+	UFUNCTION()
+	void HandleAnimalDied(ASimPetAnimal *DeadAnimal);
 };
