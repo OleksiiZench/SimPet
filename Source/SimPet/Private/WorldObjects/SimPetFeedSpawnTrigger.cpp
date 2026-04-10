@@ -1,7 +1,7 @@
 // Copyright (c) 2025 Oleksii Zenchenko. All Rights Reserved.
 
 
-#include "WorldObjects/SimPetSpawnAnimalFeed.h"
+#include "WorldObjects/SimPetFeedSpawnTrigger.h"
 
 #include "Components/ShapeComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -13,16 +13,16 @@
 
 #include "SimPetDebugHelper.h"
 
-void ASimPetSpawnAnimalFeed::BeginPlay()
+void ASimPetFeedSpawnTrigger::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	GetCollisionComponent()->OnComponentBeginOverlap.AddUniqueDynamic(this, &ASimPetSpawnAnimalFeed::OnZoneEntered);
+	GetCollisionComponent()->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnZoneEntered);
 	
 	FindAllSpawnPoints();
 }
 
-void ASimPetSpawnAnimalFeed::OnZoneEntered(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
+void ASimPetFeedSpawnTrigger::OnZoneEntered(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
 {
 	if (!OtherActor || !OtherActor->IsA(ASimPetPlayer::StaticClass()))
 	{// OtherActor - має бути гравцем
@@ -58,7 +58,7 @@ void ASimPetSpawnAnimalFeed::OnZoneEntered(UPrimitiveComponent *OverlappedCompon
 	}
 }
 
-void ASimPetSpawnAnimalFeed::FindAllSpawnPoints()
+void ASimPetFeedSpawnTrigger::FindAllSpawnPoints()
 {
 	TArray<AActor *> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASimPetSpawnPoint::StaticClass(), FoundActors);

@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/TriggerBox.h"
 
-#include "SimPetSpawnAnimalFeed.generated.h"
+#include "SimPetFeedSpawnTrigger.generated.h"
 
 class ASimPetAnimalFeed;
 class ASimPetSpawnPoint;
@@ -14,7 +14,7 @@ class ASimPetSpawnPoint;
  * 
  */
 UCLASS()
-class SIMPET_API ASimPetSpawnAnimalFeed : public ATriggerBox
+class SIMPET_API ASimPetFeedSpawnTrigger : public ATriggerBox
 {
 	GENERATED_BODY()
 	
