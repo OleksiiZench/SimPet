@@ -21,7 +21,7 @@ USimPetInteractionComponent::USimPetInteractionComponent()
 AActor *USimPetInteractionComponent::DoInteractionTrace()
 {
 	float InteractionDistance = 250.0f;
-	float InteractionRadius = 15.0f;
+	float InteractionRadius = 1.0f;
 	
 	APawn *Player = Cast<APawn>(GetOwner());
 	if (!Player)
