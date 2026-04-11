@@ -26,10 +26,4 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ASimPetAnimalFeed> SpawnFeedClass;
-	
-private:
-	void FindAllSpawnPoints();
-	
-	UPROPERTY()
-	TArray<ASimPetSpawnPoint *> FeedSpawnPoints;
 };

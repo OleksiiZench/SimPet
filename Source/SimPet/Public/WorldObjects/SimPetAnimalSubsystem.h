@@ -29,6 +29,8 @@ public:
 	void MoveAnimalToForest();
 	void MoveAnimalToOwner();
 	
+	const TArray<ASimPetSpawnPoint *> &GetAllSpawnPoints() const;
+	
 	int32 GetNumberAnimalsCertainType(ESimPetAnimals AnimalType) const;
 	int32 GetNumberWildAnimals() const;
 	

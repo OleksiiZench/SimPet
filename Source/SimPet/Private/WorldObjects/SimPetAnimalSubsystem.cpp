@@ -92,6 +92,11 @@ void USimPetAnimalSubsystem::MoveAnimalToOwner()
 	Animal->ApplyOwnerState();
 }
 
+const TArray<ASimPetSpawnPoint *> & USimPetAnimalSubsystem::GetAllSpawnPoints() const
+{
+	return AllSpawnPoints;
+}
+
 int32 USimPetAnimalSubsystem::GetNumberAnimalsCertainType(ESimPetAnimals AnimalType) const
 {
 	if (OwnerAnimals.IsEmpty())
