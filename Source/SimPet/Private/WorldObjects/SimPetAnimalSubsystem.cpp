@@ -97,7 +97,7 @@ const TArray<ASimPetSpawnPoint *> & USimPetAnimalSubsystem::GetAllSpawnPoints() 
 	return AllSpawnPoints;
 }
 
-int32 USimPetAnimalSubsystem::GetNumberAnimalsCertainType(ESimPetAnimals AnimalType) const
+int32 USimPetAnimalSubsystem::GetNumberOwnerAnimalsCertainType(ESimPetAnimals AnimalType) const
 {
 	if (OwnerAnimals.IsEmpty())
 		return 0;
@@ -125,7 +125,12 @@ int32 USimPetAnimalSubsystem::GetNumberAnimalsCertainType(ESimPetAnimals AnimalT
 	return Counter;
 }
 
-int32 USimPetAnimalSubsystem::GetNumberWildAnimals() const
+int32 USimPetAnimalSubsystem::GetTotalNumberOwnerAnimals() const
+{
+	return OwnerAnimals.Num();
+}
+
+int32 USimPetAnimalSubsystem::GetTotalNumberWildAnimals() const
 {
 	return WildAnimals.Num();
 }

@@ -31,8 +31,9 @@ public:
 	
 	const TArray<ASimPetSpawnPoint *> &GetAllSpawnPoints() const;
 	
-	int32 GetNumberAnimalsCertainType(ESimPetAnimals AnimalType) const;
-	int32 GetNumberWildAnimals() const;
+	int32 GetNumberOwnerAnimalsCertainType(ESimPetAnimals AnimalType) const;
+	int32 GetTotalNumberOwnerAnimals() const;
+	int32 GetTotalNumberWildAnimals() const;
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|Stats", meta = (AllowPrivateAccess = "true"))

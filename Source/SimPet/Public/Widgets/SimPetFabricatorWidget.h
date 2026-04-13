@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 
+#include "WorldObjects/SimPetAnimalSubsystem.h"
+
 #include "SimPetFabricatorWidget.generated.h"
 
 class ASimPetFabricator;
@@ -18,6 +20,8 @@ class SIMPET_API USimPetFabricatorWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
+	virtual void NativeConstruct() override;
+	
 	UFUNCTION(BlueprintCallable, Category = "SimPet | Widgets")
 	void InitializeFabricator(ASimPetFabricator *InFabricator);
 	
@@ -26,6 +30,15 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "SimPet | Widgets")
 	void OnCloseMenu();
+	
+	UFUNCTION(BlueprintCallable, Category = "SimPet | Widgets")
+	void MoveAnimalToForest();
+	
+	UFUNCTION(BlueprintCallable, Category = "SimPet | Widgets")
+	void MoveAnimalToOwner();
+	
 protected:
 	TWeakObjectPtr<ASimPetFabricator> LinkedFabricator;  // Посилання на фабрикатор який відкрив цей UI
+	
+	USimPetAnimalSubsystem *AnimalSubsystem;
 };

@@ -15,7 +15,6 @@
 #include "Items/SimPetAnimalWaste.h"
 #include "Characters/SimPetPlayer.h"
 #include "AI/SimPetAIController.h"
-#include "WorldObjects/SimPetAnimalSubsystem.h"
 
 #include "SimPetDebugHelper.h"
 
@@ -63,22 +62,6 @@ void ASimPetAnimal::Tick(float DeltaTime)
 
 void ASimPetAnimal::Interact_Implementation(AActor *InstigatorActor)
 {	
-	Debug::Print("Interact with animal");
-	
-	USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
-	if (AnimalSubsystem)
-	{
-		if (bAnimalInForest)
-		{
-			AnimalSubsystem->MoveAnimalToOwner();
-			bAnimalInForest = false;
-		}
-		else
-		{
-			AnimalSubsystem->MoveAnimalToForest();
-			bAnimalInForest = true;
-		}
-	}
 }
 
 void ASimPetAnimal::FeedAnimal()
