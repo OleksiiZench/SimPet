@@ -7,13 +7,14 @@
 
 USimPetPointsTransactionComponent::USimPetPointsTransactionComponent()
 {
-	PointsPerHappyTick = 5;
-	PointsPerPenalty = 100;
 }
 
 void USimPetPointsTransactionComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	PointsPerHappyTick = EconomyData->HappyTickReward;
+	PointsPerPenalty = EconomyData->PenaltyPoints;
 	
 	CachePlayerState();
 }

@@ -4,8 +4,6 @@
 #include "WorldObjects/SimPetFabricator.h"
 #include "Kismet/GameplayStatics.h"
 
-#include "Characters/Animals/SimPetAnimal.h"
-
 #include "SimPetDebugHelper.h"
 #include "Blueprint/UserWidget.h"
 #include "Widgets/SimPetFabricatorWidget.h"

@@ -109,10 +109,10 @@ protected:
 private:
 	bool bAnimalInForest = false;  // Тимчасова змінна, варто прибрати якщо уже продуманий механізм звідки переміщати тварин
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|Components", meta = (AllowPrivateAccess = "true"))
 	USimPetNeedsComponent *NeedsComponent;
 	
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|Components", meta = (AllowPrivateAccess = "true"))
 	USimPetPointsTransactionComponent *PointsTransactionComponent;
 	
 	UFUNCTION()

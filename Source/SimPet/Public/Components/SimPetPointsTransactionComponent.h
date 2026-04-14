@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 
+#include "DataAsset/Economy/SimPetEconomyData.h"
+
 #include "SimPetPointsTransactionComponent.generated.h"
 
 class ASimPetPlayerState;
@@ -21,6 +23,10 @@ public:
 	
 	void GeneratePassivePoints();
 	void GeneratePenaltyPoints();
+	
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet | Economy")
+	USimPetEconomyData *EconomyData;
+	
 	
 private:
 	int32 PointsPerHappyTick;
