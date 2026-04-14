@@ -34,10 +34,6 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	
-	//~ Begin ISimPetInteractable Interface
-	virtual void Interact_Implementation(AActor *InstigatorActor) override;
-	//~ End ISimPetInteractable Interface
-	
 	void FeedAnimal();
 	
 	void ApplyForestState();

@@ -60,10 +60,6 @@ void ASimPetAnimal::Tick(float DeltaTime)
 	AnimateLegs(DeltaTime, GetGameTimeSinceCreation());
 }
 
-void ASimPetAnimal::Interact_Implementation(AActor *InstigatorActor)
-{	
-}
-
 void ASimPetAnimal::FeedAnimal()
 {
 	if (NeedsComponent)
