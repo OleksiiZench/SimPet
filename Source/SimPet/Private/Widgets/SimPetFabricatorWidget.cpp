@@ -3,8 +3,12 @@
 
 #include "Widgets/SimPetFabricatorWidget.h"
 
+#include "Components/TextBlock.h"
+
 #include "WorldObjects/SimPetFabricator.h"
 #include "WorldObjects/SimPetAnimalSubsystem.h"
+#include "Components/SimPetPointsTransactionComponent.h"
+#include "SimPetEnumTypes.h"
 
 #include "SimPetDebugHelper.h"
 
@@ -21,6 +25,13 @@ void USimPetFabricatorWidget::NativeConstruct()
 void USimPetFabricatorWidget::InitializeFabricator(ASimPetFabricator* InFabricator)
 {
 	LinkedFabricator = InFabricator;
+	
+	if (LinkedFabricator.IsValid())
+	{
+		CachedTransactionComponent = LinkedFabricator->FindComponentByClass<USimPetPointsTransactionComponent>();
+		
+		UpdateAnimalPricesUI();
+	}
 }
 
 void USimPetFabricatorWidget::OnBuyAnimalClicked(ESimPetAnimals AnimalType)
@@ -76,4 +87,34 @@ void USimPetFabricatorWidget::MoveAnimalToOwner()
 	}
 
 	AnimalSubsystem->MoveAnimalToOwner();
+}
+
+void USimPetFabricatorWidget::UpdateAnimalPricesUI()
+{
+	if (!CachedTransactionComponent.IsValid())
+		return;
+
+	if (PriceDogText)
+	{
+		int32 PriceDog = CachedTransactionComponent->GetAnimalPrice(ESimPetAnimals::EA_Dog);
+
+		FString FormattedString = FString::Printf(TEXT("%d"), PriceDog);
+		PriceDogText->SetText(FText::FromString(FormattedString));
+	}
+	
+	if (PriceCanaryText)
+	{
+		int32 PriceCanary = CachedTransactionComponent->GetAnimalPrice(ESimPetAnimals::EA_Canary);
+        
+        FString FormattedString = FString::Printf(TEXT("%d"), PriceCanary);
+        PriceCanaryText->SetText(FText::FromString(FormattedString));
+	}
+	
+	if (PriceLizardText)
+	{
+		int32 PriceLizard = CachedTransactionComponent->GetAnimalPrice(ESimPetAnimals::EA_Lizard);
+        
+		FString FormattedString = FString::Printf(TEXT("%d"), PriceLizard);
+		PriceLizardText->SetText(FText::FromString(FormattedString));
+	}
 }

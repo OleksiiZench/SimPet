@@ -10,6 +10,8 @@
 #include "SimPetFabricatorWidget.generated.h"
 
 class ASimPetFabricator;
+class UTextBlock;
+class USimPetPointsTransactionComponent;
 
 /**
  * Клас UI, який керує вибором тварин
@@ -38,7 +40,23 @@ public:
 	void MoveAnimalToOwner();
 	
 protected:
+#pragma region UI Bindings
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *PriceDogText;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *PriceCanaryText;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *PriceLizardText;
+#pragma endregion
+	
 	TWeakObjectPtr<ASimPetFabricator> LinkedFabricator;  // Посилання на фабрикатор який відкрив цей UI
 	
 	USimPetAnimalSubsystem *AnimalSubsystem;
+	
+private:
+	TWeakObjectPtr<USimPetPointsTransactionComponent> CachedTransactionComponent;
+	
+	void UpdateAnimalPricesUI();
 };
