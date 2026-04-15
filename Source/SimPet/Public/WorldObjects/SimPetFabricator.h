@@ -10,6 +10,7 @@
 #include "SimPetFabricator.generated.h"
 
 class ASimPetAnimal;
+class USimPetPointsTransactionComponent;
 
 UCLASS()
 class SIMPET_API ASimPetFabricator : public AActor, public ISimPetInteractable
@@ -17,14 +18,20 @@ class SIMPET_API ASimPetFabricator : public AActor, public ISimPetInteractable
 	GENERATED_BODY()
 	
 public:
+	ASimPetFabricator();
+	
 	//~ Begin ISimPetInteractable Interface
 	virtual void Interact_Implementation(AActor *InstigatorActor) override;
 	//~ End ISimPetInteractable Interface
 	
 	UFUNCTION(BlueprintCallable, Category = "Fabricator")
-	void RequestSpawnAnimal(ESimPetAnimals AnimalType);
+	void AttemptBuyAnimal(ESimPetAnimals AnimalType);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<class USimPetFabricatorWidget> FabricatorWidgetClass;
+	
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|Components", meta = (AllowPrivateAccess = "true"))
+	USimPetPointsTransactionComponent *PointsTransactionComponent;
 };

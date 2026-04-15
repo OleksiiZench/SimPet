@@ -5,9 +5,7 @@
 
 #include "Core/SimPetPlayerState.h"
 
-USimPetPointsTransactionComponent::USimPetPointsTransactionComponent()
-{
-}
+#include "SimPetDebugHelper.h"
 
 void USimPetPointsTransactionComponent::BeginPlay()
 {
@@ -17,6 +15,27 @@ void USimPetPointsTransactionComponent::BeginPlay()
 	PointsPerPenalty = EconomyData->PenaltyPoints;
 	
 	CachePlayerState();
+}
+
+int32 USimPetPointsTransactionComponent::GetAnimalPrice(ESimPetAnimals AnimalType)
+{
+	if (EconomyData && EconomyData->AnimalPrices.Contains(AnimalType))
+	{
+		return EconomyData->AnimalPrices[AnimalType];
+	}
+	
+	Debug::Print(TEXT("Error: Animal Price not found in EconomyData!"));	
+	return 999999;  // Захист від безкоштовного спавну
+}
+
+bool USimPetPointsTransactionComponent::AttemptTransaction(int32 Cost)
+{
+	if (PlayerState)
+	{
+		return PlayerState->SpendPoints(Cost);
+	}
+	
+	return false;
 }
 
 void USimPetPointsTransactionComponent::GeneratePassivePoints()

@@ -21,8 +21,8 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnPointsChanged OnPointsChanged;
 	
+	bool SpendPoints(int32 Points);
 	void AddPoints(int32 Points);
-	void SpendPoints(int32 Points);
 	void ApplyPenalty(int32 PenaltyAmount);
 	
 private:

@@ -3,19 +3,21 @@
 
 #include "Core/SimPetPlayerState.h"
 
+bool ASimPetPlayerState::SpendPoints(int Points)
+{
+	if (CurrentPoints < Points)
+		return false;
+	
+	CurrentPoints -= Points;
+	
+	OnPointsChanged.Broadcast(CurrentPoints);
+	
+	return true;
+}
+
 void ASimPetPlayerState::AddPoints(int Points)
 {
 	CurrentPoints += Points;
-	
-	OnPointsChanged.Broadcast(CurrentPoints);
-}
-
-void ASimPetPlayerState::SpendPoints(int Points)
-{
-	if (CurrentPoints < Points)
-		return;
-	
-	CurrentPoints -= Points;
 	
 	OnPointsChanged.Broadcast(CurrentPoints);
 }

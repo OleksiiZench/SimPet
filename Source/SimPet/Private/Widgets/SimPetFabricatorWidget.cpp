@@ -23,11 +23,11 @@ void USimPetFabricatorWidget::InitializeFabricator(ASimPetFabricator* InFabricat
 	LinkedFabricator = InFabricator;
 }
 
-void USimPetFabricatorWidget::OnAnimalSelected(ESimPetAnimals AnimalType)
+void USimPetFabricatorWidget::OnBuyAnimalClicked(ESimPetAnimals AnimalType)
 {
 	if (LinkedFabricator.IsValid())
 	{
-		LinkedFabricator->RequestSpawnAnimal(AnimalType);
+		LinkedFabricator->AttemptBuyAnimal(AnimalType);
 		
 		OnCloseMenu();
 	}

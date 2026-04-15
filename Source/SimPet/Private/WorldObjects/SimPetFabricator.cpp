@@ -8,6 +8,12 @@
 #include "Blueprint/UserWidget.h"
 #include "Widgets/SimPetFabricatorWidget.h"
 #include "WorldObjects/SimPetAnimalSubsystem.h"
+#include "Components/SimPetPointsTransactionComponent.h"
+
+ASimPetFabricator::ASimPetFabricator()
+{
+	PointsTransactionComponent = CreateDefaultSubobject<USimPetPointsTransactionComponent>(TEXT("PointsTransactionComponent"));
+}
 
 void ASimPetFabricator::Interact_Implementation(AActor *InstigatorActor)
 {
@@ -37,15 +43,23 @@ void ASimPetFabricator::Interact_Implementation(AActor *InstigatorActor)
 	}
 }
 
-void ASimPetFabricator::RequestSpawnAnimal(ESimPetAnimals AnimalType)
+void ASimPetFabricator::AttemptBuyAnimal(ESimPetAnimals AnimalType)
 {
 	if (!GetWorld())
 		return;
 	
-	USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
+	int32 CurrentAnimalPrice = PointsTransactionComponent->GetAnimalPrice(AnimalType);
 	
-	if (!AnimalSubsystem)
-		return;
-	
-	AnimalSubsystem->SpawnAnimal(AnimalType);
+	if (PointsTransactionComponent->AttemptTransaction(CurrentAnimalPrice))
+	{
+		USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
+		if (AnimalSubsystem)
+		{
+			AnimalSubsystem->SpawnAnimal(AnimalType);
+		}
+	}
+	else
+	{
+		Debug::Print(TEXT("Not enough points!"));
+	}
 }

@@ -26,7 +26,7 @@ public:
 	void InitializeFabricator(ASimPetFabricator *InFabricator);
 	
 	UFUNCTION(BlueprintCallable, Category = "SimPet | Widgets")
-	void OnAnimalSelected(ESimPetAnimals AnimalType);
+	void OnBuyAnimalClicked(ESimPetAnimals AnimalType);
 	
 	UFUNCTION(BlueprintCallable, Category = "SimPet | Widgets")
 	void OnCloseMenu();

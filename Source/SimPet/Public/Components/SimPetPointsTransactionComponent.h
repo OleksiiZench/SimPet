@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 
 #include "DataAsset/Economy/SimPetEconomyData.h"
+#include "SimPetEnumTypes.h"
 
 #include "SimPetPointsTransactionComponent.generated.h"
 
@@ -17,16 +18,16 @@ class SIMPET_API USimPetPointsTransactionComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
-	USimPetPointsTransactionComponent();
-	
 	virtual void BeginPlay() override;
 	
+	int32 GetAnimalPrice(ESimPetAnimals AnimalType);
+	
+	bool AttemptTransaction(int32 Cost);
 	void GeneratePassivePoints();
 	void GeneratePenaltyPoints();
 	
 	UPROPERTY(EditDefaultsOnly, Category = "SimPet | Economy")
 	USimPetEconomyData *EconomyData;
-	
 	
 private:
 	int32 PointsPerHappyTick;
