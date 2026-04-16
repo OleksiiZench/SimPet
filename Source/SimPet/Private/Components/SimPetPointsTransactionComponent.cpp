@@ -19,13 +19,21 @@ void USimPetPointsTransactionComponent::BeginPlay()
 
 int32 USimPetPointsTransactionComponent::GetAnimalPrice(ESimPetAnimals AnimalType)
 {
+	if (!PlayerState->HasBoughtFirstAnimal())
+		return 0;
+	
 	if (EconomyData && EconomyData->AnimalPrices.Contains(AnimalType))
 	{
 		return EconomyData->AnimalPrices[AnimalType];
 	}
 	
-	Debug::Print(TEXT("Error: Animal Price not found in EconomyData!"));	
+	Debug::PrintError(TEXT("Animal Price not found in EconomyData!"));	
 	return 999999;  // Захист від безкоштовного спавну
+}
+
+void USimPetPointsTransactionComponent::RegisterAnimalPurchase()
+{
+	PlayerState->MarkFirstAnimalBought();
 }
 
 bool USimPetPointsTransactionComponent::AttemptTransaction(int32 Cost)

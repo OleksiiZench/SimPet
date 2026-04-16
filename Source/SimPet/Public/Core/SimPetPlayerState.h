@@ -18,13 +18,20 @@ class SIMPET_API ASimPetPlayerState : public APlayerState
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(BlueprintAssignable, Category = "Events")
-	FOnPointsChanged OnPointsChanged;
+	ASimPetPlayerState();
 	
 	bool SpendPoints(int32 Points);
 	void AddPoints(int32 Points);
 	void ApplyPenalty(int32 PenaltyAmount);
 	
+	bool HasBoughtFirstAnimal() const;
+	void MarkFirstAnimalBought();
+	
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnPointsChanged OnPointsChanged;
+	
 private:
 	int32 CurrentPoints;
+	
+	bool bHasBoughtFirstAnimal;
 };

@@ -56,6 +56,8 @@ void ASimPetFabricator::AttemptBuyAnimal(ESimPetAnimals AnimalType)
 		if (AnimalSubsystem)
 		{
 			AnimalSubsystem->SpawnAnimal(AnimalType);
+			
+			PointsTransactionComponent->RegisterAnimalPurchase();
 		}
 	}
 	else

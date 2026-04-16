@@ -21,6 +21,7 @@ public:
 	virtual void BeginPlay() override;
 	
 	int32 GetAnimalPrice(ESimPetAnimals AnimalType);
+	void RegisterAnimalPurchase();
 	
 	bool AttemptTransaction(int32 Cost);
 	void GeneratePassivePoints();
