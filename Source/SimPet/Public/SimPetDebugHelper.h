@@ -58,4 +58,139 @@ namespace Debug
 			UE_LOG(LogTemp, Warning, TEXT("%s"), *FinalMsg);
 		}
 	}
+	
+	static void Print(const FString &VectorTitle, FVector &VectorValueToPrint, const FColor &Color = FColor::MakeRandomColor(), int32 InKey = -1)
+	{
+		if (GEngine)
+		{
+			const FString FinalMsg = VectorTitle + TEXT(": ") + VectorValueToPrint.ToString();
+
+			GEngine->AddOnScreenDebugMessage(InKey, 7.0f, Color, FinalMsg);
+
+			UE_LOG(LogTemp, Warning, TEXT("%s"), *FinalMsg);
+		}
+	}
+	
+	static void Print(const FString &RotatorTitle, FRotator &RotatorValueToPrint, const FColor &Color = FColor::MakeRandomColor(), int32 InKey = -1)
+	{
+		if (GEngine)
+		{
+			const FString FinalMsg = RotatorTitle + TEXT(": ") + RotatorValueToPrint.ToString();
+
+			GEngine->AddOnScreenDebugMessage(InKey, 7.0f, Color, FinalMsg);
+
+			UE_LOG(LogTemp, Warning, TEXT("%s"), *FinalMsg);
+		}
+	}
+	
+	static void Print(const FString &TransformTitle, FTransform &TransformValueToPrint, const FColor &Color = FColor::MakeRandomColor(), int32 InKey = -1)
+	{
+		if (GEngine)
+		{
+			const FString FinalMsg = FString::Printf(TEXT("%s:\n  Loc: %s\n  Rot: %s\n  Scl: %s"),
+				*TransformTitle,
+				*TransformValueToPrint.GetLocation().ToString(),
+				*TransformValueToPrint.Rotator().ToString(),
+				*TransformValueToPrint.GetScale3D().ToString());
+
+			GEngine->AddOnScreenDebugMessage(InKey, 7.0f, Color, FinalMsg);
+
+			UE_LOG(LogTemp, Warning, TEXT("%s"), *FinalMsg);
+		}
+	}
+	
+	static void PrintError(const FString &Msg, int32 InKey = -1)
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(InKey, 7.0f, FColor::Red, TEXT("ERROR:") + Msg);
+
+			UE_LOG(LogTemp, Error, TEXT("%s"), *Msg);
+		}
+	}
+
+	static void PrintError(const FString &FloatTitle, float FloatValueToPrint, int32 InKey = -1)
+	{
+		if (GEngine)
+		{
+			const FString FinalMsg = TEXT("ERROR:") + FloatTitle + TEXT(": ") + FString::SanitizeFloat(FloatValueToPrint);
+
+			GEngine->AddOnScreenDebugMessage(InKey, 7.0f, FColor::Red, FinalMsg);
+
+			UE_LOG(LogTemp, Error, TEXT("%s"), *FinalMsg);
+		}
+	}
+	
+	static void PrintError(const FString &IntTitle, int32 IntValueToPrint, int32 InKey = -1)
+	{
+		if (GEngine)
+		{
+			const FString FinalMsg = TEXT("ERROR:") + IntTitle + TEXT(": ") + FString::FromInt(IntValueToPrint);
+
+			GEngine->AddOnScreenDebugMessage(InKey, 7.0f, FColor::Red, FinalMsg);
+
+			UE_LOG(LogTemp, Error, TEXT("%s"), *FinalMsg);
+		}
+	}
+	
+	static void PrintError(const FString &BoolTitle, bool BoolValueToPrint, int32 InKey = -1)
+	{
+		if (GEngine)
+		{
+			FString FinalMsg = TEXT("ERROR:") + BoolTitle + TEXT(": ");
+			
+			if (BoolValueToPrint)
+			{
+				FinalMsg = TEXT("ERROR:") + BoolTitle + TEXT(": true");
+			}
+			else
+			{
+				FinalMsg = TEXT("ERROR:") + BoolTitle + TEXT(": false");
+			}
+
+			GEngine->AddOnScreenDebugMessage(InKey, 7.0f, FColor::Red, FinalMsg);
+
+			UE_LOG(LogTemp, Error, TEXT("%s"), *FinalMsg);
+		}
+	}
+	
+	static void PrintError(const FString &VectorTitle, FVector &VectorValueToPrint, int32 InKey = -1)
+	{
+		if (GEngine)
+		{
+			const FString FinalMsg = TEXT("ERROR:") + VectorTitle + TEXT(": ") + VectorValueToPrint.ToString();
+
+			GEngine->AddOnScreenDebugMessage(InKey, 7.0f, FColor::Red, FinalMsg);
+
+			UE_LOG(LogTemp, Error, TEXT("%s"), *FinalMsg);
+		}
+	}
+	
+	static void PrintError(const FString &RotatorTitle, FRotator &RotatorValueToPrint, int32 InKey = -1)
+	{
+		if (GEngine)
+		{
+			const FString FinalMsg = TEXT("ERROR:") + RotatorTitle + TEXT(": ") + RotatorValueToPrint.ToString();
+
+			GEngine->AddOnScreenDebugMessage(InKey, 7.0f, FColor::Red, FinalMsg);
+
+			UE_LOG(LogTemp, Error, TEXT("%s"), *FinalMsg);
+		}
+	}
+	
+	static void PrintError(const FString &TransformTitle, FTransform &TransformValueToPrint, int32 InKey = -1)
+	{
+		if (GEngine)
+		{
+			const FString FinalMsg = FString::Printf(TEXT("ERROR: %s:\n  Loc: %s\n  Rot: %s\n  Scl: %s"),
+				*TransformTitle,
+				*TransformValueToPrint.GetLocation().ToString(),
+				*TransformValueToPrint.Rotator().ToString(),
+				*TransformValueToPrint.GetScale3D().ToString());
+
+			GEngine->AddOnScreenDebugMessage(InKey, 7.0f, FColor::Red, FinalMsg);
+
+			UE_LOG(LogTemp, Error, TEXT("%s"), *FinalMsg);
+		}
+	}
 }

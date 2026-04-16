@@ -21,7 +21,7 @@ void ASimPetFabricator::Interact_Implementation(AActor *InstigatorActor)
 
 	if (!FabricatorWidgetClass)
 	{
-		Debug::Print(TEXT("Error: FabricatorWidgetClass is not selected in Blueprint!"));
+		Debug::PrintError(TEXT("FabricatorWidgetClass is not selected in Blueprint!"));
 		return;
 	}
 	
