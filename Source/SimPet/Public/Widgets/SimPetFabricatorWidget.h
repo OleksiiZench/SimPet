@@ -22,6 +22,8 @@ class SIMPET_API USimPetFabricatorWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
+	USimPetFabricatorWidget(const FObjectInitializer& ObjectInitializer);
+	
 	virtual void NativeConstruct() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "SimPet | Widgets")

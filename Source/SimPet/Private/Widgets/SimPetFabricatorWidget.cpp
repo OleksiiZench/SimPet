@@ -12,6 +12,12 @@
 
 #include "SimPetDebugHelper.h"
 
+USimPetFabricatorWidget::USimPetFabricatorWidget(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	bIsFocusable = true;
+}
+
 void USimPetFabricatorWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
