@@ -4,6 +4,7 @@
 #include "Widgets/SimPetFabricatorWidget.h"
 
 #include "Components/TextBlock.h"
+#include "Input/Reply.h"
 
 #include "WorldObjects/SimPetFabricator.h"
 #include "WorldObjects/SimPetAnimalSubsystem.h"
@@ -26,6 +27,22 @@ void USimPetFabricatorWidget::NativeConstruct()
 	{
 		AnimalSubsystem = World->GetSubsystem<USimPetAnimalSubsystem>();
 	}
+}
+
+FReply USimPetFabricatorWidget::NativeOnKeyDown(const FGeometry &InGeometry, const FKeyEvent &InKeyEvent)
+{
+	FKey PressedKey = InKeyEvent.GetKey();
+	
+	bool bIsCloseKey = (PressedKey == EKeys::Escape) ||
+					   (PressedKey == EKeys::Gamepad_FaceButton_Right);
+	
+	if (bIsCloseKey)
+	{
+		OnCloseMenu();
+		return FReply::Handled();
+	}
+	
+	return Super::NativeOnKeyDown(InGeometry, InKeyEvent);
 }
 
 void USimPetFabricatorWidget::InitializeFabricator(ASimPetFabricator* InFabricator)

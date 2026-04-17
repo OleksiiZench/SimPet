@@ -25,6 +25,7 @@ public:
 	USimPetFabricatorWidget(const FObjectInitializer& ObjectInitializer);
 	
 	virtual void NativeConstruct() override;
+	virtual FReply NativeOnKeyDown(const FGeometry &InGeometry, const FKeyEvent &InKeyEvent) override;
 	
 	UFUNCTION(BlueprintCallable, Category = "SimPet | Widgets")
 	void InitializeFabricator(ASimPetFabricator *InFabricator);
