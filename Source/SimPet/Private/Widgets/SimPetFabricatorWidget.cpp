@@ -10,6 +10,7 @@
 #include "WorldObjects/SimPetAnimalSubsystem.h"
 #include "Components/SimPetPointsTransactionComponent.h"
 #include "SimPetEnumTypes.h"
+#include "Widgets/SimPetHUD.h"
 
 #include "SimPetDebugHelper.h"
 
@@ -75,6 +76,9 @@ void USimPetFabricatorWidget::OnCloseMenu()
 	{
 		PC->SetShowMouseCursor(false);
 		PC->SetInputMode(FInputModeGameOnly());
+		
+		if (ASimPetHUD *CurrentHUD = Cast<ASimPetHUD>(PC->GetHUD()))
+			CurrentHUD->SetHUDVisibility(true);
 	}
 }
 

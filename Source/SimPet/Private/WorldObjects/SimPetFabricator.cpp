@@ -9,6 +9,7 @@
 #include "Widgets/SimPetFabricatorWidget.h"
 #include "WorldObjects/SimPetAnimalSubsystem.h"
 #include "Components/SimPetPointsTransactionComponent.h"
+#include "Widgets/SimPetHUD.h"
 
 ASimPetFabricator::ASimPetFabricator()
 {
@@ -31,6 +32,9 @@ void ASimPetFabricator::Interact_Implementation(AActor *InstigatorActor)
 		USimPetFabricatorWidget *FabricatorUI = CreateWidget<USimPetFabricatorWidget>(PC, FabricatorWidgetClass);
 		if (FabricatorUI)
 		{
+			if (ASimPetHUD *CurrentHUD = Cast<ASimPetHUD>(PC->GetHUD()))
+				CurrentHUD->SetHUDVisibility(false);
+			
 			FabricatorUI->InitializeFabricator(this);
 			FabricatorUI->AddToViewport();
 			
