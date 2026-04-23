@@ -47,25 +47,28 @@ void ASimPetFabricator::Interact_Implementation(AActor *InstigatorActor)
 	}
 }
 
-void ASimPetFabricator::AttemptBuyAnimal(ESimPetAnimals AnimalType)
+bool ASimPetFabricator::AttemptBuyAnimal(ESimPetAnimals AnimalType)
 {
-	if (!GetWorld())
-		return;
+	if (!GetWorld() || !PointsTransactionComponent)
+		return false;
 	
 	int32 CurrentAnimalPrice = PointsTransactionComponent->GetAnimalPrice(AnimalType);
-	
-	if (PointsTransactionComponent->AttemptTransaction(CurrentAnimalPrice))
-	{
-		USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
-		if (AnimalSubsystem)
-		{
-			AnimalSubsystem->SpawnAnimal(AnimalType);
-			
-			PointsTransactionComponent->RegisterAnimalPurchase();
-		}
-	}
-	else
+	if (!PointsTransactionComponent->CanAfford(CurrentAnimalPrice))
 	{
 		Debug::Print(TEXT("Not enough points!"));
+		return false;
 	}
+	
+	USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
+
+	if (!AnimalSubsystem || !AnimalSubsystem->SpawnAnimal(AnimalType))
+	{
+		Debug::PrintError(TEXT("Cannot spawn animal!"));
+		return false;
+	}
+
+	PointsTransactionComponent->ConsumePoints(CurrentAnimalPrice);
+	PointsTransactionComponent->RegisterAnimalPurchase();
+
+	return true;
 }

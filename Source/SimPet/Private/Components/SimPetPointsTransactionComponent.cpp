@@ -36,14 +36,18 @@ void USimPetPointsTransactionComponent::RegisterAnimalPurchase()
 	PlayerState->MarkFirstAnimalBought();
 }
 
-bool USimPetPointsTransactionComponent::AttemptTransaction(int32 Cost)
+bool USimPetPointsTransactionComponent::CanAfford(int32 Cost)
 {
 	if (PlayerState)
-	{
-		return PlayerState->SpendPoints(Cost);
-	}
+		return PlayerState->HasRequiredPoints(Cost);
 	
 	return false;
+}
+
+void USimPetPointsTransactionComponent::ConsumePoints(int32 Cost)
+{
+	if (PlayerState)
+		PlayerState->SpendPoints(Cost);
 }
 
 void USimPetPointsTransactionComponent::GeneratePassivePoints()

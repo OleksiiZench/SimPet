@@ -20,7 +20,8 @@ class SIMPET_API ASimPetPlayerState : public APlayerState
 public:
 	ASimPetPlayerState();
 	
-	bool SpendPoints(int32 Points);
+	bool HasRequiredPoints(int32 Points);
+	void SpendPoints(int32 Points);
 	void AddPoints(int32 Points);
 	void ApplyPenalty(int32 PenaltyAmount);
 	

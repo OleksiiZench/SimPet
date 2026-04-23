@@ -24,7 +24,7 @@ class SIMPET_API USimPetAnimalSubsystem : public UWorldSubsystem
 public:
 	void RegisterSpawnPoint(ASimPetSpawnPoint *SpawnPoint);
 	
-	void SpawnAnimal(ESimPetAnimals AnimalType);
+	ASimPetAnimal * SpawnAnimal(ESimPetAnimals AnimalType);
 	
 	void MoveAnimalToForest();
 	void MoveAnimalToOwner();

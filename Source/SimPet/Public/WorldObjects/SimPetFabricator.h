@@ -25,7 +25,7 @@ public:
 	//~ End ISimPetInteractable Interface
 	
 	UFUNCTION(BlueprintCallable, Category = "Fabricator")
-	void AttemptBuyAnimal(ESimPetAnimals AnimalType);
+	bool AttemptBuyAnimal(ESimPetAnimals AnimalType);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")

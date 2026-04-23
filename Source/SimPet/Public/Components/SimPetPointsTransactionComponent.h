@@ -23,7 +23,8 @@ public:
 	int32 GetAnimalPrice(ESimPetAnimals AnimalType);
 	void RegisterAnimalPurchase();
 	
-	bool AttemptTransaction(int32 Cost);
+	bool CanAfford(int32 Cost);
+	void ConsumePoints(int32 Cost);
 	void GeneratePassivePoints();
 	void GeneratePenaltyPoints();
 	

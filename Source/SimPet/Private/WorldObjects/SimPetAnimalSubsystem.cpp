@@ -19,18 +19,18 @@ void USimPetAnimalSubsystem::RegisterSpawnPoint(ASimPetSpawnPoint *SpawnPoint)
 	}
 }
 
-void USimPetAnimalSubsystem::SpawnAnimal(ESimPetAnimals AnimalType)
+ASimPetAnimal * USimPetAnimalSubsystem::SpawnAnimal(ESimPetAnimals AnimalType)
 {
 	TSubclassOf<ASimPetAnimal> SpawnedAnimalClass = GetAnimalClassByAnimalType(AnimalType);
 	if (!SpawnedAnimalClass)
 	{
 		Debug::Print(TEXT("OwnerAnimals doesn't have a corresponding AnimalType!"));
-		return;
+		return nullptr;
 	}
 	
 	ASimPetSpawnPoint *AnimalSpawnPoint = GetSpawnPointInOwner();
 	if (AnimalSpawnPoint == nullptr)
-		return;
+		return nullptr;
 
 	FTransform AnimalTransform = AnimalSpawnPoint->GetTransform();
 	ASimPetAnimal *NewAnimal = GetWorld()->SpawnActor<ASimPetAnimal>(*SpawnedAnimalClass, AnimalTransform);
@@ -40,10 +40,12 @@ void USimPetAnimalSubsystem::SpawnAnimal(ESimPetAnimals AnimalType)
 		Debug::Print(TEXT("Spawned: ") + (*SpawnedAnimalClass)->GetName());
 
 		OwnerAnimals.Add(NewAnimal);
-
 		BindAnimalToSpawnPoint(NewAnimal, AnimalSpawnPoint);
+		
+		return NewAnimal;
 	}
 	
+	return nullptr;
 }
 
 void USimPetAnimalSubsystem::MoveAnimalToForest()

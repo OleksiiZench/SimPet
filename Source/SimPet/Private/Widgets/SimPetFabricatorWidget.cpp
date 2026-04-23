@@ -62,9 +62,10 @@ void USimPetFabricatorWidget::OnBuyAnimalClicked(ESimPetAnimals AnimalType)
 {
 	if (LinkedFabricator.IsValid())
 	{
-		LinkedFabricator->AttemptBuyAnimal(AnimalType);
-		
-		UpdateAnimalPricesUI();
+		if (LinkedFabricator->AttemptBuyAnimal(AnimalType))
+		{
+			UpdateAnimalPricesUI();
+		}
 	}
 }
 

@@ -8,16 +8,19 @@ ASimPetPlayerState::ASimPetPlayerState()
 	bHasBoughtFirstAnimal = false;
 }
 
-bool ASimPetPlayerState::SpendPoints(int Points)
+bool ASimPetPlayerState::HasRequiredPoints(int32 Points)
 {
 	if (CurrentPoints < Points)
 		return false;
-	
+
+	return true;
+}
+
+void ASimPetPlayerState::SpendPoints(int Points)
+{
 	CurrentPoints -= Points;
 	
 	OnPointsChanged.Broadcast(CurrentPoints);
-	
-	return true;
 }
 
 void ASimPetPlayerState::AddPoints(int Points)
