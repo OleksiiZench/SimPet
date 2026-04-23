@@ -21,13 +21,10 @@ class SIMPET_API USimPetHUDWidget : public UUserWidget
 	
 public:
 	virtual void NativeConstruct() override;
-	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+	virtual void NativeDestruct() override;
 	
 protected:
 #pragma region UI Bindings
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock *TimerText;
-	
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock *DogCountText;
 	

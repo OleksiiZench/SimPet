@@ -33,7 +33,7 @@ void ASimPetFabricator::Interact_Implementation(AActor *InstigatorActor)
 		if (FabricatorUI)
 		{
 			if (ASimPetHUD *CurrentHUD = Cast<ASimPetHUD>(PC->GetHUD()))
-				CurrentHUD->SetHUDVisibility(false);
+				CurrentHUD->SetGameplayHUDVisibility(false);
 			
 			FabricatorUI->InitializeFabricator(this);
 			FabricatorUI->AddToViewport();

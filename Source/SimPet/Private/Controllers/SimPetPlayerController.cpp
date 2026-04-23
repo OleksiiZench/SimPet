@@ -78,7 +78,7 @@ void ASimPetPlayerController::TogglePauseMenu()
 	if (bIsGamePaused)
 	{
 		if (ASimPetHUD *CurrentHUD = Cast<ASimPetHUD>(GetHUD()))
-			CurrentHUD->SetHUDVisibility(false);
+			CurrentHUD->SetGameplayHUDVisibility(false);
 		
 		if (!CurrentPauseMenuWidget && PauseMenuWidgetClass)
 		{
@@ -97,7 +97,7 @@ void ASimPetPlayerController::TogglePauseMenu()
 			CurrentPauseMenuWidget->SetVisibility(ESlateVisibility::Hidden);
 		
 		if (ASimPetHUD *CurrentHUD = Cast<ASimPetHUD>(GetHUD()))
-			CurrentHUD->SetHUDVisibility(true);
+			CurrentHUD->SetGameplayHUDVisibility(true);
 		
 		SetInputMode_Game();
 	}

@@ -3,27 +3,43 @@
 
 #include "Widgets/SimPetHUD.h"
 
-#include "Widgets/SimPetHUDWidget.h"
+#include "Blueprint/UserWidget.h"
+
+#include "SimPetDebugHelper.h"
 
 void ASimPetHUD::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (HUDWidgetClass)
+	CurrentGameplayHUDWidget = CreateAndAddToViewportWidget(GameplayHUDWidgetClass);
+	CurrentTimerHUDWidget = CreateAndAddToViewportWidget(TimerHUDWidgetClass, 5);
+	
+	Debug::Print(TEXT("CurrentGameplayHUDWidget"), CurrentGameplayHUDWidget);
+	Debug::Print(TEXT("CurrentTimerHUDWidget"), CurrentTimerHUDWidget);
+}
+
+void ASimPetHUD::SetGameplayHUDVisibility(bool bIsVisible)
+{
+	if (CurrentGameplayHUDWidget)
 	{
-		if (APlayerController *PlayerController = GetOwningPlayerController())
-		{
-			CurrentHUDWidget = CreateWidget<USimPetHUDWidget>(PlayerController, HUDWidgetClass);
-			if (CurrentHUDWidget)
-				CurrentHUDWidget->AddToViewport();
-		}
+		CurrentGameplayHUDWidget->SetVisibility(bIsVisible ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
 	}
 }
 
-void ASimPetHUD::SetHUDVisibility(bool bIsVisible)
+UUserWidget * ASimPetHUD::CreateAndAddToViewportWidget(TSubclassOf<UUserWidget> WidgetClass, int32 ZOrder)
 {
-	if (CurrentHUDWidget)
-	{
-		CurrentHUDWidget->SetVisibility(bIsVisible ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
-	}
+	if (WidgetClass == nullptr)
+		return nullptr;
+	
+	APlayerController *PlayerController = GetOwningPlayerController();
+	if (PlayerController == nullptr)
+		return nullptr;
+	
+	UUserWidget *Widget = CreateWidget<UUserWidget>(PlayerController, WidgetClass);
+	if (Widget == nullptr)
+		return nullptr;
+	
+	Widget->AddToViewport(ZOrder);
+	
+	return Widget;
 }

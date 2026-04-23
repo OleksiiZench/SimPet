@@ -40,20 +40,14 @@ void USimPetHUDWidget::NativeConstruct()
 	}
 }
 
-void USimPetHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+void USimPetHUDWidget::NativeDestruct()
 {
-	Super::NativeTick(MyGeometry, InDeltaTime);
-	
-	if (TimerText)
+	if (GetWorld())
 	{
-		float TimeSeconds = GetWorld()->GetTimeSeconds();
-		
-		// Форматуємо час у mm:ss
-		FTimespan Timespan = FTimespan::FromSeconds(TimeSeconds);
-		FString TimeString = FString::Printf(TEXT("%02d:%02d"), Timespan.GetMinutes(), Timespan.GetSeconds());
-		
-		TimerText->SetText(FText::FromString(TimeString));
+		GetWorld()->GetTimerManager().ClearTimer(StatsTimerHandle);
 	}
+	
+	Super::NativeDestruct();
 }
 
 void USimPetHUDWidget::UpdateStaminaBar(float Percent)

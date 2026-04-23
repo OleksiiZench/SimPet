@@ -79,7 +79,7 @@ void USimPetFabricatorWidget::OnCloseMenu()
 		PC->SetInputMode(FInputModeGameOnly());
 		
 		if (ASimPetHUD *CurrentHUD = Cast<ASimPetHUD>(PC->GetHUD()))
-			CurrentHUD->SetHUDVisibility(true);
+			CurrentHUD->SetGameplayHUDVisibility(true);
 	}
 }
 
