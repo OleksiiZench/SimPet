@@ -17,7 +17,7 @@
 USimPetFabricatorWidget::USimPetFabricatorWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	bIsFocusable = true;
+	SetIsFocusable(true);
 }
 
 void USimPetFabricatorWidget::NativeConstruct()
@@ -64,7 +64,7 @@ void USimPetFabricatorWidget::OnBuyAnimalClicked(ESimPetAnimals AnimalType)
 	{
 		LinkedFabricator->AttemptBuyAnimal(AnimalType);
 		
-		OnCloseMenu();
+		UpdateAnimalPricesUI();
 	}
 }
 
