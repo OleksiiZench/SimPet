@@ -28,6 +28,8 @@ public:
 	bool HasBoughtFirstAnimal() const;
 	void MarkFirstAnimalBought();
 	
+	int32 GetCurrentPoints() const;
+	
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnPointsChanged OnPointsChanged;
 	

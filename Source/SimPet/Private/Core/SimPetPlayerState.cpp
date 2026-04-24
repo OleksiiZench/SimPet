@@ -46,3 +46,8 @@ void ASimPetPlayerState::MarkFirstAnimalBought()
 {
 	bHasBoughtFirstAnimal = true;
 }
+
+int32 ASimPetPlayerState::GetCurrentPoints() const
+{
+	return CurrentPoints;
+}

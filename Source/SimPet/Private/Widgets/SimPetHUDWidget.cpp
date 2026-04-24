@@ -31,10 +31,11 @@ void USimPetHUDWidget::NativeConstruct()
 			PlayerStaminaComponent->OnStaminaChanged.AddDynamic(this, &USimPetHUDWidget::UpdateStaminaBar);
 		}
 		
-		UpdatePointsText(0);
-		
 		if (ASimPetPlayerState *PlayerState = Cast<ASimPetPlayerState>(SimPetPlayer->GetPlayerState()))
 		{
+			int32 CurrentPoints = PlayerState->GetCurrentPoints();
+			UpdatePointsText(CurrentPoints);
+			
 			PlayerState->OnPointsChanged.AddDynamic(this, &USimPetHUDWidget::UpdatePointsText);
 		}
 	}

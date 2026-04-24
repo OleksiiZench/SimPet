@@ -11,6 +11,7 @@
 #include "Components/SimPetPointsTransactionComponent.h"
 #include "SimPetEnumTypes.h"
 #include "Widgets/SimPetHUD.h"
+#include "Core/SimPetPlayerState.h"
 
 #include "SimPetDebugHelper.h"
 
@@ -28,6 +29,12 @@ void USimPetFabricatorWidget::NativeConstruct()
 	{
 		AnimalSubsystem = World->GetSubsystem<USimPetAnimalSubsystem>();
 	}
+	
+	CachePlayerState();
+	BindToPointsUpdate();
+	
+	int32 CurrentPoints = CachedPlayerState->GetCurrentPoints();
+	UpdatePointsText(CurrentPoints);
 }
 
 FReply USimPetFabricatorWidget::NativeOnKeyDown(const FGeometry &InGeometry, const FKeyEvent &InKeyEvent)
@@ -117,6 +124,16 @@ void USimPetFabricatorWidget::MoveAnimalToOwner()
 	AnimalSubsystem->MoveAnimalToOwner();
 }
 
+void USimPetFabricatorWidget::UpdatePointsText(int32 Points)
+{
+	FString FormattedString = FString::Printf(TEXT("Points: %d"), Points);
+	
+	if (PointsText)
+	{
+		PointsText->SetText(FText::FromString(FormattedString));
+	}
+}
+
 void USimPetFabricatorWidget::UpdateAnimalPricesUI()
 {
 	if (!CachedTransactionComponent.IsValid())
@@ -145,4 +162,17 @@ void USimPetFabricatorWidget::UpdateAnimalPricesUI()
 		FString FormattedString = FString::Printf(TEXT("%d"), PriceLizard);
 		PriceLizardText->SetText(FText::FromString(FormattedString));
 	}
+}
+
+void USimPetFabricatorWidget::CachePlayerState()
+{
+	if (Cast<ASimPetPlayerState>(GetOwningPlayerState()))
+	{
+		CachedPlayerState = Cast<ASimPetPlayerState>(GetOwningPlayerState());
+	}
+}
+
+void USimPetFabricatorWidget::BindToPointsUpdate()
+{	
+	CachedPlayerState->OnPointsChanged.AddDynamic(this, &ThisClass::UpdatePointsText);
 }

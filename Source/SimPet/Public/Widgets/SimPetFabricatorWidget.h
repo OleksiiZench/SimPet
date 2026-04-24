@@ -12,6 +12,7 @@
 class ASimPetFabricator;
 class UTextBlock;
 class USimPetPointsTransactionComponent;
+class ASimPetPlayerState;
 
 /**
  * Клас UI, який керує вибором тварин
@@ -52,6 +53,9 @@ protected:
 	
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock *PriceLizardText;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *PointsText;
 #pragma endregion
 	
 	TWeakObjectPtr<ASimPetFabricator> LinkedFabricator;  // Посилання на фабрикатор який відкрив цей UI
@@ -60,6 +64,13 @@ protected:
 	
 private:
 	TWeakObjectPtr<USimPetPointsTransactionComponent> CachedTransactionComponent;
+	ASimPetPlayerState *CachedPlayerState;
+	
+	UFUNCTION()
+	void UpdatePointsText(int32 Points);
 	
 	void UpdateAnimalPricesUI();
+	
+	void CachePlayerState();
+	void BindToPointsUpdate();
 };
