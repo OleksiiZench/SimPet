@@ -20,6 +20,8 @@ public:
 	ASimPetMainLevelGameMode();
 	
 	virtual void BeginPlay() override;
+	
 private:
 	void SetLowSettings();
+	void SpawnFeed();
 };

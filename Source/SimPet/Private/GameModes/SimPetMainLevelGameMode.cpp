@@ -6,6 +6,7 @@
 #include "GameFramework/GameUserSettings.h"
 
 #include "Characters/SimPetPlayer.h"
+#include "WorldObjects/SimPetItemSubsystem.h"
 
 ASimPetMainLevelGameMode::ASimPetMainLevelGameMode()
 {
@@ -17,6 +18,8 @@ void ASimPetMainLevelGameMode::BeginPlay()
 	Super::BeginPlay();
 	
 	SetLowSettings();
+	
+	SpawnFeed();
 }
 
 void ASimPetMainLevelGameMode::SetLowSettings()
@@ -38,4 +41,13 @@ void ASimPetMainLevelGameMode::SetLowSettings()
 		
 		UserSettings->ApplySettings(true);
 	}
+}
+
+void ASimPetMainLevelGameMode::SpawnFeed()
+{
+	USimPetItemSubsystem *ItemSubsystem = GetWorld()->GetSubsystem<USimPetItemSubsystem>();
+	if (ItemSubsystem == nullptr)
+		return;
+	
+	ItemSubsystem->SpawnFeedOnRelevantPoints();
 }
