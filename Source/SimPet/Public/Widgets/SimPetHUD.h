@@ -21,7 +21,9 @@ class SIMPET_API ASimPetHUD : public AHUD
 public:
 	virtual  void BeginPlay() override;
 	
+	void SetAllHUDVisibility(bool bIsVisible);
 	void SetGameplayHUDVisibility(bool bIsVisible);
+	void SetTimerHUDVisibility(bool bIsVisible);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "SimPet | UI")

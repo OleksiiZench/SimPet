@@ -18,11 +18,25 @@ void ASimPetHUD::BeginPlay()
 	Debug::Print(TEXT("CurrentTimerHUDWidget"), CurrentTimerHUDWidget);
 }
 
+void ASimPetHUD::SetAllHUDVisibility(bool bIsVisible)
+{
+	SetGameplayHUDVisibility(bIsVisible);
+	SetTimerHUDVisibility(bIsVisible);
+}
+
 void ASimPetHUD::SetGameplayHUDVisibility(bool bIsVisible)
 {
 	if (CurrentGameplayHUDWidget)
 	{
 		CurrentGameplayHUDWidget->SetVisibility(bIsVisible ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+	}
+}
+
+void ASimPetHUD::SetTimerHUDVisibility(bool bIsVisible)
+{
+	if (CurrentTimerHUDWidget)
+	{
+		CurrentTimerHUDWidget->SetVisibility(bIsVisible ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
 	}
 }
 
