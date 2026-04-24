@@ -16,6 +16,11 @@ void ASimPetMainLevelGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	SetLowSettings();
+}
+
+void ASimPetMainLevelGameMode::SetLowSettings()
+{
 	UGameUserSettings *UserSettings = GEngine->GetGameUserSettings();
 	
 	if (UserSettings)
