@@ -10,7 +10,7 @@ void ASimPetAnimalFeed::Interact_Implementation(AActor *InstigatorActor)
 {
 	Super::Interact_Implementation(InstigatorActor);
 	
-	OnFeedPickedUp.Broadcast(this);
+	NotifyPickedUp();
 }
 
 bool ASimPetAnimalFeed::TryInteractWithAnotherActor(AActor *TargetActor)
@@ -30,6 +30,13 @@ bool ASimPetAnimalFeed::TryInteractWithAnotherActor(AActor *TargetActor)
 	}
 	
 	return false;
+}
+
+void ASimPetAnimalFeed::NotifyPickedUp()
+{
+	Super::NotifyPickedUp();
+	
+	OnFeedPickedUp.Broadcast(this);
 }
 
 bool ASimPetAnimalFeed::TryFeedAnimal(AActor *TargetActor)

@@ -28,6 +28,7 @@ public:
 	virtual void GetOwnedGameplayTags(FGameplayTagContainer &TagContainer) const override;
 	
 	virtual bool TryInteractWithAnotherActor(AActor *TargetActor);
+	virtual void NotifyPickedUp();
 	
 	void EnablePhysics();
 	void DisablePhysics();

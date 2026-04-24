@@ -45,6 +45,10 @@ bool ASimPetItem::TryInteractWithAnotherActor(AActor *TargetActor)
 	return false;
 }
 
+void ASimPetItem::NotifyPickedUp()
+{
+}
+
 void ASimPetItem::EnablePhysics()
 {
 	if (CacheStaticMeshComp)

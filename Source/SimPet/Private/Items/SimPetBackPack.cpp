@@ -39,6 +39,8 @@ bool ASimPetBackPack::TryAddItem(ASimPetItem *Item)
 		
 		StoredItems.Add(Item);
 		
+		Item->NotifyPickedUp();
+		
 		return true;
 	}
 	
