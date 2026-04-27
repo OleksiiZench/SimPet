@@ -5,8 +5,6 @@
 
 #include "BehaviorTree/BlackboardComponent.h"
 
-#include "SimPetDebugHelper.h"
-
 UBTService_PickHappyAction::UBTService_PickHappyAction()
 {
 	NodeName = "Pick Happy Action";

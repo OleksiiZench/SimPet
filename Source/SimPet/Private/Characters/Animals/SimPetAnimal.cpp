@@ -16,9 +16,6 @@
 #include "Characters/SimPetPlayer.h"
 #include "AI/SimPetAIController.h"
 
-#include "SimPetDebugHelper.h"
-
-
 ASimPetAnimal::ASimPetAnimal()
 {
 	PrimaryActorTick.bCanEverTick = true;

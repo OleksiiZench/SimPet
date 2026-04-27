@@ -3,8 +3,6 @@
 
 #include "Components/Attributes/SimPetNeedsComponent.h"
 
-#include "SimPetDebugHelper.h"
-
 USimPetNeedsComponent::USimPetNeedsComponent()
 {
 	SecondsPerGameHour = 1.0f;

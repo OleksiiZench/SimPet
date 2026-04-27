@@ -5,8 +5,6 @@
 
 #include "Items/SimPetItem.h"
 
-#include "SimPetDebugHelper.h"
-
 void ASimPetBackPack::SecondaryInteract_Implementation(AActor *InstigatorActor)
 {
 	ExtractItem();

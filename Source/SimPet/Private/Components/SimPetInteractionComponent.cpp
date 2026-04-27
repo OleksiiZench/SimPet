@@ -8,8 +8,6 @@
 #include "Interfaces/SimPetInteractable.h"
 #include "Items/SimPetItem.h"
 
-#include "SimPetDebugHelper.h"
-
 USimPetInteractionComponent::USimPetInteractionComponent()
 {
 	CachedTakenItem = nullptr;
