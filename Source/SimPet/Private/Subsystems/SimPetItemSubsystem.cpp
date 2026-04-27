@@ -1,11 +1,11 @@
 // Copyright (c) 2025 Oleksii Zenchenko. All Rights Reserved.
 
 
-#include "WorldObjects/SimPetItemSubsystem.h"
+#include "Subsystems/SimPetItemSubsystem.h"
 
 #include "WorldObjects/SimPetItemSettings.h"
 #include "Items/SimPetAnimalFeed.h"
-#include "WorldObjects/SimPetAnimalSubsystem.h"
+#include "Subsystems/SimPetAnimalSubsystem.h"
 #include "WorldObjects/SimPetSpawnPoint.h"
 #include "SimPetGameplayTags.h"
 

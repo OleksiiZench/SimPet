@@ -6,7 +6,7 @@
 #include "GameFramework/GameUserSettings.h"
 
 #include "Characters/SimPetPlayer.h"
-#include "WorldObjects/SimPetItemSubsystem.h"
+#include "Subsystems/SimPetItemSubsystem.h"
 
 ASimPetMainLevelGameMode::ASimPetMainLevelGameMode()
 {

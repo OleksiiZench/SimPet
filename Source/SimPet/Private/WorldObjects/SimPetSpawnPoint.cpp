@@ -6,7 +6,7 @@
 #include "SimPetGameplayTags.h"
 #include "Items/SimPetAnimalFeed.h"
 #include "Characters/Animals/SimPetAnimal.h"
-#include "WorldObjects/SimPetAnimalSubsystem.h"
+#include "Subsystems/SimPetAnimalSubsystem.h"
 
 void ASimPetSpawnPoint::BeginPlay()
 {

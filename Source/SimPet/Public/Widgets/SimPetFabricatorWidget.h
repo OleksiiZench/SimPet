@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 
-#include "WorldObjects/SimPetAnimalSubsystem.h"
+#include "Subsystems/SimPetAnimalSubsystem.h"
 
 #include "SimPetFabricatorWidget.generated.h"
 

@@ -7,7 +7,7 @@
 #include "Input/Reply.h"
 
 #include "WorldObjects/SimPetFabricator.h"
-#include "WorldObjects/SimPetAnimalSubsystem.h"
+#include "Subsystems/SimPetAnimalSubsystem.h"
 #include "Components/SimPetPointsTransactionComponent.h"
 #include "SimPetEnumTypes.h"
 #include "Widgets/SimPetHUD.h"

@@ -7,7 +7,7 @@
 #include "SimPetDebugHelper.h"
 #include "Blueprint/UserWidget.h"
 #include "Widgets/SimPetFabricatorWidget.h"
-#include "WorldObjects/SimPetAnimalSubsystem.h"
+#include "Subsystems/SimPetAnimalSubsystem.h"
 #include "Components/SimPetPointsTransactionComponent.h"
 #include "Widgets/SimPetHUD.h"
 

@@ -6,7 +6,7 @@
 #include "Components/ShapeComponent.h"
 
 #include "Characters/SimPetPlayer.h"
-#include "WorldObjects/SimPetItemSubsystem.h"
+#include "Subsystems/SimPetItemSubsystem.h"
 
 void ASimPetFeedSpawnTrigger::BeginPlay()
 {
