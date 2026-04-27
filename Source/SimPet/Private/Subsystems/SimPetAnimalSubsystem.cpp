@@ -6,7 +6,7 @@
 #include "WorldObjects/SimPetSpawnPoint.h"
 #include "SimPetGameplayTags.h"
 #include "Characters/Animals/SimPetAnimal.h"
-#include "WorldObjects/SimPetAnimalSettings.h"
+#include "Core/Settings/SimPetAnimalSettings.h"
 
 #include "SimPetDebugHelper.h"
 

@@ -1,5 +1,5 @@
 // Copyright (c) 2025 Oleksii Zenchenko. All Rights Reserved.
 
 
-#include "WorldObjects/SimPetAnimalSettings.h"
+#include "Core/Settings/SimPetAnimalSettings.h"
 

@@ -3,7 +3,7 @@
 
 #include "Subsystems/SimPetItemSubsystem.h"
 
-#include "WorldObjects/SimPetItemSettings.h"
+#include "Core/Settings/SimPetItemSettings.h"
 #include "Items/SimPetAnimalFeed.h"
 #include "Subsystems/SimPetAnimalSubsystem.h"
 #include "WorldObjects/SimPetSpawnPoint.h"
