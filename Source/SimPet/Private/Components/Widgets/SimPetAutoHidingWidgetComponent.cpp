@@ -9,7 +9,7 @@ USimPetAutoHidingWidgetComponent::USimPetAutoHidingWidgetComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	
-	MaxVisibleDistance = 600.0f;
+	MaxVisibleDistance = 1500.0f;
 	
 	SecondsPerCheck = 0.2f;
 }
