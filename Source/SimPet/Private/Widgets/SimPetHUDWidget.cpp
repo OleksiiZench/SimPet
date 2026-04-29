@@ -81,28 +81,28 @@ void USimPetHUDWidget::UpdateAnimalStats()
 	
 	if (DogCountText)
 	{
-		int NumberOfDogs = AnimalSubsystem->GetNumberOwnerAnimalsCertainType(ESimPetAnimals::EA_Dog);
+		int32 NumberOfDogs = AnimalSubsystem->GetNumberOwnerAnimalsCertainType(ESimPetAnimals::EA_Dog);
 		
 		DogCountText->SetText(FText::AsNumber(NumberOfDogs));
 	}
 	
 	if (CanaryCountText)
 	{
-		int NumberOfCanaries = AnimalSubsystem->GetNumberOwnerAnimalsCertainType(ESimPetAnimals::EA_Canary);
+		int32 NumberOfCanaries = AnimalSubsystem->GetNumberOwnerAnimalsCertainType(ESimPetAnimals::EA_Canary);
 		
 		CanaryCountText->SetText(FText::AsNumber(NumberOfCanaries));
 	}
 	
 	if (LizardCountText)
 	{
-		int NumberOfLizards = AnimalSubsystem->GetNumberOwnerAnimalsCertainType(ESimPetAnimals::EA_Lizard);
+		int32 NumberOfLizards = AnimalSubsystem->GetNumberOwnerAnimalsCertainType(ESimPetAnimals::EA_Lizard);
 		
 		LizardCountText->SetText(FText::AsNumber(NumberOfLizards));
 	}
 	
 	if (WildAnimalCountText)
 	{
-		int NumberOfWildAnimals = AnimalSubsystem->GetTotalNumberWildAnimals();
+		int32 NumberOfWildAnimals = AnimalSubsystem->GetTotalNumberWildAnimals();
 		
 		WildAnimalCountText->SetText(FText::AsNumber(NumberOfWildAnimals));
 	}

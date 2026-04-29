@@ -20,14 +20,9 @@ void USimPetPauseMenuWidget::NativeConstruct()
 	CacheSaveSubsystem();
 	CachePlayerState();
 	
+	SetupButtonBindings();
+	
 	UpdateAssignedText();
-	
-	// 1. Прив'язка кнопок
-	if (Btn_Resume)
-		Btn_Resume->OnClicked.AddDynamic(this, &USimPetPauseMenuWidget::OnResumeClicked);
-	
-	if (Btn_ToMainMenu)
-		Btn_ToMainMenu->OnClicked.AddDynamic(this, &USimPetPauseMenuWidget::OnToMainMenuClicked);
 }
 
 void USimPetPauseMenuWidget::OnResumeClicked()
@@ -40,6 +35,15 @@ void USimPetPauseMenuWidget::OnToMainMenuClicked()
 {
 	UGameplayStatics::SetGamePaused(GetWorld(), false);
 	UGameplayStatics::OpenLevel(this, MainMenuLevelName);
+}
+
+void USimPetPauseMenuWidget::SetupButtonBindings()
+{
+	if (Btn_Resume)
+		Btn_Resume->OnClicked.AddDynamic(this, &USimPetPauseMenuWidget::OnResumeClicked);
+	
+	if (Btn_ToMainMenu)
+		Btn_ToMainMenu->OnClicked.AddDynamic(this, &USimPetPauseMenuWidget::OnToMainMenuClicked);
 }
 
 void USimPetPauseMenuWidget::UpdateAssignedText()

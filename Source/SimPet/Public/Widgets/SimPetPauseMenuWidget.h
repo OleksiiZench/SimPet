@@ -60,6 +60,8 @@ private:
 	UPROPERTY()
 	ASimPetPlayerState *CachedPlayerState;
 	
+	void SetupButtonBindings();
+	
 	void UpdateAssignedText();
 	void UpdateMaxPointsText();
 	void UpdateCurrentPointsText();
