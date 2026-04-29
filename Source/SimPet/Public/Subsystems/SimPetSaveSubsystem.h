@@ -16,6 +16,8 @@ class SIMPET_API USimPetSaveSubsystem : public UWorldSubsystem
 	GENERATED_BODY()
 	
 public:
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	
 	void CheckAndUpdateMaxPoints(int32 InCurrentPoints);
 	int32 GetMaxPoints();
 	

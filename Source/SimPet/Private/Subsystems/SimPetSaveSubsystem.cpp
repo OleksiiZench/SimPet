@@ -7,6 +7,13 @@
 
 #include "Core/SimPetSaveGame.h"
 
+void USimPetSaveSubsystem::Initialize(FSubsystemCollectionBase &Collection)
+{
+	Super::Initialize(Collection);
+	
+	LoadMaxPoints();
+}
+
 void USimPetSaveSubsystem::CheckAndUpdateMaxPoints(int32 InCurrentPoints)
 {
 	if (InCurrentPoints > MaxPoints)
@@ -19,8 +26,6 @@ void USimPetSaveSubsystem::CheckAndUpdateMaxPoints(int32 InCurrentPoints)
 
 int32 USimPetSaveSubsystem::GetMaxPoints()
 {
-	LoadMaxPoints();
-	
 	return MaxPoints;
 }
 
