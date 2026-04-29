@@ -9,7 +9,9 @@
 
 class UButton;
 class UTextBlock;
+class ASimPetPlayerController;
 class USimPetSaveSubsystem;
+class ASimPetPlayerState;
 
 /**
  * 
@@ -35,6 +37,9 @@ protected:
 	
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock *MaxPointsText;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *CurrentPointsText;
 #pragma endregion
 	
 #pragma region UI Callbacks
@@ -46,9 +51,20 @@ protected:
 #pragma endregion
 	
 private:
+	UPROPERTY()
+	ASimPetPlayerController *CachedPlayerController;
+	
+	UPROPERTY()
 	USimPetSaveSubsystem *CachedSaveSubsystem;
 	
-	void UpdateMaxPointsText();
+	UPROPERTY()
+	ASimPetPlayerState *CachedPlayerState;
 	
+	void UpdateAssignedText();
+	void UpdateMaxPointsText();
+	void UpdateCurrentPointsText();
+	
+	void CachePlayerController();
 	void CacheSaveSubsystem();
+	void CachePlayerState();
 };
