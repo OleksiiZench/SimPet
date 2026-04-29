@@ -3,3 +3,7 @@
 
 #include "Core/SimPetSaveGame.h"
 
+USimPetSaveGame::USimPetSaveGame()
+{
+    MaxPoints = 0;
+}

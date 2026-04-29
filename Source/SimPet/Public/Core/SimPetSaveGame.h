@@ -15,4 +15,9 @@ class SIMPET_API USimPetSaveGame : public USaveGame
 {
 	GENERATED_BODY()
 	
+public:
+	USimPetSaveGame();
+
+	UPROPERTY(VisibleAnywhere, Category = "SimPet | Stats")
+	int32 MaxPoints;
 };

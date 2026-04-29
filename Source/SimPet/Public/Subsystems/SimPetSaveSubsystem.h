@@ -15,4 +15,13 @@ class SIMPET_API USimPetSaveSubsystem : public UWorldSubsystem
 {
 	GENERATED_BODY()
 	
+public:
+	void CheckAndUpdateMaxPoints(int32 InCurrentPoints);
+	
+private:
+	const FString SaveSlotName = TEXT("SimPet_SaveSlot");
+	int32 MaxPoints;
+	
+	void LoadMaxPoints();
+	void SaveMaxPoints();
 };
