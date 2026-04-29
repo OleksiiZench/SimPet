@@ -8,6 +8,8 @@
 #include "SimPetPauseMenuWidget.generated.h"
 
 class UButton;
+class UTextBlock;
+class USimPetSaveSubsystem;
 
 /**
  * 
@@ -30,6 +32,9 @@ protected:
 	
 	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_ToMainMenu;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *MaxPointsText;
 #pragma endregion
 	
 #pragma region UI Callbacks
@@ -39,4 +44,11 @@ protected:
 	UFUNCTION()
 	void OnToMainMenuClicked();
 #pragma endregion
+	
+private:
+	USimPetSaveSubsystem *CachedSaveSubsystem;
+	
+	void UpdateMaxPointsText();
+	
+	void CacheSaveSubsystem();
 };

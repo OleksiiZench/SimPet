@@ -17,6 +17,13 @@ void USimPetSaveSubsystem::CheckAndUpdateMaxPoints(int32 InCurrentPoints)
 	}
 }
 
+int32 USimPetSaveSubsystem::GetMaxPoints()
+{
+	LoadMaxPoints();
+	
+	return MaxPoints;
+}
+
 void USimPetSaveSubsystem::LoadMaxPoints()
 {
 	if (UGameplayStatics::DoesSaveGameExist(SaveSlotName, 0))

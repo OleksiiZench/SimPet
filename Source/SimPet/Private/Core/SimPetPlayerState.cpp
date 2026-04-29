@@ -2,10 +2,18 @@
 
 
 #include "Core/SimPetPlayerState.h"
+#include "Subsystems/SimPetSaveSubsystem.h"
 
 ASimPetPlayerState::ASimPetPlayerState()
 {
 	bHasBoughtFirstAnimal = false;
+}
+
+void ASimPetPlayerState::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	CacheSaveSubsystem();
 }
 
 bool ASimPetPlayerState::HasRequiredPoints(int32 Points)
@@ -18,23 +26,17 @@ bool ASimPetPlayerState::HasRequiredPoints(int32 Points)
 
 void ASimPetPlayerState::SpendPoints(int Points)
 {
-	CurrentPoints -= Points;
-	
-	OnPointsChanged.Broadcast(CurrentPoints);
+	UpdateCurrentPoints(CurrentPoints -= Points);
 }
 
 void ASimPetPlayerState::AddPoints(int Points)
 {
-	CurrentPoints += Points;
-	
-	OnPointsChanged.Broadcast(CurrentPoints);
+	UpdateCurrentPoints(CurrentPoints += Points);
 }
 
 void ASimPetPlayerState::ApplyPenalty(int32 PenaltyAmount)
 {
-	CurrentPoints -= PenaltyAmount;
-	
-	OnPointsChanged.Broadcast(CurrentPoints);
+	UpdateCurrentPoints(CurrentPoints -= PenaltyAmount);
 }
 
 bool ASimPetPlayerState::HasBoughtFirstAnimal() const
@@ -50,4 +52,24 @@ void ASimPetPlayerState::MarkFirstAnimalBought()
 int32 ASimPetPlayerState::GetCurrentPoints() const
 {
 	return CurrentPoints;
+}
+
+void ASimPetPlayerState::UpdateCurrentPoints(int32 NewCurrentPoints)
+{
+	CurrentPoints = NewCurrentPoints;
+	
+	OnPointsChanged.Broadcast(CurrentPoints);
+	
+	if (CachedSaveSubsystem)
+	{
+		CachedSaveSubsystem->CheckAndUpdateMaxPoints(CurrentPoints);
+	}
+}
+
+void ASimPetPlayerState::CacheSaveSubsystem()
+{
+	if (GetWorld())
+	{
+		CachedSaveSubsystem = GetWorld()->GetSubsystem<USimPetSaveSubsystem>();
+	}
 }

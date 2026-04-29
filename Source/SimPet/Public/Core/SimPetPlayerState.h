@@ -7,6 +7,8 @@
 
 #include "SimPetPlayerState.generated.h"
 
+class USimPetSaveSubsystem;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPointsChanged, int, Points);
 
 /**
@@ -19,6 +21,8 @@ class SIMPET_API ASimPetPlayerState : public APlayerState
 	
 public:
 	ASimPetPlayerState();
+	
+	virtual void BeginPlay() override;
 	
 	bool HasRequiredPoints(int32 Points);
 	void SpendPoints(int32 Points);
@@ -37,4 +41,10 @@ private:
 	int32 CurrentPoints;
 	
 	bool bHasBoughtFirstAnimal;
+	
+	USimPetSaveSubsystem *CachedSaveSubsystem;
+	
+	void UpdateCurrentPoints(int32 NewCurrentPoints);
+	
+	void CacheSaveSubsystem();
 };

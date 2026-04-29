@@ -17,6 +17,7 @@ class SIMPET_API USimPetSaveSubsystem : public UWorldSubsystem
 	
 public:
 	void CheckAndUpdateMaxPoints(int32 InCurrentPoints);
+	int32 GetMaxPoints();
 	
 private:
 	const FString SaveSlotName = TEXT("SimPet_SaveSlot");
