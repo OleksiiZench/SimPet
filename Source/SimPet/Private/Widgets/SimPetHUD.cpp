@@ -28,7 +28,7 @@ void ASimPetHUD::SetGameplayHUDVisibility(bool bIsVisible)
 {
 	if (CurrentGameplayHUDWidget)
 	{
-		CurrentGameplayHUDWidget->SetVisibility(bIsVisible ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+		CurrentGameplayHUDWidget->SetVisibility(bIsVisible ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Hidden);
 	}
 }
 
@@ -36,7 +36,7 @@ void ASimPetHUD::SetTimerHUDVisibility(bool bIsVisible)
 {
 	if (CurrentTimerHUDWidget)
 	{
-		CurrentTimerHUDWidget->SetVisibility(bIsVisible ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+		CurrentTimerHUDWidget->SetVisibility(bIsVisible ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Hidden);
 	}
 }
 

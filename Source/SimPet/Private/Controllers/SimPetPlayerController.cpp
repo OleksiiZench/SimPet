@@ -70,11 +70,9 @@ void ASimPetPlayerController::Input_Pause(const FInputActionValue &InputActionVa
 void ASimPetPlayerController::TogglePauseMenu()
 {	
 	bIsGamePaused = !bIsGamePaused;
-	
-	// 1. Ставимо/ Знімаємо паузу гри
 	UGameplayStatics::SetGamePaused(GetWorld(), bIsGamePaused);
 	
-	// 2. Логіка відображення
+	// Логіка відображення
 	if (bIsGamePaused)
 	{
 		if (ASimPetHUD *CurrentHUD = Cast<ASimPetHUD>(GetHUD()))
@@ -83,18 +81,21 @@ void ASimPetPlayerController::TogglePauseMenu()
 		if (!CurrentPauseMenuWidget && PauseMenuWidgetClass)
 		{
 			CurrentPauseMenuWidget = CreateWidget<USimPetPauseMenuWidget>(this, PauseMenuWidgetClass);
+		}
+		
+		if (CurrentPauseMenuWidget && !CurrentPauseMenuWidget->IsInViewport())
+		{
 			CurrentPauseMenuWidget->AddToViewport(10);
 		}
 		
-		if (CurrentPauseMenuWidget)
-			CurrentPauseMenuWidget->SetVisibility(ESlateVisibility::Visible);
-		
-		SetInputMode_UI();
+		SetInputMode_UI(CurrentPauseMenuWidget);
 	}
 	else
 	{
 		if (CurrentPauseMenuWidget)
-			CurrentPauseMenuWidget->SetVisibility(ESlateVisibility::Hidden);
+		{
+			CurrentPauseMenuWidget->RemoveFromParent();
+		}
 		
 		if (ASimPetHUD *CurrentHUD = Cast<ASimPetHUD>(GetHUD()))
 			CurrentHUD->SetAllHUDVisibility(true);
