@@ -35,5 +35,6 @@ private:
 	
 	void TakeItem(ASimPetItem *Item);
 	void DropItem(ASimPetItem *Item);
-	FAttachmentTransformRules GetRuleForAttachingItems();
+	
+	static FAttachmentTransformRules GetRuleForAttachingItems();
 };

@@ -14,13 +14,12 @@ ASimPetLizard::ASimPetLizard()
 
 void ASimPetLizard::AnimateLegs(float DeltaTime, float CurrentTime)
 {// Повторення логіки з SimPetAnimal, але Yaw замість Pitch
-	float CurrentVelocity = GetVelocity().Size();  // Розкоментувати якщо реалізований рух тварин
-	
-	float WalkSpeed = 15.0f;  // Швидкість ходьби, частота кроків
-	float ReturnSpeed = 15.0f;  // Швидкість повернення ніг у вихідне положення
+	float CurrentVelocity = GetVelocity().Size();
 	
 	for (int32 i = 0; i < SpawnedLegs.Num(); i++)
 	{
+		constexpr float ReturnSpeed = 15.0f;  // Швидкість повернення ніг у вихідне положення
+		
 		UStaticMeshComponent *Leg = SpawnedLegs[i];
 		if (!Leg)
 			continue;
@@ -30,7 +29,11 @@ void ASimPetLizard::AnimateLegs(float DeltaTime, float CurrentTime)
 		float TargetYaw = 0.0f;
 		
 		if (CurrentVelocity > 0.0f)
+		{
+			constexpr float WalkSpeed = 15.0f;  // Швидкість ходьби, частота кроків
+			
 			TargetYaw = FMath::Sin((CurrentTime * WalkSpeed) + 0.0f) * LegLiftAngle;
+		}
 		
 		float NewYaw = FMath::FInterpTo(LegRotation.Yaw, TargetYaw, DeltaTime, ReturnSpeed);
 		

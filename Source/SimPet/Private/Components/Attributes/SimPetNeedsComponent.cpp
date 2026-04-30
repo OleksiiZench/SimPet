@@ -38,7 +38,7 @@ void USimPetNeedsComponent::EnableNeeds()
 	StartNeedsTimer();
 }
 
-ESimPetAnimalState USimPetNeedsComponent::GetAnimalState()
+ESimPetAnimalState USimPetNeedsComponent::GetAnimalState() const
 {
 	return AnimalState;
 }

@@ -22,6 +22,7 @@ public:
 	virtual void BeginPlay() override;
 	
 private:
-	void SetLowSettings();
 	void SpawnFeed();
+	
+	static void SetLowSettings();
 };

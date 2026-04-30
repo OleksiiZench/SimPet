@@ -16,7 +16,7 @@ void ASimPetPlayerState::BeginPlay()
 	CacheSaveSubsystem();
 }
 
-bool ASimPetPlayerState::HasRequiredPoints(int32 Points)
+bool ASimPetPlayerState::HasRequiredPoints(int32 Points) const
 {
 	if (CurrentPoints < Points)
 		return false;

@@ -22,10 +22,19 @@ void ASimPetMainLevelGameMode::BeginPlay()
 	SpawnFeed();
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
+void ASimPetMainLevelGameMode::SpawnFeed()
+{
+	USimPetItemSubsystem *ItemSubsystem = GetWorld()->GetSubsystem<USimPetItemSubsystem>();
+	if (ItemSubsystem == nullptr)
+		return;
+	
+	ItemSubsystem->SpawnFeedOnRelevantPoints();
+}
+
 void ASimPetMainLevelGameMode::SetLowSettings()
 {
 	UGameUserSettings *UserSettings = GEngine->GetGameUserSettings();
-	
 	if (UserSettings)
 	{
 		UserSettings->SetViewDistanceQuality(1);
@@ -41,13 +50,4 @@ void ASimPetMainLevelGameMode::SetLowSettings()
 		
 		UserSettings->ApplySettings(true);
 	}
-}
-
-void ASimPetMainLevelGameMode::SpawnFeed()
-{
-	USimPetItemSubsystem *ItemSubsystem = GetWorld()->GetSubsystem<USimPetItemSubsystem>();
-	if (ItemSubsystem == nullptr)
-		return;
-	
-	ItemSubsystem->SpawnFeedOnRelevantPoints();
 }

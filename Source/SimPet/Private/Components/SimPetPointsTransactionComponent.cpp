@@ -17,7 +17,34 @@ void USimPetPointsTransactionComponent::BeginPlay()
 	CachePlayerState();
 }
 
-int32 USimPetPointsTransactionComponent::GetAnimalPrice(ESimPetAnimals AnimalType)
+// ReSharper disable once CppMemberFunctionMayBeConst
+void USimPetPointsTransactionComponent::RegisterAnimalPurchase()
+{
+	PlayerState->MarkFirstAnimalBought();
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void USimPetPointsTransactionComponent::ConsumePoints(int32 Cost)
+{
+	if (PlayerState)
+		PlayerState->SpendPoints(Cost);
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void USimPetPointsTransactionComponent::GeneratePassivePoints()
+{
+	if (PlayerState)
+		PlayerState->AddPoints(PointsPerHappyTick);
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void USimPetPointsTransactionComponent::GeneratePenaltyPoints()
+{
+	if (PlayerState)
+		PlayerState->ApplyPenalty(PointsPerPenalty);
+}
+
+int32 USimPetPointsTransactionComponent::GetAnimalPrice(ESimPetAnimals AnimalType) const
 {
 	if (!PlayerState->HasBoughtFirstAnimal())
 		return 0;
@@ -31,35 +58,12 @@ int32 USimPetPointsTransactionComponent::GetAnimalPrice(ESimPetAnimals AnimalTyp
 	return 999999;  // Захист від безкоштовного спавну
 }
 
-void USimPetPointsTransactionComponent::RegisterAnimalPurchase()
-{
-	PlayerState->MarkFirstAnimalBought();
-}
-
-bool USimPetPointsTransactionComponent::CanAfford(int32 Cost)
+bool USimPetPointsTransactionComponent::CanAfford(int32 Cost) const
 {
 	if (PlayerState)
 		return PlayerState->HasRequiredPoints(Cost);
 	
 	return false;
-}
-
-void USimPetPointsTransactionComponent::ConsumePoints(int32 Cost)
-{
-	if (PlayerState)
-		PlayerState->SpendPoints(Cost);
-}
-
-void USimPetPointsTransactionComponent::GeneratePassivePoints()
-{
-	if (PlayerState)
-		PlayerState->AddPoints(PointsPerHappyTick);
-}
-
-void USimPetPointsTransactionComponent::GeneratePenaltyPoints()
-{
-	if (PlayerState)
-		PlayerState->ApplyPenalty(PointsPerPenalty);
 }
 
 void USimPetPointsTransactionComponent::CachePlayerState()

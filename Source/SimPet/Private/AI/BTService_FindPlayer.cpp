@@ -59,7 +59,6 @@ void UBTService_FindPlayer::TickNode(UBehaviorTreeComponent &OwnerComp, uint8 *N
 	
 	// 3. Запис гравця, якщо відповідна дистанція
 	ACharacter *Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	
 	if (Player)
 	{
 		float Dist = FVector::Dist(AIPawn->GetActorLocation(), Player->GetActorLocation());

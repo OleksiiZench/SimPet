@@ -70,7 +70,7 @@ FVector ASimPetPlayer::GetPawnViewLocation() const
 	return Super::GetPawnViewLocation();
 }
 
-USimPetStaminaComponent *ASimPetPlayer::GetStaminaComponent()
+USimPetStaminaComponent *ASimPetPlayer::GetStaminaComponent() const
 {
 	return StaminaComponent;
 }
@@ -133,11 +133,13 @@ void ASimPetPlayer::Input_SecondaryInteract(const FInputActionValue &InputAction
 	}
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ASimPetPlayer::Input_Sprint_Started(const FInputActionValue& InputActionValue)
 {
 	StaminaComponent->SetSprint(true);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ASimPetPlayer::Input_Sprint_Completed(const FInputActionValue& InputActionValue)
 {
 	StaminaComponent->SetSprint(false);

@@ -60,8 +60,8 @@ private:
 	bool bIsSprinting = false;
 	
 	void UpdateStamina(float DeltaTime);
-	bool IsMovingHorizontally();
-	bool IsMovingBackward();
+	bool IsMovingHorizontally() const;
+	bool IsMovingBackward() const;
 	
 	void CachePlayerAndCharacterMovementComp();
 };

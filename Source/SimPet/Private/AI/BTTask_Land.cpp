@@ -15,7 +15,6 @@ EBTNodeResult::Type UBTTask_Land::ExecuteTask(UBehaviorTreeComponent &OwnerComp,
 {
 	AAIController *AIController = OwnerComp.GetAIOwner();
 	ASimPetCanary *Canary = AIController ? Cast<ASimPetCanary>(AIController->GetPawn()) : nullptr;
-	
 	if (Canary)
 		Canary->SetFlyingMovementMode(false);
 		

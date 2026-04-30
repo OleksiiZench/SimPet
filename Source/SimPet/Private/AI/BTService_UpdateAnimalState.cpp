@@ -18,10 +18,9 @@ void UBTService_UpdateAnimalState::TickNode(UBehaviorTreeComponent &OwnerComp, u
 	
 	AAIController *AIController = OwnerComp.GetAIOwner();
 	ASimPetAnimal *Animal = AIController ? Cast<ASimPetAnimal>(AIController->GetPawn()) : nullptr;
-	
 	if (Animal)
 	{
-		uint8 StateAsByte = (uint8)Animal->GetAnimalState();
+		int32 StateAsByte = static_cast<int32>(Animal->GetAnimalState());
 		
 		OwnerComp.GetBlackboardComponent()->SetValueAsInt(GetSelectedBlackboardKey(), StateAsByte);  // Записуємо в BlackBoard
 	}

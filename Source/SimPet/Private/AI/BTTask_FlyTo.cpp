@@ -38,7 +38,7 @@ EBTNodeResult::Type UBTTask_FlyTo::ExecuteTask(UBehaviorTreeComponent &OwnerComp
 		false,
 		false,
 		true,
-		0,
+		nullptr,
 		true
 	);
 	

@@ -20,7 +20,6 @@ void ASimPetAIController::OnPossess(APawn* InPawn)
 		
 		// 2. Запис даних в BB
 		UBlackboardComponent *BB = GetBlackboardComponent();
-		
 		if (BB)
 		{
 			FVector TargetHomeLocation;

@@ -39,7 +39,7 @@ public:
 	void ApplyForestState();
 	void ApplyOwnerState();
 	
-	ESimPetAnimalState GetAnimalState();
+	ESimPetAnimalState GetAnimalState() const;
 	
 	UPROPERTY()
 	FOnAnimalDiedSignature OnAnimalDied;
@@ -129,20 +129,20 @@ private:
 	
 	void InitializeBaseBody();
 	void SetupComponents();
-	void InitializeAnimalStatusWidget();
+	void InitializeAnimalStatusWidget() const;
 	void BindNeedsEvents();
 	
 	void SpawnAnimalWaste();
-	FVector GetLocationAboveGround();
+	FVector GetLocationAboveGround() const;
 	
-	void CleanAnimal();
+	void CleanAnimal() const;
 	void Die();
-	void ScatterMeshParts();
+	void ScatterMeshParts() const;
 	
 	void UpdateBlackboardForForest();
 	void UpdateBlackboardForOwner();
-	void SetBlackboardParam(float BaseRadius, float FlyRadius, float ZigZagRadius, bool bChangeHomeLocation);
+	void SetBlackboardParam(float BaseRadius, float FlyRadius, float ZigZagRadius, bool bChangeHomeLocation) const;
 	
-	void GeneratePointsIfAnimalIsHappy();
-	void GeneratePenaltyPointsWhenAnimalDied();
+	void GeneratePointsIfAnimalIsHappy() const;
+	void GeneratePenaltyPointsWhenAnimalDied() const;
 };

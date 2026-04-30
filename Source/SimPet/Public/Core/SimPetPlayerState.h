@@ -24,7 +24,7 @@ public:
 	
 	virtual void BeginPlay() override;
 	
-	bool HasRequiredPoints(int32 Points);
+	bool HasRequiredPoints(int32 Points) const;
 	void SpendPoints(int32 Points);
 	void AddPoints(int32 Points);
 	void ApplyPenalty(int32 PenaltyAmount);

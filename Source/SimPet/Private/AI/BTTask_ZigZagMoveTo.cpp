@@ -57,7 +57,6 @@ EBTNodeResult::Type UBTTask_ZigZagMoveTo::ExecuteTask(UBehaviorTreeComponent &Ow
 	float ActualRadius = BB->GetValueAsFloat(RadiusKey.SelectedKeyName);
 	
 	FNavLocation ResultLocation;
-	FVector TargetLocation;
 	
 	bool bFound = NavSys->GetRandomPointInNavigableRadius(
 		HomeLocation,
@@ -70,9 +69,9 @@ EBTNodeResult::Type UBTTask_ZigZagMoveTo::ExecuteTask(UBehaviorTreeComponent &Ow
 		return EBTNodeResult::Failed;
 	}
 	
-	TargetLocation = ResultLocation.Location;
+	FVector TargetLocation = ResultLocation.Location;
 	
-	// 5. Вираховуємо Waypoints до Targetlocation
+	// 5. Вираховуємо Waypoints до TargetLocation
 	CurrentPointIndex = 0;
 	Waypoints.Empty();
 	
@@ -81,13 +80,13 @@ EBTNodeResult::Type UBTTask_ZigZagMoveTo::ExecuteTask(UBehaviorTreeComponent &Ow
 	FVector Direction = (TargetLocation - CurrentLocation).GetSafeNormal();
 	FVector LeftVector = FVector::CrossProduct(Direction, FVector::UpVector);
 	
-	int32 NumOfZigZags = FMath::FloorToInt(DistToTarget / 100);  // Отримуєм кількість точок поворотів
+	int32 NumOfZigzags = FMath::FloorToInt(DistToTarget / 100);  // Отримуєм кількість точок поворотів
 	
 	float SideMultiplier = 1.0f;
 	
-	for (int32 i = 1; i <= NumOfZigZags; i++)
+	for (int32 i = 1; i <= NumOfZigzags; i++)
 	{
-		float Alpha = float(i) / (float)(NumOfZigZags + 1);
+		double Alpha = static_cast<double>(i) / static_cast<double>(NumOfZigzags + 1);
 		
 		FVector CenterPoint = FMath::Lerp(CurrentLocation, TargetLocation, Alpha);
 		

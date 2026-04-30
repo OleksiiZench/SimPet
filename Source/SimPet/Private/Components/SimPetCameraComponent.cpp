@@ -40,7 +40,6 @@ void USimPetCameraComponent::UpdateCameraBob(float DeltaTime)
 	float Speed = Velocity.Size();
 	
 	bool bIsMovingOnGround = Speed > 10.0f && CharacterMovementComp->IsMovingOnGround();
-	
 	if (bIsMovingOnGround)
 	{
 		BobTimer += Speed *DeltaTime * BobFrequencyMultiplier;  // Збільшуємо таймер залежно від швидкості

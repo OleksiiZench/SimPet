@@ -34,7 +34,7 @@ public:
 	virtual void SetupPlayerInputComponent(UInputComponent *PlayerInputComponent) override;
 	virtual FVector GetPawnViewLocation() const override;
 	
-	USimPetStaminaComponent *GetStaminaComponent();
+	USimPetStaminaComponent *GetStaminaComponent() const;
 	
 private:	
 #pragma region Components

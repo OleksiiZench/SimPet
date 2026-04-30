@@ -49,6 +49,7 @@ void ASimPetCanary::OnConstruction(const FTransform &Transform)
 	}
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ASimPetCanary::SetFlyingMovementMode(const bool IsFlying)
 {
 	if (IsFlying)
@@ -61,10 +62,10 @@ void ASimPetCanary::SetFlyingMovementMode(const bool IsFlying)
 	}
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ASimPetCanary::AnimateWings(float DeltaTime)
 {
-	float FlySpeed = 15.0f;  // частота махів крил
-	float ReturnSpeed = 10.0f;  // Швидкість повернення крил у вихідне положення
+	constexpr float ReturnSpeed = 10.0f;  // Швидкість повернення крил у вихідне положення
 	
 	FVector CurrentLocation = SpawnedWings->GetRelativeLocation();
 	
@@ -72,6 +73,8 @@ void ASimPetCanary::AnimateWings(float DeltaTime)
 	
 	if (MovementComponent->IsFlying() || MovementComponent->IsFalling())
 	{
+		constexpr float FlySpeed = 15.0f;  // частота махів крил
+		
 		TargetZ = FMath::Sin(GetGameTimeSinceCreation() * FlySpeed) * WingsLiftOffset;
 	}
 	

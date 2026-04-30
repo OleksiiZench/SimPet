@@ -16,6 +16,7 @@ USimPetInteractionComponent::USimPetInteractionComponent()
 	InteractionTraceChanel = TraceTypeQuery2;
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 AActor *USimPetInteractionComponent::DoInteractionTrace()
 {
 	float InteractionDistance = 250.0f;

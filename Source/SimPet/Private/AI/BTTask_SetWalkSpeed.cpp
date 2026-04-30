@@ -18,12 +18,10 @@ EBTNodeResult::Type UBTTask_SetWalkSpeed::ExecuteTask(UBehaviorTreeComponent &Ow
 {
 	AAIController *AIController = OwnerComp.GetAIOwner();
 	ACharacter *Character = AIController ? Cast<ACharacter>(AIController->GetPawn()) : nullptr;
-	
 	if (!Character)
 		return EBTNodeResult::Failed;
 	
 	UCharacterMovementComponent *Movement = Character->GetCharacterMovement();
-	
 	if (Movement)
 	{
 		Movement->MaxWalkSpeed = WalkSpeed;

@@ -57,6 +57,7 @@ void ASimPetAnimal::Tick(float DeltaTime)
 	AnimateLegs(DeltaTime, GetGameTimeSinceCreation());
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ASimPetAnimal::FeedAnimal()
 {
 	if (NeedsComponent)
@@ -81,7 +82,7 @@ void ASimPetAnimal::ApplyOwnerState()
 	UpdateBlackboardForOwner();
 }
 
-ESimPetAnimalState ASimPetAnimal::GetAnimalState()
+ESimPetAnimalState ASimPetAnimal::GetAnimalState() const
 {
 	return NeedsComponent->GetAnimalState();
 }
@@ -91,11 +92,12 @@ void ASimPetAnimal::AnimateLegs(float DeltaTime, float CurrentTime)
 	// 1. Отримуємо поточну швидкість
 	float CurrentVelocity = GetVelocity().Size();
 	
-	float WalkSpeed = 10.0f;  // Швидкість ходьби, частота кроків
-	float ReturnSpeed = 10.0f;  // Швидкість повернення ніг у вихідне положення
+
 	
 	for (int32 i = 0; i < SpawnedLegs.Num(); i++)
 	{
+		constexpr float ReturnSpeed = 10.0f;  // Швидкість повернення ніг у вихідне положення
+		
 		UStaticMeshComponent *Leg = SpawnedLegs[i];
 		if (!Leg)
 			continue;
@@ -108,6 +110,7 @@ void ASimPetAnimal::AnimateLegs(float DeltaTime, float CurrentTime)
 		// 2. Рахуємо синусоїду при русі або польоті
 		if (CurrentVelocity > 0.0f || MovementComponent->IsFlying())
 		{
+			constexpr float WalkSpeed = 10.0f;  // Швидкість ходьби, частота кроків
 			bool bIsRightLeg = LegSocketName.Contains(TEXT("Right"));
 			float PhaseOffset = bIsRightLeg ? UE_PI : 0.0f;
 			
@@ -178,6 +181,7 @@ void ASimPetAnimal::RebuildBodyParts()
 	}
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ASimPetAnimal::HandleHappyTick()
 {
 	GeneratePointsIfAnimalIsHappy();
@@ -193,6 +197,7 @@ void ASimPetAnimal::HandleGotDirty()
 	SpawnAnimalWaste();
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ASimPetAnimal::HandleWasteCleaned()
 {
 	CleanAnimal();
@@ -225,10 +230,9 @@ void ASimPetAnimal::SetupComponents()
 	StatusWidgetComponent->SetDrawSize(FVector2D(200.0f, 100.0f));
 }
 
-void ASimPetAnimal::InitializeAnimalStatusWidget()
+void ASimPetAnimal::InitializeAnimalStatusWidget() const
 {
 	USimPetAnimalNeedsStatusWidget *AnimalStatusWidget = Cast<USimPetAnimalNeedsStatusWidget>(StatusWidgetComponent->GetUserWidgetObject());
-	
 	if (AnimalStatusWidget)
 	{
 		AnimalStatusWidget->Init(NeedsComponent);
@@ -250,14 +254,13 @@ void ASimPetAnimal::SpawnAnimalWaste()
 	FVector SpawnLocation = GetLocationAboveGround();
 	
 	ASimPetAnimalWaste *SpawnedAnimalWaste = GetWorld()->SpawnActor<ASimPetAnimalWaste>(WasteClass, SpawnLocation, FRotator::ZeroRotator);
-
 	if (SpawnedAnimalWaste)
 	{
 		SpawnedAnimalWaste->OnWasteCleaned.AddDynamic(this, &ASimPetAnimal::HandleWasteCleaned);
 	}
 }
 
-FVector ASimPetAnimal::GetLocationAboveGround()
+FVector ASimPetAnimal::GetLocationAboveGround() const
 {
 	FVector StartTraceLocation = GetActorLocation();
 	FVector EndTraceLocation = StartTraceLocation - FVector(0.0f, 0.0f, 500.0f);
@@ -281,7 +284,7 @@ FVector ASimPetAnimal::GetLocationAboveGround()
 	return SpawnLocation;
 }
 
-void ASimPetAnimal::CleanAnimal()
+void ASimPetAnimal::CleanAnimal() const
 {
 	if (NeedsComponent)
 	{
@@ -307,7 +310,7 @@ void ASimPetAnimal::Die()
 	OnAnimalDied.Broadcast(this);
 }
 
-void ASimPetAnimal::ScatterMeshParts()
+void ASimPetAnimal::ScatterMeshParts() const
 {
 	TArray<UStaticMeshComponent *> AllMeshes;
 	GetComponents<UStaticMeshComponent>(AllMeshes);
@@ -323,17 +326,19 @@ void ASimPetAnimal::ScatterMeshParts()
 	}
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ASimPetAnimal::UpdateBlackboardForForest()
 {
 	SetBlackboardParam(3000.0f, 3000.0f, 3000.0f, true);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ASimPetAnimal::UpdateBlackboardForOwner()
 {
 	SetBlackboardParam(300.0f, 300.0f, 350.0f, true);
 }
 
-void ASimPetAnimal::SetBlackboardParam(float BaseRadius, float FlyRadius, float ZigZagRadius, bool bChangeHomeLocation)
+void ASimPetAnimal::SetBlackboardParam(float BaseRadius, float FlyRadius, float ZigZagRadius, bool bChangeHomeLocation) const
 {
 	ASimPetAIController *AIController = Cast<ASimPetAIController>(GetController());
 	if (!AIController)
@@ -358,12 +363,12 @@ void ASimPetAnimal::SetBlackboardParam(float BaseRadius, float FlyRadius, float 
 	}
 }
 
-void ASimPetAnimal::GeneratePointsIfAnimalIsHappy()
+void ASimPetAnimal::GeneratePointsIfAnimalIsHappy() const
 {
 	PointsTransactionComponent->GeneratePassivePoints();
 }
 
-void ASimPetAnimal::GeneratePenaltyPointsWhenAnimalDied()
+void ASimPetAnimal::GeneratePenaltyPointsWhenAnimalDied() const
 {
 	PointsTransactionComponent->GeneratePenaltyPoints();
 }

@@ -12,7 +12,6 @@ void ASimPetMenuGameMode::BeginPlay()
 	if (MainMenuWidgetClass)
 	{
 		UUserWidget* MenuWidget = CreateWidget<UUserWidget>(GetWorld(), MainMenuWidgetClass);
-		
 		if (MenuWidget)
 			MenuWidget->AddToViewport();
 	}

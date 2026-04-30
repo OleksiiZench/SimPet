@@ -19,13 +19,14 @@ class SIMPET_API USimPetPointsTransactionComponent : public UActorComponent
 public:
 	virtual void BeginPlay() override;
 	
-	int32 GetAnimalPrice(ESimPetAnimals AnimalType);
 	void RegisterAnimalPurchase();
 	
-	bool CanAfford(int32 Cost);
 	void ConsumePoints(int32 Cost);
 	void GeneratePassivePoints();
 	void GeneratePenaltyPoints();
+	
+	int32 GetAnimalPrice(ESimPetAnimals AnimalType) const;	
+	bool CanAfford(int32 Cost) const;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "SimPet | Economy")
 	USimPetEconomyData *EconomyData;

@@ -94,7 +94,7 @@ void USimPetStaminaComponent::UpdateStamina(float DeltaTime)
 	}
 }
 
-bool USimPetStaminaComponent::IsMovingHorizontally()
+bool USimPetStaminaComponent::IsMovingHorizontally() const
 {
 	if (!Player)
 		return false;
@@ -102,7 +102,7 @@ bool USimPetStaminaComponent::IsMovingHorizontally()
 	return !(Player->GetVelocity().Size2D() < 5.0f);
 }
 
-bool USimPetStaminaComponent::IsMovingBackward()
+bool USimPetStaminaComponent::IsMovingBackward() const
 {
 	if (!Player)
 		return false;
