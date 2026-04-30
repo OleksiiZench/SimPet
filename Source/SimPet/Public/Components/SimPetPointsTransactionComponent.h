@@ -6,7 +6,6 @@
 #include "Components/ActorComponent.h"
 
 #include "DataAsset/Economy/SimPetEconomyData.h"
-#include "SimPetEnumTypes.h"
 
 #include "SimPetPointsTransactionComponent.generated.h"
 
@@ -32,9 +31,11 @@ public:
 	USimPetEconomyData *EconomyData;
 	
 private:
+	UPROPERTY()
+	ASimPetPlayerState *PlayerState;
+	
 	int32 PointsPerHappyTick;
 	int32 PointsPerPenalty;
-	ASimPetPlayerState *PlayerState;
 	
 	void CachePlayerState();
 };

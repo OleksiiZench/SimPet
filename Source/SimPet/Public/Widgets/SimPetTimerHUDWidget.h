@@ -18,8 +18,8 @@ class SIMPET_API USimPetTimerHUDWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	void NativeConstruct() override;
-	void NativeDestruct() override;
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
 	
 protected:
 #pragma region UI Bindings

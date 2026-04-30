@@ -38,6 +38,7 @@ public:
 	
 private:	
 #pragma region Components
+	UPROPERTY()
 	UCharacterMovementComponent *CurrentMovementComp;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))

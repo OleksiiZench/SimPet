@@ -25,8 +25,12 @@ public:
 	void SetHoldPoint(USceneComponent *InHoldPoint);
 	
 private:
+	UPROPERTY()
 	ASimPetItem *CachedTakenItem;
+	
+	UPROPERTY()
 	USceneComponent *HoldPoint;
+	
 	TEnumAsByte<ETraceTypeQuery> InteractionTraceChanel;
 	
 	void TakeItem(ASimPetItem *Item);

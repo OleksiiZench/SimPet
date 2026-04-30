@@ -6,8 +6,6 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "GameplayTagContainer.h"
 
-#include "SimPetEnumTypes.h"
-
 #include "SimPetAnimalSubsystem.generated.h"
 
 class ASimPetAnimal;

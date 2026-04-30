@@ -25,14 +25,17 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 	
 private:
+	UPROPERTY()
+	ASimPetPlayer *Player;
+	
+	UPROPERTY()
+	UCharacterMovementComponent *CharacterMovementComp;
+	
 	float BobVerticalAmplitude;  // Наскільки сильно коливає вгору/ вниз
 	float BobHorizontalAmplitude;  // Наскільки сильно коливає вліво/ вправо
 	float BobFrequencyMultiplier;  // Множник швидкості коливання
-	float BobTimer;  // Таймер для синуcоїди
+	float BobTimer;  // Timer for a sine wave
 	FVector DefaultCameraRelativeLocation;  // Координати камери в спокої
-	
-	ASimPetPlayer *Player;
-	UCharacterMovementComponent *CharacterMovementComp;
 	
 	void UpdateCameraBob(float DeltaTime);
 	void CachePlayerAndCharacterMovementComp();

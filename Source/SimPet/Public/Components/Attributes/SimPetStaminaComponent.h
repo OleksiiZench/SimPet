@@ -25,6 +25,9 @@ public:
 	
 	void SetSprint(bool bIsSprint);
 	
+	/**
+	 * 
+	 */
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnStaminaChanged OnStaminaChanged;
 	
@@ -47,11 +50,14 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	float CurrentStamina;
 	
+	UPROPERTY()
+	ASimPetPlayer *Player;
+	
+	UPROPERTY()
+	UCharacterMovementComponent *CharacterMovementComp;
+	
 	bool bIsMoving;
 	bool bIsSprinting = false;
-	
-	ASimPetPlayer *Player;
-	UCharacterMovementComponent *CharacterMovementComp;
 	
 	void UpdateStamina(float DeltaTime);
 	bool IsMovingHorizontally();

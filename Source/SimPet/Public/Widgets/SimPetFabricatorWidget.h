@@ -58,13 +58,16 @@ protected:
 	UTextBlock *PointsText;
 #pragma endregion
 	
-	TWeakObjectPtr<ASimPetFabricator> LinkedFabricator;  // Посилання на фабрикатор який відкрив цей UI
-	
+	UPROPERTY()
 	USimPetAnimalSubsystem *AnimalSubsystem;
 	
+	TWeakObjectPtr<ASimPetFabricator> LinkedFabricator;  // Посилання на фабрикатор який відкрив цей UI
+	
 private:
-	TWeakObjectPtr<USimPetPointsTransactionComponent> CachedTransactionComponent;
+	UPROPERTY()
 	ASimPetPlayerState *CachedPlayerState;
+	
+	TWeakObjectPtr<USimPetPointsTransactionComponent> CachedTransactionComponent;
 	
 	UFUNCTION()
 	void UpdatePointsText(int32 Points);

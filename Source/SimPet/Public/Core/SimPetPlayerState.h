@@ -38,11 +38,12 @@ public:
 	FOnPointsChanged OnPointsChanged;
 	
 private:
+	UPROPERTY()
+	USimPetSaveSubsystem *CachedSaveSubsystem;
+	
 	int32 CurrentPoints;
 	
 	bool bHasBoughtFirstAnimal;
-	
-	USimPetSaveSubsystem *CachedSaveSubsystem;
 	
 	void UpdateCurrentPoints(int32 NewCurrentPoints);
 	

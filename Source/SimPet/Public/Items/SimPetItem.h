@@ -38,5 +38,6 @@ protected:
 	FGameplayTagContainer GameplayTags;
 	
 private:
+	UPROPERTY()
 	UStaticMeshComponent *CacheStaticMeshComp;
 };
