@@ -34,7 +34,6 @@ ASimPetAnimal * USimPetAnimalSubsystem::SpawnAnimal(ESimPetAnimals AnimalType)
 
 	FTransform AnimalTransform = AnimalSpawnPoint->GetTransform();
 	ASimPetAnimal *NewAnimal = GetWorld()->SpawnActor<ASimPetAnimal>(*SpawnedAnimalClass, AnimalTransform);
-
 	if (NewAnimal)
 	{
 		Debug::Print(TEXT("Spawned: ") + (*SpawnedAnimalClass)->GetName());
@@ -200,10 +199,10 @@ void USimPetAnimalSubsystem::UnbindAnimalFromSpawnPoint(ASimPetAnimal *Animal)
 	AnimalToSpawnPointMap.Remove(Animal);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeStatic
 TSubclassOf<ASimPetAnimal> USimPetAnimalSubsystem::GetAnimalClassByAnimalType(ESimPetAnimals AnimalType) const
 {
 	const USimPetAnimalSettings *Settings = GetDefault<USimPetAnimalSettings>();
-	
 	if (Settings)
 	{
 		if (const TSubclassOf<ASimPetAnimal> *FoundClassPtr = Settings->AnimalClassMap.Find(AnimalType))

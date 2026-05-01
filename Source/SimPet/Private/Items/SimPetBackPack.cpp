@@ -58,6 +58,7 @@ void ASimPetBackPack::ExtractItem()
 	EnablePhysicsAndApplyImpulse(ItemToExtract);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeStatic
 void ASimPetBackPack::HideAndOptimizeItem(ASimPetItem *Item)
 {
 	if (UPrimitiveComponent *PrimCompOfItem = Cast<UPrimitiveComponent>(Item->GetRootComponent()))
@@ -68,14 +69,15 @@ void ASimPetBackPack::HideAndOptimizeItem(ASimPetItem *Item)
 	Item->SetActorTickEnabled(false);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ASimPetBackPack::AttachItemToBackpack(ASimPetItem *Item)
 {
 	USceneComponent *RootCompOfBackpack = GetRootComponent();
-	
 	if (RootCompOfBackpack)
 		Item->AttachToComponent(RootCompOfBackpack, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeStatic
 void ASimPetBackPack::ShowAndDetachItem(ASimPetItem *Item)
 {
 	Item->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
@@ -85,8 +87,13 @@ void ASimPetBackPack::ShowAndDetachItem(ASimPetItem *Item)
 	Item->SetActorTickEnabled(true);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
+// ReSharper disable once CppParameterMayBeConstPtrOrRef
 void ASimPetBackPack::EnablePhysicsAndApplyImpulse(ASimPetItem *Item)
 {
+	if (Item == nullptr)
+		return;
+	
 	if (UPrimitiveComponent *PrimCompOfItem = Cast<UPrimitiveComponent>(Item->GetRootComponent()))
 	{
 		PrimCompOfItem->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);

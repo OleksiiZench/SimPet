@@ -27,6 +27,7 @@ void USimPetTimerHUDWidget::NativeDestruct()
 	Super::NativeDestruct();
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetTimerHUDWidget::UpdateTimerDisplay()
 {
 	if (TimerText)

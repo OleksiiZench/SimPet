@@ -24,7 +24,7 @@ void USimPetSaveSubsystem::CheckAndUpdateMaxPoints(int32 InCurrentPoints)
 	}
 }
 
-int32 USimPetSaveSubsystem::GetMaxPoints()
+int32 USimPetSaveSubsystem::GetMaxPoints() const
 {
 	return MaxPoints;
 }
@@ -44,7 +44,7 @@ void USimPetSaveSubsystem::LoadMaxPoints()
 	}
 }
 
-void USimPetSaveSubsystem::SaveMaxPoints()
+void USimPetSaveSubsystem::SaveMaxPoints() const
 {
 	USimPetSaveGame *SaveGameInstance = Cast<USimPetSaveGame>(UGameplayStatics::CreateSaveGameObject(USimPetSaveGame::StaticClass()));
 	if (SaveGameInstance)

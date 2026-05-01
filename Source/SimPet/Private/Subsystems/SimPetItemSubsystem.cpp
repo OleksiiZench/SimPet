@@ -43,7 +43,6 @@ void USimPetItemSubsystem::SpawnFeedOnRelevantPoints()
 		
 		FTransform FeedTransform = SpawnPoint->GetTransform();
 		ASimPetAnimalFeed *NewFeed = GetWorld()->SpawnActor<ASimPetAnimalFeed>(CachedSpawnFeedClass, FeedTransform);
-
 		if (NewFeed)
 		{
 			SpawnPoint->AddGameplayTags(SimPetGameplayTags::Spawn_Point_HasFeed);
@@ -55,7 +54,6 @@ void USimPetItemSubsystem::SpawnFeedOnRelevantPoints()
 void USimPetItemSubsystem::CacheSpawnFeedClassFromItemSettings()
 {
 	const USimPetItemSettings *Settings = GetDefault<USimPetItemSettings>();
-	
 	if (Settings)
 	{
 		CachedSpawnFeedClass = Settings->SpawnFeedClass;

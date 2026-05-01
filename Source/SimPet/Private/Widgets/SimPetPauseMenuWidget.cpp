@@ -25,12 +25,14 @@ void USimPetPauseMenuWidget::NativeConstruct()
 	UpdateAssignedText();
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetPauseMenuWidget::OnResumeClicked()
 {
 	if (CachedPlayerController)
 		CachedPlayerController->TogglePauseMenu();
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetPauseMenuWidget::OnToMainMenuClicked()
 {
 	UGameplayStatics::SetGamePaused(GetWorld(), false);
@@ -52,6 +54,7 @@ void USimPetPauseMenuWidget::UpdateAssignedText()
 	UpdateCurrentPointsText();
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetPauseMenuWidget::UpdateMaxPointsText()
 {
 	if (MaxPointsText)
@@ -62,6 +65,7 @@ void USimPetPauseMenuWidget::UpdateMaxPointsText()
 	}
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetPauseMenuWidget::UpdateCurrentPointsText()
 {
 	if (CurrentPointsText)
@@ -75,7 +79,6 @@ void USimPetPauseMenuWidget::UpdateCurrentPointsText()
 void USimPetPauseMenuWidget::CachePlayerController()
 {
 	ACharacter *PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	
 	if (PlayerCharacter)
 		CachedPlayerController = Cast<ASimPetPlayerController>(PlayerCharacter->GetController());
 }

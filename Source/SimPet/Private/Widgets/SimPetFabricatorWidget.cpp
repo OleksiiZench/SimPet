@@ -124,16 +124,17 @@ void USimPetFabricatorWidget::MoveAnimalToOwner()
 	AnimalSubsystem->MoveAnimalToOwner();
 }
 
-void USimPetFabricatorWidget::UpdatePointsText(int32 Points)
+// ReSharper disable once CppMemberFunctionMayBeConst
+void USimPetFabricatorWidget::UpdatePointsText(const int32 Points)
 {
-	FString FormattedString = FString::Printf(TEXT("Points: %d"), Points);
-	
+	const FString FormattedString = FString::Printf(TEXT("Points: %d"), Points);
 	if (PointsText)
 	{
 		PointsText->SetText(FText::FromString(FormattedString));
 	}
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetFabricatorWidget::UpdateAnimalPricesUI()
 {
 	if (!CachedTransactionComponent.IsValid())
@@ -141,25 +142,25 @@ void USimPetFabricatorWidget::UpdateAnimalPricesUI()
 
 	if (PriceDogText)
 	{
-		int32 PriceDog = CachedTransactionComponent->GetAnimalPrice(ESimPetAnimals::EA_Dog);
+		const int32 PriceDog = CachedTransactionComponent->GetAnimalPrice(ESimPetAnimals::EA_Dog);
 
-		FString FormattedString = FString::Printf(TEXT("%d"), PriceDog);
+		const FString FormattedString = FString::Printf(TEXT("%d"), PriceDog);
 		PriceDogText->SetText(FText::FromString(FormattedString));
 	}
 	
 	if (PriceCanaryText)
 	{
-		int32 PriceCanary = CachedTransactionComponent->GetAnimalPrice(ESimPetAnimals::EA_Canary);
+		const int32 PriceCanary = CachedTransactionComponent->GetAnimalPrice(ESimPetAnimals::EA_Canary);
         
-        FString FormattedString = FString::Printf(TEXT("%d"), PriceCanary);
+        const FString FormattedString = FString::Printf(TEXT("%d"), PriceCanary);
         PriceCanaryText->SetText(FText::FromString(FormattedString));
 	}
 	
 	if (PriceLizardText)
 	{
-		int32 PriceLizard = CachedTransactionComponent->GetAnimalPrice(ESimPetAnimals::EA_Lizard);
+		const int32 PriceLizard = CachedTransactionComponent->GetAnimalPrice(ESimPetAnimals::EA_Lizard);
         
-		FString FormattedString = FString::Printf(TEXT("%d"), PriceLizard);
+		const FString FormattedString = FString::Printf(TEXT("%d"), PriceLizard);
 		PriceLizardText->SetText(FText::FromString(FormattedString));
 	}
 }

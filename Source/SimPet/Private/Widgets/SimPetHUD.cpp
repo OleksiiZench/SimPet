@@ -24,7 +24,8 @@ void ASimPetHUD::SetAllHUDVisibility(bool bIsVisible)
 	SetTimerHUDVisibility(bIsVisible);
 }
 
-void ASimPetHUD::SetGameplayHUDVisibility(bool bIsVisible)
+// ReSharper disable once CppMemberFunctionMayBeConst
+void ASimPetHUD::SetGameplayHUDVisibility(const bool bIsVisible)
 {
 	if (CurrentGameplayHUDWidget)
 	{
@@ -32,7 +33,8 @@ void ASimPetHUD::SetGameplayHUDVisibility(bool bIsVisible)
 	}
 }
 
-void ASimPetHUD::SetTimerHUDVisibility(bool bIsVisible)
+// ReSharper disable once CppMemberFunctionMayBeConst
+void ASimPetHUD::SetTimerHUDVisibility(const bool bIsVisible)
 {
 	if (CurrentTimerHUDWidget)
 	{
@@ -40,7 +42,8 @@ void ASimPetHUD::SetTimerHUDVisibility(bool bIsVisible)
 	}
 }
 
-UUserWidget * ASimPetHUD::CreateAndAddToViewportWidget(TSubclassOf<UUserWidget> WidgetClass, int32 ZOrder)
+// ReSharper disable once CppMemberFunctionMayBeConst
+UUserWidget * ASimPetHUD::CreateAndAddToViewportWidget(const TSubclassOf<UUserWidget> WidgetClass, const int32 ZOrder)
 {
 	if (WidgetClass == nullptr)
 		return nullptr;

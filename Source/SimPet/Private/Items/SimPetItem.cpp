@@ -47,6 +47,7 @@ void ASimPetItem::NotifyPickedUp()
 {
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ASimPetItem::EnablePhysics()
 {
 	if (CacheStaticMeshComp)
@@ -57,6 +58,7 @@ void ASimPetItem::EnablePhysics()
 	}
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ASimPetItem::DisablePhysics()
 {
 	if (CacheStaticMeshComp)

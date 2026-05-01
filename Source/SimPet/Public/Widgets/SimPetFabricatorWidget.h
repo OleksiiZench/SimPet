@@ -70,7 +70,7 @@ private:
 	TWeakObjectPtr<USimPetPointsTransactionComponent> CachedTransactionComponent;
 	
 	UFUNCTION()
-	void UpdatePointsText(int32 Points);
+	void UpdatePointsText(const int32 Points);
 	
 	void UpdateAnimalPricesUI();
 	

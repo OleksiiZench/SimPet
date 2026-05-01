@@ -19,12 +19,12 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	
 	void CheckAndUpdateMaxPoints(int32 InCurrentPoints);
-	int32 GetMaxPoints();
+	int32 GetMaxPoints() const;
 	
 private:
 	const FString SaveSlotName = TEXT("SimPet_SaveSlot");
 	int32 MaxPoints;
 	
 	void LoadMaxPoints();
-	void SaveMaxPoints();
+	void SaveMaxPoints() const;
 };

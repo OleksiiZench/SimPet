@@ -22,8 +22,8 @@ public:
 	virtual  void BeginPlay() override;
 	
 	void SetAllHUDVisibility(bool bIsVisible);
-	void SetGameplayHUDVisibility(bool bIsVisible);
-	void SetTimerHUDVisibility(bool bIsVisible);
+	void SetGameplayHUDVisibility(const bool bIsVisible);
+	void SetTimerHUDVisibility(const bool bIsVisible);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "SimPet | UI")
@@ -39,5 +39,5 @@ private:
 	UPROPERTY()
 	UUserWidget *CurrentTimerHUDWidget;
 	
-	UUserWidget * CreateAndAddToViewportWidget(TSubclassOf<UUserWidget> WidgetClass, int32 ZOrder = 0);
+	UUserWidget * CreateAndAddToViewportWidget(const TSubclassOf<UUserWidget> WidgetClass, const int32 ZOrder = 0);
 };

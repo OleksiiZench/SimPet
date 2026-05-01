@@ -53,23 +53,27 @@ void USimPetMainMenuWidget::OnContinueClicked()
 	Debug::Print(TEXT("Continue Button Clicked! (Save system not implemented yet)"));
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetMainMenuWidget::OnNewGameClicked()
 {
 	UGameplayStatics::OpenLevel(this, GameplayLevelName);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetMainMenuWidget::OnSettingsClicked()
 {
 	if (MenuSwitcher)
 		MenuSwitcher->SetActiveWidgetIndex(1);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetMainMenuWidget::OnSettingsBackClicked()
 {
 	if (MenuSwitcher)
 		MenuSwitcher->SetActiveWidgetIndex(0);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetMainMenuWidget::OnExitClicked()
 {
 	UKismetSystemLibrary::QuitGame(GetWorld(), GetOwningPlayer(), EQuitPreference::Quit, true);

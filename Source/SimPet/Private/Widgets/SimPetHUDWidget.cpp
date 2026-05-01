@@ -10,6 +10,7 @@
 #include "Components/Attributes/SimPetStaminaComponent.h"
 #include "Core/SimPetPlayerState.h"
 #include "Subsystems/SimPetAnimalSubsystem.h"
+#include "SimPetEnumTypes.h"
 
 void USimPetHUDWidget::NativeConstruct()
 {
@@ -51,6 +52,7 @@ void USimPetHUDWidget::NativeDestruct()
 	Super::NativeDestruct();
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetHUDWidget::UpdateStaminaBar(float Percent)
 {
 	if (StaminaProgressBar)
@@ -59,6 +61,7 @@ void USimPetHUDWidget::UpdateStaminaBar(float Percent)
 	}
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetHUDWidget::UpdatePointsText(int32 Points)
 {
 	FString FormattedString = FString::Printf(TEXT("Points: %d"), Points);
@@ -69,6 +72,7 @@ void USimPetHUDWidget::UpdatePointsText(int32 Points)
 	}
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetHUDWidget::UpdateAnimalStats()
 {
 	if (!GetWorld())

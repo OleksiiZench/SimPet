@@ -23,8 +23,8 @@ public:
 	
 	void Init(USimPetNeedsComponent *InNeedsComponent);
 	
-	void SetDirtyIconVisible(bool bVisible);
-	void SetHungryIconVisible(bool bVisible);
+	void SetDirtyIconVisible(const bool bVisible);
+	void SetHungryIconVisible(const bool bVisible);
 	
 protected:
 	UPROPERTY(meta = (BindWidget))
@@ -32,8 +32,8 @@ protected:
 	
 	UPROPERTY(meta = (BindWidget))
 	UImage *HungryIcon;
-	
-	ESlateVisibility GetVisibilityFromBool(bool bVisible) const;
+
+	static ESlateVisibility GetVisibilityFromBool(const bool bVisible);
 	
 private:
 	TWeakObjectPtr<USimPetNeedsComponent> CacheAnimalNeedsComponent;
