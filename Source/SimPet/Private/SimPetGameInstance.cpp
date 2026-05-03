@@ -3,11 +3,7 @@
 
 #include "SimPetGameInstance.h"
 
-#include "SimPetDebugHelper.h"
-
 void USimPetGameInstance::Init()
 {
 	Super::Init();
-	
-	Debug::Print(__func__);
 }

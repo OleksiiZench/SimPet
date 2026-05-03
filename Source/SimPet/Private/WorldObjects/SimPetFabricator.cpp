@@ -4,12 +4,13 @@
 #include "WorldObjects/SimPetFabricator.h"
 #include "Kismet/GameplayStatics.h"
 
-#include "SimPetDebugHelper.h"
 #include "Blueprint/UserWidget.h"
 #include "Widgets/SimPetFabricatorWidget.h"
 #include "Subsystems/SimPetAnimalSubsystem.h"
 #include "Components/SimPetPointsTransactionComponent.h"
 #include "Widgets/SimPetHUD.h"
+
+#include "SimPetDebugHelper.h"
 
 ASimPetFabricator::ASimPetFabricator()
 {
@@ -18,8 +19,6 @@ ASimPetFabricator::ASimPetFabricator()
 
 void ASimPetFabricator::Interact_Implementation(AActor *InstigatorActor)
 {
-	Debug::Print(__func__);
-
 	if (!FabricatorWidgetClass)
 	{
 		Debug::PrintError(TEXT("FabricatorWidgetClass is not selected in Blueprint!"));

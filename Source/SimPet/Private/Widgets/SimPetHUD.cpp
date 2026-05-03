@@ -5,17 +5,12 @@
 
 #include "Blueprint/UserWidget.h"
 
-#include "SimPetDebugHelper.h"
-
 void ASimPetHUD::BeginPlay()
 {
 	Super::BeginPlay();
 	
 	CurrentGameplayHUDWidget = CreateAndAddToViewportWidget(GameplayHUDWidgetClass);
 	CurrentTimerHUDWidget = CreateAndAddToViewportWidget(TimerHUDWidgetClass, 5);
-	
-	Debug::Print(TEXT("CurrentGameplayHUDWidget"), CurrentGameplayHUDWidget);
-	Debug::Print(TEXT("CurrentTimerHUDWidget"), CurrentTimerHUDWidget);
 }
 
 void ASimPetHUD::SetAllHUDVisibility(bool bIsVisible)
