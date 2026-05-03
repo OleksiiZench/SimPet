@@ -50,7 +50,7 @@ private:
 	
 	ASimPetSpawnPoint *GetSpawnPointInOwner();
 	ASimPetSpawnPoint *GetSpawnPointInForest();
-	ASimPetSpawnPoint *FindAvailibleSpawnPointByTag(const FGameplayTag &LocationTag);
+	ASimPetSpawnPoint *FindAvailableSpawnPointByTag(const FGameplayTag &LocationTag);
 	
 	void BindAnimalToSpawnPoint(ASimPetAnimal *Animal, ASimPetSpawnPoint *AnimalSpawnPoint);
 	void UnbindAnimalFromSpawnPoint(ASimPetAnimal *Animal);

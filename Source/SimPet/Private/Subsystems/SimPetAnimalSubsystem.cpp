@@ -138,15 +138,15 @@ int32 USimPetAnimalSubsystem::GetTotalNumberWildAnimals() const
 
 ASimPetSpawnPoint * USimPetAnimalSubsystem::GetSpawnPointInOwner()
 {
-	return FindAvailibleSpawnPointByTag(SimPetGameplayTags::Spawn_Point_ForAnimal_InOwner);
+	return FindAvailableSpawnPointByTag(SimPetGameplayTags::Spawn_Point_ForAnimal_InOwner);
 }
 
 ASimPetSpawnPoint * USimPetAnimalSubsystem::GetSpawnPointInForest()
 {
-	return FindAvailibleSpawnPointByTag(SimPetGameplayTags::Spawn_Point_ForAnimal_InForest);
+	return FindAvailableSpawnPointByTag(SimPetGameplayTags::Spawn_Point_ForAnimal_InForest);
 }
 
-ASimPetSpawnPoint * USimPetAnimalSubsystem::FindAvailibleSpawnPointByTag(const FGameplayTag &LocationTag)
+ASimPetSpawnPoint * USimPetAnimalSubsystem::FindAvailableSpawnPointByTag(const FGameplayTag &LocationTag)
 {
 	for (ASimPetSpawnPoint *SpawnPoint : AllSpawnPoints)
 	{
