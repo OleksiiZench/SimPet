@@ -59,7 +59,7 @@ namespace Debug
 		}
 	}
 	
-	static void Print(const FString &VectorTitle, FVector &VectorValueToPrint, const FColor &Color = FColor::MakeRandomColor(), int32 InKey = -1)
+	static void Print(const FString &VectorTitle, const FVector &VectorValueToPrint, const FColor &Color = FColor::MakeRandomColor(), int32 InKey = -1)
 	{
 		if (GEngine)
 		{
@@ -71,7 +71,7 @@ namespace Debug
 		}
 	}
 	
-	static void Print(const FString &RotatorTitle, FRotator &RotatorValueToPrint, const FColor &Color = FColor::MakeRandomColor(), int32 InKey = -1)
+	static void Print(const FString &RotatorTitle, const FRotator &RotatorValueToPrint, const FColor &Color = FColor::MakeRandomColor(), int32 InKey = -1)
 	{
 		if (GEngine)
 		{
@@ -83,7 +83,7 @@ namespace Debug
 		}
 	}
 	
-	static void Print(const FString &TransformTitle, FTransform &TransformValueToPrint, const FColor &Color = FColor::MakeRandomColor(), int32 InKey = -1)
+	static void Print(const FString &TransformTitle, const FTransform &TransformValueToPrint, const FColor &Color = FColor::MakeRandomColor(), int32 InKey = -1)
 	{
 		if (GEngine)
 		{
@@ -154,7 +154,7 @@ namespace Debug
 		}
 	}
 	
-	static void PrintError(const FString &VectorTitle, FVector &VectorValueToPrint, int32 InKey = -1)
+	static void PrintError(const FString &VectorTitle, const FVector &VectorValueToPrint, int32 InKey = -1)
 	{
 		if (GEngine)
 		{
@@ -166,7 +166,7 @@ namespace Debug
 		}
 	}
 	
-	static void PrintError(const FString &RotatorTitle, FRotator &RotatorValueToPrint, int32 InKey = -1)
+	static void PrintError(const FString &RotatorTitle, const FRotator &RotatorValueToPrint, int32 InKey = -1)
 	{
 		if (GEngine)
 		{
@@ -178,7 +178,7 @@ namespace Debug
 		}
 	}
 	
-	static void PrintError(const FString &TransformTitle, FTransform &TransformValueToPrint, int32 InKey = -1)
+	static void PrintError(const FString &TransformTitle, const FTransform &TransformValueToPrint, int32 InKey = -1)
 	{
 		if (GEngine)
 		{
