@@ -12,6 +12,8 @@
 class ASimPetAnimal;
 class USimPetPointsTransactionComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPurchaseAttemptResultSignature, bool, bIsSuccess, const FString&, Message);
+
 UCLASS()
 class SIMPET_API ASimPetFabricator : public AActor, public ISimPetInteractable
 {
@@ -27,6 +29,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Fabricator")
 	bool AttemptBuyAnimal(ESimPetAnimals AnimalType);
 	
+	UPROPERTY(BlueprintAssignable)
+	FOnPurchaseAttemptResultSignature OnPurchaseAttemptResult;
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<class USimPetFabricatorWidget> FabricatorWidgetClass;
@@ -34,4 +39,6 @@ protected:
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|Components", meta = (AllowPrivateAccess = "true"))
 	USimPetPointsTransactionComponent *PointsTransactionComponent;
+	
+	void BroadcastResultAnimalPurchase(bool bIsSuccess, const FString &Message);
 };

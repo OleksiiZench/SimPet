@@ -54,7 +54,8 @@ bool ASimPetFabricator::AttemptBuyAnimal(ESimPetAnimals AnimalType)
 	int32 CurrentAnimalPrice = PointsTransactionComponent->GetAnimalPrice(AnimalType);
 	if (!PointsTransactionComponent->CanAfford(CurrentAnimalPrice))
 	{
-		Debug::Print(TEXT("Not enough points!"));
+		BroadcastResultAnimalPurchase(false, TEXT("Failed animal purchase. Not enough points!"));
+		
 		return false;
 	}
 	
@@ -62,12 +63,20 @@ bool ASimPetFabricator::AttemptBuyAnimal(ESimPetAnimals AnimalType)
 
 	if (!AnimalSubsystem || !AnimalSubsystem->SpawnAnimal(AnimalType))
 	{
-		Debug::PrintError(TEXT("Cannot spawn animal!"));
+		BroadcastResultAnimalPurchase(false, TEXT("Failed animal purchase. Failed spawn!"));
+		
 		return false;
 	}
 
 	PointsTransactionComponent->ConsumePoints(CurrentAnimalPrice);
 	PointsTransactionComponent->RegisterAnimalPurchase();
 
+	BroadcastResultAnimalPurchase(true, TEXT("Successful purchase of an animal!"));
+	
 	return true;
+}
+
+void ASimPetFabricator::BroadcastResultAnimalPurchase(bool bIsSuccess, const FString &Message)
+{
+	OnPurchaseAttemptResult.Broadcast(bIsSuccess, Message);
 }
