@@ -18,9 +18,10 @@ class SIMPET_API ASimPetHUD : public AHUD
 {
 	GENERATED_BODY()
 	
-public:
+protected:
 	virtual  void BeginPlay() override;
 	
+public:
 	void SetAllHUDVisibility(bool bIsVisible);
 	void SetGameplayHUDVisibility(const bool bIsVisible);
 	void SetTimerHUDVisibility(const bool bIsVisible);

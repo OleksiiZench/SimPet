@@ -26,12 +26,12 @@ public:
 	virtual void Interact_Implementation(AActor *InstigatorActor) override;
 	//~ End ISimPetInteractable Interface
 	
-	UFUNCTION(BlueprintCallable, Category = "Fabricator")
-	bool AttemptBuyAnimal(ESimPetAnimals AnimalType);
-	
 	UPROPERTY(BlueprintAssignable)
 	FOnPurchaseAttemptResultSignature OnPurchaseAttemptResult;
 	
+	UFUNCTION(BlueprintCallable, Category = "Fabricator")
+	bool AttemptBuyAnimal(ESimPetAnimals AnimalType);
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<class USimPetFabricatorWidget> FabricatorWidgetClass;
