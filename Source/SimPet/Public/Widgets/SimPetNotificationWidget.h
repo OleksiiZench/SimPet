@@ -4,7 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+
 #include "SimPetNotificationWidget.generated.h"
+
+class UTextBlock;
+class UWidgetAnimation;
 
 /**
  * 
@@ -14,4 +18,16 @@ class SIMPET_API USimPetNotificationWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
+public:
+	UFUNCTION(BlueprintCallable, Category = "SimPet|UI|Notification")
+	void ShowNotification(bool bIsSuccess, const FString &Message);
+	
+protected:
+#pragma region UI Bindings
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *MessageText;
+	
+	UPROPERTY(meta = (BindWidget))
+	UWidgetAnimation *SlideAnimation;
+#pragma endregion
 };
