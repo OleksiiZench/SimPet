@@ -11,10 +11,18 @@
 #include "Widgets/SimPetHUD.h"
 
 #include "SimPetDebugHelper.h"
+#include "Subsystems/SimPetUISubsystem.h"
 
 ASimPetFabricator::ASimPetFabricator()
 {
 	PointsTransactionComponent = CreateDefaultSubobject<USimPetPointsTransactionComponent>(TEXT("PointsTransactionComponent"));
+}
+
+void ASimPetFabricator::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	CacheUISubsystem();
 }
 
 void ASimPetFabricator::Interact_Implementation(AActor *InstigatorActor)
@@ -76,7 +84,19 @@ bool ASimPetFabricator::AttemptBuyAnimal(ESimPetAnimals AnimalType)
 	return true;
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ASimPetFabricator::BroadcastResultAnimalPurchase(bool bIsSuccess, const FString &Message)
 {
-	OnPurchaseAttemptResult.Broadcast(bIsSuccess, Message);
+	if (CachedUISubsystem)
+	{
+		CachedUISubsystem->BroadcastNotification(bIsSuccess, Message);
+	}
+}
+
+void ASimPetFabricator::CacheUISubsystem()
+{
+	if (GetWorld())
+	{
+		CachedUISubsystem = GetWorld()->GetSubsystem<USimPetUISubsystem>();
+	}
 }
