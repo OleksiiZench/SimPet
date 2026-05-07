@@ -11,7 +11,7 @@ void USimPetNotificationWidget::ShowNotification(bool bIsSuccess, const FString 
 	{
 		MessageText->SetText(FText::FromString(Message));
 		
-		FLinearColor TextColor = bIsSuccess ? FLinearColor::Green : FLinearColor:: Red;
+		FLinearColor TextColor = FLinearColor::Black;
 		MessageText->SetColorAndOpacity(TextColor);
 	}
 	
@@ -19,4 +19,6 @@ void USimPetNotificationWidget::ShowNotification(bool bIsSuccess, const FString 
 	{
 		PlayAnimation(SlideAnim);
 	}
+	
+	// TODO: bIsSuccess буде відповідати за колір Border
 }

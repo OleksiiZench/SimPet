@@ -5,12 +5,23 @@
 
 #include "Blueprint/UserWidget.h"
 
+#include "Subsystems/SimPetUISubsystem.h"
+#include "Widgets/SimPetNotificationWidget.h"
+
+#include "SimPetDebugHelper.h"
+
 void ASimPetHUD::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	CurrentGameplayHUDWidget = CreateAndAddToViewportWidget(GameplayHUDWidgetClass);
-	CurrentTimerHUDWidget = CreateAndAddToViewportWidget(TimerHUDWidgetClass, 5);
+	CreateWidgets();
+	
+	CacheUISubsystem();
+	
+	if (CachedUISubsystem != nullptr)
+	{
+		CachedUISubsystem->OnShowUINotification.AddDynamic(this, &ThisClass::HandleShowNotification);
+	}
 }
 
 void ASimPetHUD::SetAllHUDVisibility(bool bIsVisible)
@@ -34,6 +45,42 @@ void ASimPetHUD::SetTimerHUDVisibility(const bool bIsVisible)
 	if (CurrentTimerHUDWidget)
 	{
 		CurrentTimerHUDWidget->SetVisibility(bIsVisible ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Hidden);
+	}
+}
+
+void ASimPetHUD::CreateWidgets()
+{
+	CurrentGameplayHUDWidget = CreateAndAddToViewportWidget(GameplayHUDWidgetClass);
+	CurrentTimerHUDWidget = CreateAndAddToViewportWidget(TimerHUDWidgetClass, 5);
+	
+	if (NotificationWidgetClass)
+	{
+		CurrentNotificationWidget = CreateWidget<USimPetNotificationWidget>(GetOwningPlayerController(), NotificationWidgetClass);
+		if (CurrentNotificationWidget)
+		{
+			CurrentNotificationWidget->AddToViewport(10);
+			
+			CurrentNotificationWidget->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
+}
+
+void ASimPetHUD::CacheUISubsystem()
+{
+	if (GetWorld())
+	{
+		CachedUISubsystem = GetWorld()->GetSubsystem<USimPetUISubsystem>();
+	}
+}
+
+void ASimPetHUD::HandleShowNotification(bool bIsSuccess, const FString &Message)
+{
+	Debug::Print(TEXT("HandleShowNotification"));
+	
+	if (CurrentNotificationWidget)
+	{
+		CurrentNotificationWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+		CurrentNotificationWidget->ShowNotification(bIsSuccess, Message);
 	}
 }
 

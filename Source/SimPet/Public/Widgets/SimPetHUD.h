@@ -9,6 +9,8 @@
 
 class USimPetHUDWidget;
 class USimPetTimerHUDWidget;
+class USimPetUISubsystem;
+class USimPetNotificationWidget;
 
 /**
  * 
@@ -33,12 +35,27 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "SimPet | UI")
 	TSubclassOf<UUserWidget> TimerHUDWidgetClass;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet | UI")
+	TSubclassOf<UUserWidget> NotificationWidgetClass;
+	
 private:
 	UPROPERTY()
 	UUserWidget *CurrentGameplayHUDWidget;
 	
 	UPROPERTY()
 	UUserWidget *CurrentTimerHUDWidget;
+	
+	UPROPERTY()
+	USimPetNotificationWidget *CurrentNotificationWidget;
+	
+	UPROPERTY()
+	USimPetUISubsystem *CachedUISubsystem;
+	
+	void CreateWidgets();
+	void CacheUISubsystem();
+	
+	UFUNCTION()
+	void HandleShowNotification(bool bIsSuccess, const FString &Message);
 	
 	UUserWidget * CreateAndAddToViewportWidget(const TSubclassOf<UUserWidget> WidgetClass, const int32 ZOrder = 0);
 };
