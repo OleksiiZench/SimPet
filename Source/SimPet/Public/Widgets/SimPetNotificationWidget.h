@@ -27,7 +27,7 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock *MessageText;
 	
-	UPROPERTY(meta = (BindWidget))
-	UWidgetAnimation *SlideAnimation;
+	UPROPERTY(Transient, meta = (BindWidgetAnim))
+	UWidgetAnimation *SlideAnim;
 #pragma endregion
 };

@@ -15,8 +15,8 @@ void USimPetNotificationWidget::ShowNotification(bool bIsSuccess, const FString 
 		MessageText->SetColorAndOpacity(TextColor);
 	}
 	
-	if (SlideAnimation)
+	if (SlideAnim)
 	{
-		PlayAnimation(SlideAnimation);
+		PlayAnimation(SlideAnim);
 	}
 }
