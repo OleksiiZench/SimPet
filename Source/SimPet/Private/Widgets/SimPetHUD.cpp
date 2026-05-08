@@ -9,6 +9,7 @@
 #include "Widgets/SimPetNotificationWidget.h"
 
 #include "SimPetDebugHelper.h"
+#include "Kismet/KismetInternationalizationLibrary.h"
 
 void ASimPetHUD::BeginPlay()
 {
@@ -22,6 +23,8 @@ void ASimPetHUD::BeginPlay()
 	{
 		CachedUISubsystem->OnShowUINotification.AddDynamic(this, &ThisClass::HandleShowNotification);
 	}
+	
+	UKismetInternationalizationLibrary::SetCurrentCulture(TEXT("uk"), true);
 }
 
 void ASimPetHUD::SetAllHUDVisibility(bool bIsVisible)

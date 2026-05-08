@@ -13,6 +13,12 @@
 #include "SimPetDebugHelper.h"
 #include "Subsystems/SimPetUISubsystem.h"
 
+#define LOCTEXT_NAMESPACE "Fabricator"
+
+const FText PurchaseSuccessMsg = LOCTEXT("PurchaseSuccess", "Successful purchase of an animal!");
+const FText NoPointsMsg = LOCTEXT("NoPoints", "Failed animal purchase. Not enough points!");
+const FText SpawnErrorMsg = LOCTEXT("SpawnError", "Failed animal purchase. Failed spawn!");
+
 ASimPetFabricator::ASimPetFabricator()
 {
 	PointsTransactionComponent = CreateDefaultSubobject<USimPetPointsTransactionComponent>(TEXT("PointsTransactionComponent"));
@@ -62,7 +68,7 @@ bool ASimPetFabricator::AttemptBuyAnimal(ESimPetAnimals AnimalType)
 	int32 CurrentAnimalPrice = PointsTransactionComponent->GetAnimalPrice(AnimalType);
 	if (!PointsTransactionComponent->CanAfford(CurrentAnimalPrice))
 	{
-		BroadcastResultAnimalPurchase(false, TEXT("Failed animal purchase. Not enough points!"));
+		BroadcastResultAnimalPurchase(false, NoPointsMsg.ToString());
 		
 		return false;
 	}
@@ -71,7 +77,7 @@ bool ASimPetFabricator::AttemptBuyAnimal(ESimPetAnimals AnimalType)
 
 	if (!AnimalSubsystem || !AnimalSubsystem->SpawnAnimal(AnimalType))
 	{
-		BroadcastResultAnimalPurchase(false, TEXT("Failed animal purchase. Failed spawn!"));
+		BroadcastResultAnimalPurchase(false, SpawnErrorMsg.ToString());
 		
 		return false;
 	}
@@ -79,7 +85,7 @@ bool ASimPetFabricator::AttemptBuyAnimal(ESimPetAnimals AnimalType)
 	PointsTransactionComponent->ConsumePoints(CurrentAnimalPrice);
 	PointsTransactionComponent->RegisterAnimalPurchase();
 
-	BroadcastResultAnimalPurchase(true, TEXT("Successful purchase of an animal!"));
+	BroadcastResultAnimalPurchase(true, PurchaseSuccessMsg.ToString());
 	
 	return true;
 }
@@ -100,3 +106,5 @@ void ASimPetFabricator::CacheUISubsystem()
 		CachedUISubsystem = GetWorld()->GetSubsystem<USimPetUISubsystem>();
 	}
 }
+
+#undef LOCTEXT_NAMESPACE
