@@ -12,6 +12,8 @@
 #include "Subsystems/SimPetSaveSubsystem.h"
 #include "Core/SimPetPlayerState.h"
 
+#include "SimPetDebugHelper.h"
+
 void USimPetPauseMenuWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -57,7 +59,7 @@ void USimPetPauseMenuWidget::UpdateAssignedText()
 // ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetPauseMenuWidget::UpdateMaxPointsText()
 {
-	if (MaxPointsText)
+	if (MaxPointsText && CachedSaveSubsystem)
 	{
 		int32 MaxPoints = CachedSaveSubsystem->GetMaxPoints();
 		
@@ -68,7 +70,7 @@ void USimPetPauseMenuWidget::UpdateMaxPointsText()
 // ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetPauseMenuWidget::UpdateCurrentPointsText()
 {
-	if (CurrentPointsText)
+	if (CurrentPointsText && CachedPlayerState)
 	{
 		int32 CurrentPoints = CachedPlayerState->GetCurrentPoints();
 		
@@ -93,8 +95,9 @@ void USimPetPauseMenuWidget::CacheSaveSubsystem()
 
 void USimPetPauseMenuWidget::CachePlayerState()
 {
-	if (Cast<ASimPetPlayerState>(GetOwningPlayerState()))
+	CachedPlayerState = Cast<ASimPetPlayerState>(GetOwningPlayerState());
+	if (CachedPlayerState == nullptr)
 	{
-		CachedPlayerState = Cast<ASimPetPlayerState>(GetOwningPlayerState());
+		Debug::PrintError(TEXT("Failed to cache PlayerState!"));
 	}
 }
