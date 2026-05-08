@@ -21,7 +21,8 @@ class SIMPET_API ASimPetHUD : public AHUD
 	GENERATED_BODY()
 	
 protected:
-	virtual  void BeginPlay() override;
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	
 public:
 	void SetAllHUDVisibility(bool bIsVisible);
@@ -53,6 +54,8 @@ private:
 	
 	void CreateWidgets();
 	void CacheUISubsystem();
+	void BindDelegates();
+	void UnbindDelegates();
 	
 	UFUNCTION()
 	void HandleShowNotification(bool bIsSuccess, const FString &Message);

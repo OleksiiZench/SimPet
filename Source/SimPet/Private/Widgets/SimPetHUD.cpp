@@ -18,10 +18,14 @@ void ASimPetHUD::BeginPlay()
 	
 	CacheUISubsystem();
 	
-	if (CachedUISubsystem != nullptr)
-	{
-		CachedUISubsystem->OnShowUINotification.AddDynamic(this, &ThisClass::HandleShowNotification);
-	}
+	BindDelegates();
+}
+
+void ASimPetHUD::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	UnbindDelegates();
+	
+	Super::EndPlay(EndPlayReason);
 }
 
 void ASimPetHUD::SetAllHUDVisibility(bool bIsVisible)
@@ -73,11 +77,25 @@ void ASimPetHUD::CacheUISubsystem()
 	}
 }
 
+void ASimPetHUD::BindDelegates()
+{
+	if (CachedUISubsystem != nullptr)
+	{
+		CachedUISubsystem->OnShowUINotification.AddDynamic(this, &ThisClass::HandleShowNotification);
+	}
+}
+
+void ASimPetHUD::UnbindDelegates()
+{
+	if (CachedUISubsystem != nullptr)
+	{
+		CachedUISubsystem->OnShowUINotification.RemoveDynamic(this, &ThisClass::HandleShowNotification);
+	}
+}
+
 // ReSharper disable once CppMemberFunctionMayBeConst
 void ASimPetHUD::HandleShowNotification(bool bIsSuccess, const FString &Message)
 {
-	Debug::Print(TEXT("HandleShowNotification"));
-	
 	if (CurrentNotificationWidget)
 	{
 		CurrentNotificationWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
