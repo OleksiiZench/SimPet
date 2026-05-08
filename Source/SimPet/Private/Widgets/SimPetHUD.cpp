@@ -8,8 +8,6 @@
 #include "Subsystems/SimPetUISubsystem.h"
 #include "Widgets/SimPetNotificationWidget.h"
 
-#include "SimPetDebugHelper.h"
-
 void ASimPetHUD::BeginPlay()
 {
 	Super::BeginPlay();

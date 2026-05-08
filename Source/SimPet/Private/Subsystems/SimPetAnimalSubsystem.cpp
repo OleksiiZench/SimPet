@@ -10,7 +10,6 @@
 
 #include "SimPetDebugHelper.h"
 
-
 void USimPetAnimalSubsystem::RegisterSpawnPoint(ASimPetSpawnPoint *SpawnPoint)
 {
 	if (SpawnPoint && !AllSpawnPoints.Contains(SpawnPoint))
@@ -36,8 +35,6 @@ ASimPetAnimal * USimPetAnimalSubsystem::SpawnAnimal(ESimPetAnimals AnimalType)
 	ASimPetAnimal *NewAnimal = GetWorld()->SpawnActor<ASimPetAnimal>(*SpawnedAnimalClass, AnimalTransform);
 	if (NewAnimal)
 	{
-		Debug::Print(TEXT("Spawned: ") + (*SpawnedAnimalClass)->GetName());
-
 		OwnerAnimals.Add(NewAnimal);
 		BindAnimalToSpawnPoint(NewAnimal, AnimalSpawnPoint);
 		
