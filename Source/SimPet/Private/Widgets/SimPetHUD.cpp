@@ -9,7 +9,6 @@
 #include "Widgets/SimPetNotificationWidget.h"
 
 #include "SimPetDebugHelper.h"
-#include "Kismet/KismetInternationalizationLibrary.h"
 
 void ASimPetHUD::BeginPlay()
 {
@@ -23,8 +22,6 @@ void ASimPetHUD::BeginPlay()
 	{
 		CachedUISubsystem->OnShowUINotification.AddDynamic(this, &ThisClass::HandleShowNotification);
 	}
-	
-	UKismetInternationalizationLibrary::SetCurrentCulture(TEXT("uk"), true);
 }
 
 void ASimPetHUD::SetAllHUDVisibility(bool bIsVisible)
@@ -76,6 +73,7 @@ void ASimPetHUD::CacheUISubsystem()
 	}
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ASimPetHUD::HandleShowNotification(bool bIsSuccess, const FString &Message)
 {
 	Debug::Print(TEXT("HandleShowNotification"));
