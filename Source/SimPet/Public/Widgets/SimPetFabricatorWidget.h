@@ -26,6 +26,7 @@ public:
 	USimPetFabricatorWidget(const FObjectInitializer& ObjectInitializer);
 	
 	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
 	virtual FReply NativeOnKeyDown(const FGeometry &InGeometry, const FKeyEvent &InKeyEvent) override;
 	
 	UFUNCTION(BlueprintCallable, Category = "SimPet | Widgets")
@@ -76,4 +77,5 @@ private:
 	
 	void CachePlayerState();
 	void BindToPointsUpdate();
+	void UnbindToPointsUpdate();
 };

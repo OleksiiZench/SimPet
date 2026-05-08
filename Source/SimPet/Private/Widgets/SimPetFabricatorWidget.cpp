@@ -33,8 +33,18 @@ void USimPetFabricatorWidget::NativeConstruct()
 	CachePlayerState();
 	BindToPointsUpdate();
 	
-	int32 CurrentPoints = CachedPlayerState->GetCurrentPoints();
-	UpdatePointsText(CurrentPoints);
+	if (CachedPlayerState)
+	{
+		int32 CurrentPoints = CachedPlayerState->GetCurrentPoints();
+		UpdatePointsText(CurrentPoints);
+	}
+}
+
+void USimPetFabricatorWidget::NativeDestruct()
+{
+	UnbindToPointsUpdate();
+	
+	Super::NativeDestruct();
 }
 
 FReply USimPetFabricatorWidget::NativeOnKeyDown(const FGeometry &InGeometry, const FKeyEvent &InKeyEvent)
@@ -167,13 +177,21 @@ void USimPetFabricatorWidget::UpdateAnimalPricesUI()
 
 void USimPetFabricatorWidget::CachePlayerState()
 {
-	if (Cast<ASimPetPlayerState>(GetOwningPlayerState()))
+	CachedPlayerState = Cast<ASimPetPlayerState>(GetOwningPlayerState());
+	if (CachedPlayerState == nullptr)
 	{
-		CachedPlayerState = Cast<ASimPetPlayerState>(GetOwningPlayerState());
+		Debug::PrintError(TEXT("Caching PlayerState failed!"));
 	}
 }
 
 void USimPetFabricatorWidget::BindToPointsUpdate()
 {	
-	CachedPlayerState->OnPointsChanged.AddDynamic(this, &ThisClass::UpdatePointsText);
+	if (CachedPlayerState)
+		CachedPlayerState->OnPointsChanged.AddDynamic(this, &ThisClass::UpdatePointsText);
+}
+
+void USimPetFabricatorWidget::UnbindToPointsUpdate()
+{
+	if (CachedPlayerState)
+		CachedPlayerState->OnPointsChanged.RemoveDynamic(this, &ThisClass::UpdatePointsText);
 }
