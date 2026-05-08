@@ -3,6 +3,7 @@
 
 #include "Widgets/SimPetNotificationWidget.h"
 
+#include "Components/Border.h"
 #include "Components/TextBlock.h"
 
 void USimPetNotificationWidget::ShowNotification(bool bIsSuccess, const FString &Message)
@@ -13,6 +14,16 @@ void USimPetNotificationWidget::ShowNotification(bool bIsSuccess, const FString 
 		
 		FLinearColor TextColor = FLinearColor::Black;
 		MessageText->SetColorAndOpacity(TextColor);
+	}
+	
+	if (NotificationBorder)
+	{
+		constexpr FLinearColor GreenColor = FLinearColor(0.0f, 0.5f, 0.0f, 0.8f);
+		constexpr FLinearColor RedColor = FLinearColor(0.8f, 0.0f, 0.0f, 0.8f);
+		
+		FLinearColor BorderColor = bIsSuccess ? GreenColor : RedColor;
+		
+		NotificationBorder->SetBrushColor(BorderColor);
 	}
 	
 	if (SlideAnim)

@@ -7,6 +7,7 @@
 
 #include "SimPetNotificationWidget.generated.h"
 
+class UBorder;
 class UTextBlock;
 class UWidgetAnimation;
 
@@ -24,6 +25,9 @@ public:
 	
 protected:
 #pragma region UI Bindings
+	UPROPERTY(meta = (BindWidget))
+	UBorder *NotificationBorder;
+	
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock *MessageText;
 	
