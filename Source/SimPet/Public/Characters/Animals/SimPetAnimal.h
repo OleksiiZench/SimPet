@@ -130,6 +130,7 @@ private:
 	void InitializeBaseBody();
 	void SetupComponents();
 	void InitializeAnimalStatusWidget() const;
+	void DeinitializeAnimalStatusWidget() const;
 	void BindNeedsEvents();
 	
 	void SpawnAnimalWaste();

@@ -19,6 +19,8 @@ void USimPetAnimalNeedsStatusWidget::NativeOnInitialized()
 
 void USimPetAnimalNeedsStatusWidget::Init(USimPetNeedsComponent *InNeedsComponent)
 {
+	UnbindNeedsEvents();
+	
 	if (InNeedsComponent)
 	{
 		CacheAnimalNeedsComponent = InNeedsComponent;
@@ -29,6 +31,12 @@ void USimPetAnimalNeedsStatusWidget::Init(USimPetNeedsComponent *InNeedsComponen
 	{
 		Debug::Print(TEXT("Filed to cache InNeedsComponent!"));
 	}
+}
+
+void USimPetAnimalNeedsStatusWidget::Deinit()
+{
+	UnbindNeedsEvents();
+	CacheAnimalNeedsComponent = nullptr;
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
@@ -66,6 +74,18 @@ void USimPetAnimalNeedsStatusWidget::BindNeedsEvents()
 		CacheAnimalNeedsComponent->OnGotHungry.AddDynamic(this, &USimPetAnimalNeedsStatusWidget::HandleGotHungry);
 		CacheAnimalNeedsComponent->OnGotClean.AddDynamic(this, &USimPetAnimalNeedsStatusWidget::HandleGotClean);
 		CacheAnimalNeedsComponent->OnHungrySatisfied.AddDynamic(this, &USimPetAnimalNeedsStatusWidget::HandleHungrySatisfied);
+	}
+}
+
+void USimPetAnimalNeedsStatusWidget::UnbindNeedsEvents()
+{
+	if (CacheAnimalNeedsComponent.IsValid())
+	{
+		CacheAnimalNeedsComponent->OnNeedsDepleted.RemoveDynamic(this, &USimPetAnimalNeedsStatusWidget::HandleNeedsDepleted);
+		CacheAnimalNeedsComponent->OnGotDirty.RemoveDynamic(this, &USimPetAnimalNeedsStatusWidget::HandleGotDirty);
+		CacheAnimalNeedsComponent->OnGotHungry.RemoveDynamic(this, &USimPetAnimalNeedsStatusWidget::HandleGotHungry);
+		CacheAnimalNeedsComponent->OnGotClean.RemoveDynamic(this, &USimPetAnimalNeedsStatusWidget::HandleGotClean);
+		CacheAnimalNeedsComponent->OnHungrySatisfied.RemoveDynamic(this, &USimPetAnimalNeedsStatusWidget::HandleHungrySatisfied);
 	}
 }
 

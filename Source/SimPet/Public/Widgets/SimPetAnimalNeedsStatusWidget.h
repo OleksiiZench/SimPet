@@ -22,6 +22,7 @@ public:
 	virtual void NativeOnInitialized() override;
 	
 	void Init(USimPetNeedsComponent *InNeedsComponent);
+	void Deinit();
 	
 	void SetDirtyIconVisible(const bool bVisible);
 	void SetHungryIconVisible(const bool bVisible);
@@ -39,6 +40,7 @@ private:
 	TWeakObjectPtr<USimPetNeedsComponent> CacheAnimalNeedsComponent;
 	
 	void BindNeedsEvents();
+	void UnbindNeedsEvents();
 	
 	UFUNCTION()
 	void HandleNeedsDepleted();

@@ -239,6 +239,15 @@ void ASimPetAnimal::InitializeAnimalStatusWidget() const
 	}
 }
 
+void ASimPetAnimal::DeinitializeAnimalStatusWidget() const
+{
+	USimPetAnimalNeedsStatusWidget *AnimalStatusWidget = Cast<USimPetAnimalNeedsStatusWidget>(StatusWidgetComponent->GetUserWidgetObject());
+	if (AnimalStatusWidget)
+	{
+		AnimalStatusWidget->Deinit();
+	}
+}
+
 void ASimPetAnimal::BindNeedsEvents()
 {
 	NeedsComponent->OnHappyTick.AddDynamic(this, &ASimPetAnimal::HandleHappyTick);
@@ -298,6 +307,8 @@ void ASimPetAnimal::Die()
 	{
 		AnimalController->Destroy();
 	}
+	
+	DeinitializeAnimalStatusWidget();
 	
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
