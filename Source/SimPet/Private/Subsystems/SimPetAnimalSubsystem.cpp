@@ -38,6 +38,8 @@ ASimPetAnimal * USimPetAnimalSubsystem::SpawnAnimal(ESimPetAnimals AnimalType)
 		OwnerAnimals.Add(NewAnimal);
 		BindAnimalToSpawnPoint(NewAnimal, AnimalSpawnPoint);
 		
+		NewAnimal->OnAnimalDied.AddDynamic(this, &ThisClass::HandleAnimalDied);
+		
 		return NewAnimal;
 	}
 	
@@ -175,8 +177,6 @@ void USimPetAnimalSubsystem::BindAnimalToSpawnPoint(ASimPetAnimal *Animal, ASimP
 
 	AnimalSpawnPoint->AddGameplayTags(SimPetGameplayTags::Spawn_Point_HasAnimal);
 	
-	Animal->OnAnimalDied.AddDynamic(this, &ThisClass::HandleAnimalDied);
-	
 	AnimalToSpawnPointMap.Add(Animal, AnimalSpawnPoint);
 }
 
@@ -190,8 +190,6 @@ void USimPetAnimalSubsystem::UnbindAnimalFromSpawnPoint(ASimPetAnimal *Animal)
 		return;
 
 	AnimalSpawnPoint->RemoveGameplayTags(SimPetGameplayTags::Spawn_Point_HasAnimal);
-
-	Animal->OnAnimalDied.RemoveDynamic(this, &ThisClass::HandleAnimalDied);
 	
 	AnimalToSpawnPointMap.Remove(Animal);
 }
@@ -215,6 +213,8 @@ void USimPetAnimalSubsystem::HandleAnimalDied(ASimPetAnimal *DeadAnimal)
 {
 	if (DeadAnimal == nullptr)
 		return;
+	
+	DeadAnimal->OnAnimalDied.RemoveDynamic(this, &ThisClass::HandleAnimalDied);
 	
 	UnbindAnimalFromSpawnPoint(DeadAnimal);
 	
