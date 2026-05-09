@@ -27,10 +27,14 @@ public:
 	UFUNCTION()
 	void HandleFeedPickedUp(ASimPetAnimalFeed *PickedFeed);
 	
+	UFUNCTION()
+	void HandleFeedDestroyed(AActor *DestroyedActor);
+	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tags")
 	FGameplayTagContainer GameplayTags;
 	
 private:
 	void RegisterSpawnPointInAnimalSubsystem();
+	void ClearFeedTag();
 };

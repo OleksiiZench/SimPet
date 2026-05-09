@@ -33,10 +33,20 @@ void ASimPetSpawnPoint::RemoveGameplayTags(const FGameplayTag &Tag)
 
 void ASimPetSpawnPoint::HandleFeedPickedUp(ASimPetAnimalFeed *PickedFeed)
 {
-	GameplayTags.RemoveTag(SimPetGameplayTags::Spawn_Point_HasFeed);
+	ClearFeedTag();
 	
 	if (PickedFeed)
 		PickedFeed->OnFeedPickedUp.RemoveDynamic(this, &ASimPetSpawnPoint::HandleFeedPickedUp);
+}
+
+void ASimPetSpawnPoint::HandleFeedDestroyed(AActor *DestroyedActor)
+{
+	ClearFeedTag();
+	
+	if (DestroyedActor)
+	{
+		DestroyedActor->OnDestroyed.RemoveDynamic(this, &ASimPetSpawnPoint::HandleFeedDestroyed);
+	}
 }
 
 void ASimPetSpawnPoint::RegisterSpawnPointInAnimalSubsystem()
@@ -46,4 +56,9 @@ void ASimPetSpawnPoint::RegisterSpawnPointInAnimalSubsystem()
 	{
 		AnimalSubsystem->RegisterSpawnPoint(this);
 	}
+}
+
+void ASimPetSpawnPoint::ClearFeedTag()
+{
+	GameplayTags.RemoveTag(SimPetGameplayTags::Spawn_Point_HasFeed);
 }

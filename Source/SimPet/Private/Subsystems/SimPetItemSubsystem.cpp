@@ -46,7 +46,9 @@ void USimPetItemSubsystem::SpawnFeedOnRelevantPoints()
 		if (NewFeed)
 		{
 			SpawnPoint->AddGameplayTags(SimPetGameplayTags::Spawn_Point_HasFeed);
+			
 			NewFeed->OnFeedPickedUp.AddDynamic(SpawnPoint, &ASimPetSpawnPoint::HandleFeedPickedUp);
+			NewFeed->OnDestroyed.AddDynamic(SpawnPoint, &ASimPetSpawnPoint::HandleFeedDestroyed);
 		}
 	}
 }
