@@ -10,6 +10,8 @@
 class UTextBlock;
 class UProgressBar;
 class ASimPetPlayer;
+class USimPetStaminaComponent;
+class ASimPetPlayerState;
 
 /**
  * 
@@ -56,4 +58,19 @@ protected:
 	
 	FTimerHandle StatsTimerHandle;  // Таймер для оновлення статистики
 #pragma endregion
+	
+private:
+	UPROPERTY()
+	USimPetStaminaComponent *CachedPlayerStaminaComponent;
+	
+	UPROPERTY()
+	ASimPetPlayerState *CachedPlayerState;
+	
+	void CacheDependencies();
+	void SetupInitialValues();
+	
+	void InitializeTimer();
+	void ClearTimer();
+	void BindDelegates();
+	void UnbindDelegates();
 };

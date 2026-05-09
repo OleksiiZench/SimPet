@@ -16,38 +16,19 @@ void USimPetHUDWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 	
-	if (GetWorld())
-	{// Оновлення статистики раз на секунду
-		GetWorld()->GetTimerManager().SetTimer(StatsTimerHandle, this, &USimPetHUDWidget::UpdateAnimalStats, 1.0f, true);
-	}
+	CacheDependencies();
+	SetupInitialValues();
 	
+	InitializeTimer();
 	UpdateAnimalStats();
 	
-	if (ASimPetPlayer *SimPetPlayer = Cast<ASimPetPlayer>(GetOwningPlayerPawn()))
-	{
-		StaminaProgressBar->SetPercent(1.0f);
-		
-		if (USimPetStaminaComponent *PlayerStaminaComponent = SimPetPlayer->GetStaminaComponent())
-		{
-			PlayerStaminaComponent->OnStaminaChanged.AddDynamic(this, &USimPetHUDWidget::UpdateStaminaBar);
-		}
-		
-		if (ASimPetPlayerState *PlayerState = Cast<ASimPetPlayerState>(SimPetPlayer->GetPlayerState()))
-		{
-			int32 CurrentPoints = PlayerState->GetCurrentPoints();
-			UpdatePointsText(CurrentPoints);
-			
-			PlayerState->OnPointsChanged.AddDynamic(this, &USimPetHUDWidget::UpdatePointsText);
-		}
-	}
+	BindDelegates();
 }
 
 void USimPetHUDWidget::NativeDestruct()
 {
-	if (GetWorld())
-	{
-		GetWorld()->GetTimerManager().ClearTimer(StatsTimerHandle);
-	}
+	UnbindDelegates();
+	ClearTimer();
 	
 	Super::NativeDestruct();
 }
@@ -110,4 +91,61 @@ void USimPetHUDWidget::UpdateAnimalStats()
 		
 		WildAnimalCountText->SetText(FText::AsNumber(NumberOfWildAnimals));
 	}
+}
+
+void USimPetHUDWidget::CacheDependencies()
+{
+	if (ASimPetPlayer *SimPetPlayer = Cast<ASimPetPlayer>(GetOwningPlayerPawn()))
+	{
+		CachedPlayerStaminaComponent = SimPetPlayer->GetStaminaComponent();
+		CachedPlayerState = Cast<ASimPetPlayerState>(SimPetPlayer->GetPlayerState());
+	}
+}
+
+void USimPetHUDWidget::SetupInitialValues()
+{
+	if (StaminaProgressBar)
+	{
+		StaminaProgressBar->SetPercent(1.0f);
+	}
+	
+	if (CachedPlayerState)
+	{
+		int32 CurrentPoints = CachedPlayerState->GetCurrentPoints();
+		UpdatePointsText(CurrentPoints);
+	}
+}
+
+void USimPetHUDWidget::InitializeTimer()
+{
+	if (GetWorld())
+	{// Оновлення статистики раз на секунду
+		GetWorld()->GetTimerManager().SetTimer(StatsTimerHandle, this, &USimPetHUDWidget::UpdateAnimalStats, 1.0f, true);
+	}
+}
+
+void USimPetHUDWidget::ClearTimer()
+{
+	if (GetWorld())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(StatsTimerHandle);
+	}
+}
+
+void USimPetHUDWidget::BindDelegates()
+{
+	if (CachedPlayerStaminaComponent)
+		CachedPlayerStaminaComponent->OnStaminaChanged.AddDynamic(this, &USimPetHUDWidget::UpdateStaminaBar);
+	
+	if (CachedPlayerState)
+		CachedPlayerState->OnPointsChanged.AddDynamic(this, &USimPetHUDWidget::UpdatePointsText);
+}
+
+void USimPetHUDWidget::UnbindDelegates()
+{
+	if (CachedPlayerStaminaComponent)
+		CachedPlayerStaminaComponent->OnStaminaChanged.RemoveDynamic(this, &USimPetHUDWidget::UpdateStaminaBar);
+	
+	if (CachedPlayerState)
+		CachedPlayerState->OnPointsChanged.RemoveDynamic(this, &USimPetHUDWidget::UpdatePointsText);
 }
