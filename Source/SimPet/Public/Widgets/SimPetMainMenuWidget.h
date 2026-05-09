@@ -84,5 +84,7 @@ private:
 	TArray<FText> DifficultyOptions;
 	int32 CurrentDifficultyIndex;
 	
+	void SetupButtonBindings();
+	void InitializeDifficultyOptions();
 	void UpdateDifficultyDisplay();
 };
