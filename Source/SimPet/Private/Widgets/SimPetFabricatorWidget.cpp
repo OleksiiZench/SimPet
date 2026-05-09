@@ -134,6 +134,13 @@ void USimPetFabricatorWidget::MoveAnimalToOwner()
 	AnimalSubsystem->MoveAnimalToOwner();
 }
 
+FReply USimPetFabricatorWidget::NativeOnMouseButtonDown(const FGeometry &InGeometry, const FPointerEvent &InMouseEvent)
+{
+	Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+	
+	return FReply::Handled().SetUserFocus(GetCachedWidget().ToSharedRef(), EFocusCause::Mouse);
+}
+
 // ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetFabricatorWidget::UpdatePointsText(const int32 Points)
 {

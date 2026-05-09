@@ -64,6 +64,8 @@ protected:
 	
 	TWeakObjectPtr<ASimPetFabricator> LinkedFabricator;  // Посилання на фабрикатор який відкрив цей UI
 	
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	
 private:
 	UPROPERTY()
 	ASimPetPlayerState *CachedPlayerState;
