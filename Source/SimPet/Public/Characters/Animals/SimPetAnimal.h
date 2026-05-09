@@ -32,6 +32,7 @@ public:
 
 	virtual void OnConstruction(const FTransform &Transform) override;
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float DeltaTime) override;
 	
 	void FeedAnimal();
@@ -115,6 +116,9 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|Components", meta = (AllowPrivateAccess = "true"))
 	USimPetPointsTransactionComponent *PointsTransactionComponent;
 	
+	UPROPERTY();
+	TArray<ASimPetAnimalWaste *> TrackedWastes;
+	
 	UFUNCTION()
 	void HandleHappyTick();
 	
@@ -132,9 +136,11 @@ private:
 	void InitializeAnimalStatusWidget() const;
 	void DeinitializeAnimalStatusWidget() const;
 	void BindNeedsEvents();
+	void UnbindNeedsEvents();
 	
 	void SpawnAnimalWaste();
 	FVector GetLocationAboveGround() const;
+	void ClearWasteBindings();
 	
 	void CleanAnimal() const;
 	void Die();

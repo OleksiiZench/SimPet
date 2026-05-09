@@ -50,6 +50,14 @@ void ASimPetAnimal::BeginPlay()
 	BindNeedsEvents();
 }
 
+void ASimPetAnimal::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	UnbindNeedsEvents();
+	ClearWasteBindings();
+	
+	Super::EndPlay(EndPlayReason);
+}
+
 void ASimPetAnimal::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -250,9 +258,22 @@ void ASimPetAnimal::DeinitializeAnimalStatusWidget() const
 
 void ASimPetAnimal::BindNeedsEvents()
 {
-	NeedsComponent->OnHappyTick.AddDynamic(this, &ASimPetAnimal::HandleHappyTick);
-	NeedsComponent->OnNeedsDepleted.AddDynamic(this, &ASimPetAnimal::HandleNeedsDepleted);
-	NeedsComponent->OnGotDirty.AddDynamic(this, &ASimPetAnimal::HandleGotDirty);
+	if (NeedsComponent)
+	{
+		NeedsComponent->OnHappyTick.AddDynamic(this, &ASimPetAnimal::HandleHappyTick);
+		NeedsComponent->OnNeedsDepleted.AddDynamic(this, &ASimPetAnimal::HandleNeedsDepleted);
+		NeedsComponent->OnGotDirty.AddDynamic(this, &ASimPetAnimal::HandleGotDirty);
+	}
+}
+
+void ASimPetAnimal::UnbindNeedsEvents()
+{
+	if (NeedsComponent)
+	{
+		NeedsComponent->OnHappyTick.RemoveDynamic(this, &ASimPetAnimal::HandleHappyTick);
+		NeedsComponent->OnNeedsDepleted.RemoveDynamic(this, &ASimPetAnimal::HandleNeedsDepleted);
+		NeedsComponent->OnGotDirty.RemoveDynamic(this, &ASimPetAnimal::HandleGotDirty);
+	}
 }
 
 void ASimPetAnimal::SpawnAnimalWaste()
@@ -266,6 +287,7 @@ void ASimPetAnimal::SpawnAnimalWaste()
 	if (SpawnedAnimalWaste)
 	{
 		SpawnedAnimalWaste->OnWasteCleaned.AddDynamic(this, &ASimPetAnimal::HandleWasteCleaned);
+		TrackedWastes.Add(SpawnedAnimalWaste);
 	}
 }
 
@@ -291,6 +313,19 @@ FVector ASimPetAnimal::GetLocationAboveGround() const
 	}
 	
 	return SpawnLocation;
+}
+
+void ASimPetAnimal::ClearWasteBindings()
+{
+	for (ASimPetAnimalWaste *Waste : TrackedWastes)
+	{
+		if (IsValid(Waste))
+		{
+			Waste->OnWasteCleaned.RemoveDynamic(this, &ASimPetAnimal::HandleWasteCleaned);
+		}
+	}
+	
+	TrackedWastes.Empty();
 }
 
 void ASimPetAnimal::CleanAnimal() const
