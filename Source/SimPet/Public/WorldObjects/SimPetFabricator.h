@@ -12,6 +12,7 @@
 class ASimPetAnimal;
 class USimPetPointsTransactionComponent;
 class USimPetUISubsystem;
+class USimPetAnimalSubsystem;
 
 UCLASS()
 class SIMPET_API ASimPetFabricator : public AActor, public ISimPetInteractable
@@ -29,8 +30,14 @@ public:
 	virtual void Interact_Implementation(AActor *InstigatorActor) override;
 	//~ End ISimPetInteractable Interface
 	
-	UFUNCTION(BlueprintCallable, Category = "Fabricator")
+	UFUNCTION(BlueprintCallable, Category = "SimPet|Fabricator")
 	bool AttemptBuyAnimal(ESimPetAnimals AnimalType);
+	
+	UFUNCTION(BlueprintCallable, Category = "SimPet|Fabricator")
+	void MoveAnimalToForest();
+	
+	UFUNCTION(BlueprintCallable, Category = "SimPet|Fabricator")
+	void MoveAnimalToOwner();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
@@ -40,8 +47,14 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|Components", meta = (AllowPrivateAccess = "true"))
 	USimPetPointsTransactionComponent *PointsTransactionComponent;
 	
+	UPROPERTY()
+	USimPetAnimalSubsystem *CachedAnimalSubsystem;
+	
+	UPROPERTY()
 	USimPetUISubsystem *CachedUISubsystem;
 	
-	void BroadcastResultAnimalPurchase(bool bIsSuccess, const FString &Message);
+	void BroadcastResultNotification(bool bIsSuccess, const FString &Message);
+	
+	void CacheAnimalSubsystem();
 	void CacheUISubsystem();
 };

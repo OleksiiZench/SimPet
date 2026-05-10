@@ -18,6 +18,9 @@
 const FText PurchaseSuccessMsg = LOCTEXT("PurchaseSuccess", "Successful purchase of an animal!");
 const FText NoPointsMsg = LOCTEXT("NoPoints", "Failed animal purchase. Not enough points!");
 const FText SpawnErrorMsg = LOCTEXT("SpawnError", "Failed animal purchase. Failed spawn!");
+const FText MoveToForestMsg = LOCTEXT("MoveToForest", "Successful move to Forest!");
+const FText MoveToOwnerMsg = LOCTEXT("MoveToOwner", "Successful move to Owner!");
+const FText UnsuccessfulMoveMsg = LOCTEXT("UnsuccessfulMoveMsg", "Unsuccessful move!");
 
 ASimPetFabricator::ASimPetFabricator()
 {
@@ -29,6 +32,7 @@ void ASimPetFabricator::BeginPlay()
 	Super::BeginPlay();
 	
 	CacheUISubsystem();
+	CacheAnimalSubsystem();
 }
 
 void ASimPetFabricator::Interact_Implementation(AActor *InstigatorActor)
@@ -68,16 +72,14 @@ bool ASimPetFabricator::AttemptBuyAnimal(ESimPetAnimals AnimalType)
 	int32 CurrentAnimalPrice = PointsTransactionComponent->GetAnimalPrice(AnimalType);
 	if (!PointsTransactionComponent->CanAfford(CurrentAnimalPrice))
 	{
-		BroadcastResultAnimalPurchase(false, NoPointsMsg.ToString());
+		BroadcastResultNotification(false, NoPointsMsg.ToString());
 		
 		return false;
 	}
-	
-	USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
 
-	if (!AnimalSubsystem || !AnimalSubsystem->SpawnAnimal(AnimalType))
+	if (!CachedAnimalSubsystem || !CachedAnimalSubsystem->SpawnAnimal(AnimalType))
 	{
-		BroadcastResultAnimalPurchase(false, SpawnErrorMsg.ToString());
+		BroadcastResultNotification(false, SpawnErrorMsg.ToString());
 		
 		return false;
 	}
@@ -85,17 +87,65 @@ bool ASimPetFabricator::AttemptBuyAnimal(ESimPetAnimals AnimalType)
 	PointsTransactionComponent->ConsumePoints(CurrentAnimalPrice);
 	PointsTransactionComponent->RegisterAnimalPurchase();
 
-	BroadcastResultAnimalPurchase(true, PurchaseSuccessMsg.ToString());
+	BroadcastResultNotification(true, PurchaseSuccessMsg.ToString());
 	
 	return true;
 }
 
+void ASimPetFabricator::MoveAnimalToForest()
+{
+	if (CachedAnimalSubsystem == nullptr)
+	{
+		return;
+	}
+	
+	int32 NumberAnimalInOwner = CachedAnimalSubsystem->GetTotalNumberOwnerAnimals();
+	if (NumberAnimalInOwner <= 0)
+	{
+		BroadcastResultNotification(false, UnsuccessfulMoveMsg.ToString());
+		
+		return;
+	}
+
+	CachedAnimalSubsystem->MoveAnimalToForest();
+	
+	BroadcastResultNotification(true, MoveToForestMsg.ToString());
+}
+
+void ASimPetFabricator::MoveAnimalToOwner()
+{
+	if (CachedAnimalSubsystem == nullptr)
+	{
+		return;
+	}
+	
+	int32 NumberAnimalInForest = CachedAnimalSubsystem->GetTotalNumberWildAnimals();
+	if (NumberAnimalInForest <= 0)
+	{
+		BroadcastResultNotification(false, UnsuccessfulMoveMsg.ToString());
+		
+		return;
+	}
+
+	CachedAnimalSubsystem->MoveAnimalToOwner();
+	
+	BroadcastResultNotification(true, MoveToOwnerMsg.ToString());
+}
+
 // ReSharper disable once CppMemberFunctionMayBeConst
-void ASimPetFabricator::BroadcastResultAnimalPurchase(bool bIsSuccess, const FString &Message)
+void ASimPetFabricator::BroadcastResultNotification(bool bIsSuccess, const FString &Message)
 {
 	if (CachedUISubsystem)
 	{
 		CachedUISubsystem->BroadcastNotification(bIsSuccess, Message);
+	}
+}
+
+void ASimPetFabricator::CacheAnimalSubsystem()
+{
+	if (GetWorld())
+	{
+		CachedAnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
 	}
 }
 

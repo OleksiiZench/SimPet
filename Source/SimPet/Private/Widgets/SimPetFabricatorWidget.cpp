@@ -7,7 +7,6 @@
 #include "Input/Reply.h"
 
 #include "WorldObjects/SimPetFabricator.h"
-#include "Subsystems/SimPetAnimalSubsystem.h"
 #include "Components/SimPetPointsTransactionComponent.h"
 #include "SimPetEnumTypes.h"
 #include "Widgets/SimPetHUD.h"
@@ -24,11 +23,6 @@ USimPetFabricatorWidget::USimPetFabricatorWidget(const FObjectInitializer& Objec
 void USimPetFabricatorWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	
-	if (UWorld *World = GetWorld())
-	{
-		AnimalSubsystem = World->GetSubsystem<USimPetAnimalSubsystem>();
-	}
 	
 	CachePlayerState();
 	BindToPointsUpdate();
@@ -100,38 +94,20 @@ void USimPetFabricatorWidget::OnCloseMenu()
 	}
 }
 
-void USimPetFabricatorWidget::MoveAnimalToForest()
+void USimPetFabricatorWidget::OnMoveAnimalToForestClicked()
 {
-	if (AnimalSubsystem == nullptr)
+	if (LinkedFabricator.IsValid())
 	{
-		return;
+		LinkedFabricator->MoveAnimalToForest();
 	}
-	
-	int32 NumberAnimalInOwner = AnimalSubsystem->GetTotalNumberOwnerAnimals();
-	if (NumberAnimalInOwner <= 0)
-	{
-		Debug::Print(TEXT("The owner does not have any animals!"));
-		return;
-	}
-
-	AnimalSubsystem->MoveAnimalToForest();
 }
 
-void USimPetFabricatorWidget::MoveAnimalToOwner()
+void USimPetFabricatorWidget::OnMoveAnimalToOwnerClicked()
 {
-	if (AnimalSubsystem == nullptr)
+	if (LinkedFabricator.IsValid())
 	{
-		return;
+		LinkedFabricator->MoveAnimalToOwner();
 	}
-	
-	int32 NumberAnimalInForest = AnimalSubsystem->GetTotalNumberWildAnimals();
-	if (NumberAnimalInForest <= 0)
-	{
-		Debug::Print(TEXT("There are no animals in the forest!"));
-		return;
-	}
-
-	AnimalSubsystem->MoveAnimalToOwner();
 }
 
 FReply USimPetFabricatorWidget::NativeOnMouseButtonDown(const FGeometry &InGeometry, const FPointerEvent &InMouseEvent)

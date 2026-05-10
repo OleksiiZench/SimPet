@@ -39,10 +39,10 @@ public:
 	void OnCloseMenu();
 	
 	UFUNCTION(BlueprintCallable, Category = "SimPet | Widgets")
-	void MoveAnimalToForest();
+	void OnMoveAnimalToForestClicked();
 	
 	UFUNCTION(BlueprintCallable, Category = "SimPet | Widgets")
-	void MoveAnimalToOwner();
+	void OnMoveAnimalToOwnerClicked();
 	
 protected:
 #pragma region UI Bindings
@@ -58,9 +58,6 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock *PointsText;
 #pragma endregion
-	
-	UPROPERTY()
-	USimPetAnimalSubsystem *AnimalSubsystem;
 	
 	TWeakObjectPtr<ASimPetFabricator> LinkedFabricator;  // Посилання на фабрикатор який відкрив цей UI
 	
