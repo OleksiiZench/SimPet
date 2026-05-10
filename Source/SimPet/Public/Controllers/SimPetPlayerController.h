@@ -33,8 +33,6 @@ public:
 	void TogglePauseMenu();
 	
 private:
-	bool bIsGamePaused = false;
-	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext *DefaultMappingContext;
 	

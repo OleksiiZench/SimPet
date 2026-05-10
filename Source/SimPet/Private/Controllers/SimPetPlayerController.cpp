@@ -69,11 +69,13 @@ void ASimPetPlayerController::Input_Pause(const FInputActionValue &InputActionVa
 
 void ASimPetPlayerController::TogglePauseMenu()
 {	
-	bIsGamePaused = !bIsGamePaused;
-	UGameplayStatics::SetGamePaused(GetWorld(), bIsGamePaused);
+	bool bIsCurrentlyPaused = UGameplayStatics::IsGamePaused(GetWorld());
+	
+	bool bNewPauseState = !bIsCurrentlyPaused;
+	UGameplayStatics::SetGamePaused(GetWorld(), bNewPauseState);
 	
 	// Логіка відображення
-	if (bIsGamePaused)
+	if (bNewPauseState)
 	{
 		if (ASimPetHUD *CurrentHUD = Cast<ASimPetHUD>(GetHUD()))
 			CurrentHUD->SetAllHUDVisibility(false);

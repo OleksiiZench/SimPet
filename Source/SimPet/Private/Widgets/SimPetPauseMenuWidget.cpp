@@ -14,15 +14,20 @@
 
 #include "SimPetDebugHelper.h"
 
-void USimPetPauseMenuWidget::NativeConstruct()
+void USimPetPauseMenuWidget::NativeOnInitialized()
 {
-	Super::NativeConstruct();
+	Super::NativeOnInitialized();
 	
 	CachePlayerController();
 	CacheSaveSubsystem();
 	CachePlayerState();
 	
 	SetupButtonBindings();
+}
+
+void USimPetPauseMenuWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
 	
 	UpdateAssignedText();
 }
@@ -31,7 +36,9 @@ void USimPetPauseMenuWidget::NativeConstruct()
 void USimPetPauseMenuWidget::OnResumeClicked()
 {
 	if (CachedPlayerController)
+	{
 		CachedPlayerController->TogglePauseMenu();
+	}
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
