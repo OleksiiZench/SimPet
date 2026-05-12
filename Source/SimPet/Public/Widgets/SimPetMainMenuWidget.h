@@ -11,18 +11,26 @@ class UButton;
 class UTextBlock;
 class UWidgetSwitcher;
 
-/**
- * 
- */
+enum class EMainMenuTab : uint8
+{
+	MainMenu,
+	GeneralSettings,
+	DifficultySettings,
+	GraphSettings,
+};
+
+
+
+
 UCLASS()
 class SIMPET_API USimPetMainMenuWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
-public:
+protected:
+	virtual void NativeOnInitialized() override;
 	virtual void NativeConstruct() override;
 	
-protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Config")
 	FName GameplayLevelName;
 	
@@ -43,7 +51,17 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_Exit;
 	
-	// 2. SettingsMenu
+	// 2. GeneralSettingsMenu
+	UPROPERTY(meta = (BindWidget))
+	UButton *Btn_DifficultySettings;
+	
+	UPROPERTY(meta = (BindWidget))
+	UButton *Btn_GraphSettings;
+	
+	UPROPERTY(meta = (BindWidget))
+	UButton *Btn_GeneralSettingsBack;
+	
+	// 3. DifficultySettingsMenu
 	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_DifficultyLeft;
 	
@@ -51,13 +69,27 @@ protected:
 	UButton *Btn_DifficultyRight;
 	
 	UPROPERTY(meta = (BindWidget))
-	UButton *Btn_SettingsBack;
+	UTextBlock *Text_Difficulty;
 	
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock *Text_Difficulty;
+	UButton *Btn_DifficultySettingsBack;
+	
+	// 4. GraphSettingsMenu
+	UPROPERTY(meta = (BindWidget))
+	UButton *Btn_GraphLeft;
+	
+	UPROPERTY(meta = (BindWidget))
+	UButton *Btn_GraphRight;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_Graph;
+	
+	UPROPERTY(meta = (BindWidget))
+	UButton *Btn_GraphSettingsBack;
 #pragma endregion
 	
 #pragma region UI Callbacks
+	// 1. MainMenu
 	UFUNCTION()
 	void OnContinueClicked();
 	
@@ -68,23 +100,58 @@ protected:
 	void OnSettingsClicked();
 	
 	UFUNCTION()
-	void OnSettingsBackClicked();
-	
-	UFUNCTION()
 	void OnExitClicked();
 	
+	// 2. GeneralSettingsMenu
+	UFUNCTION()
+	void OnDifficultySettingsClicked();
+	
+	UFUNCTION()
+	void OnGraphSettingsClicked();
+	
+	UFUNCTION()
+	void OnGeneralSettingsBackClicked();
+	
+	// 3. DifficultySettingsMenu
 	UFUNCTION()
 	void OnDifficultyLeftClicked();
 	
 	UFUNCTION()
 	void OnDifficultyRightClicked();
+	
+	UFUNCTION()
+	void OnDifficultyBackClicked();
+	
+	// 4. GraphSettingsMenu
+	UFUNCTION()
+	void OnGraphLeftClicked();
+	
+	UFUNCTION()
+	void OnGraphRightClicked();
+	
+	UFUNCTION()
+	void OnGraphBackClicked();
+	
 #pragma endregion
 	
 private:
 	TArray<FText> DifficultyOptions;
 	int32 CurrentDifficultyIndex;
 	
+	TArray<FText> GraphOptions;
+	int32 CurrentGraphIndex;
+	
+	void SwitchToTab(EMainMenuTab TabToSwitch);
+	
 	void SetupButtonBindings();
+	void SetupMainMenuButtonBindings();
+	void SetupGeneralSettingsButtonBindings();
+	void SetupDifficultySettingsButtonBindings();
+	void SetupGraphSettingsButtonBindings();
+	
 	void InitializeDifficultyOptions();
 	void UpdateDifficultyDisplay();
+	
+	void InitializeGraphOptions();
+	void UpdateGraphDisplay();
 };
