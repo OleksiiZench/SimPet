@@ -7,6 +7,7 @@
 #include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/WidgetSwitcher.h"
+#include "GameFramework/GameUserSettings.h"
 
 #include "SimPetDebugHelper.h"
 
@@ -108,6 +109,8 @@ void USimPetMainMenuWidget::OnGraphRightClicked()
 
 void USimPetMainMenuWidget::OnGraphBackClicked()
 {
+	SetGraphSettings(CurrentGraphIndex);
+	
 	SwitchToTab(EMainMenuTab::GeneralSettings);
 }
 
@@ -212,5 +215,91 @@ void USimPetMainMenuWidget::UpdateGraphDisplay()
 	if (Text_Graph && GraphOptions.IsValidIndex(CurrentGraphIndex))
 	{
 		Text_Graph->SetText(GraphOptions[CurrentGraphIndex]);
+	}
+}
+
+void USimPetMainMenuWidget::SetGraphSettings(int32 GraphIndex)
+{
+	EGraphicsQuality QualityLevel = static_cast<EGraphicsQuality>(GraphIndex);
+	switch (QualityLevel)
+	{
+	case EGraphicsQuality::Low:
+		SetLowGraphSettings();
+		break;
+		
+	case EGraphicsQuality::Medium:
+		SetMediumGraphSettings();
+		break;
+		
+	case EGraphicsQuality::High:
+		SetHighGraphSettings();
+		break;
+		
+	default:
+		Debug::PrintError(TEXT("Invalid graph index"));
+		break;
+	}
+}
+
+// ReSharper disable once CppMemberFunctionMayBeStatic
+void USimPetMainMenuWidget::SetLowGraphSettings()
+{
+	UGameUserSettings *UserSettings = GEngine->GetGameUserSettings();
+	if (UserSettings)
+	{
+		UserSettings->SetViewDistanceQuality(1);
+		UserSettings->SetAntiAliasingQuality(1);
+		UserSettings->SetPostProcessingQuality(0);
+		UserSettings->SetShadowQuality(0);
+		UserSettings->SetGlobalIlluminationQuality(0);
+		UserSettings->SetReflectionQuality(1);
+		UserSettings->SetTextureQuality(1);
+		UserSettings->SetVisualEffectQuality(1);
+		UserSettings->SetFoliageQuality(1);
+		UserSettings->SetShadingQuality(1);
+
+		UserSettings->ApplyNonResolutionSettings();
+	}
+}
+
+// ReSharper disable once CppMemberFunctionMayBeStatic
+void USimPetMainMenuWidget::SetMediumGraphSettings()
+{
+	UGameUserSettings *UserSettings = GEngine->GetGameUserSettings();
+	if (UserSettings)
+	{
+		UserSettings->SetViewDistanceQuality(2);
+		UserSettings->SetAntiAliasingQuality(2);
+		UserSettings->SetPostProcessingQuality(1);
+		UserSettings->SetShadowQuality(1);
+		UserSettings->SetGlobalIlluminationQuality(1);
+		UserSettings->SetReflectionQuality(2);
+		UserSettings->SetTextureQuality(2);
+		UserSettings->SetVisualEffectQuality(2);
+		UserSettings->SetFoliageQuality(2);
+		UserSettings->SetShadingQuality(2);
+
+		UserSettings->ApplyNonResolutionSettings();
+	}
+}
+
+// ReSharper disable once CppMemberFunctionMayBeStatic
+void USimPetMainMenuWidget::SetHighGraphSettings()
+{
+	UGameUserSettings *UserSettings = GEngine->GetGameUserSettings();
+	if (UserSettings)
+	{
+		UserSettings->SetViewDistanceQuality(3);
+		UserSettings->SetAntiAliasingQuality(3);
+		UserSettings->SetPostProcessingQuality(3);
+		UserSettings->SetShadowQuality(3);
+		UserSettings->SetGlobalIlluminationQuality(3);
+		UserSettings->SetReflectionQuality(3);
+		UserSettings->SetTextureQuality(3);
+		UserSettings->SetVisualEffectQuality(3);
+		UserSettings->SetFoliageQuality(3);
+		UserSettings->SetShadingQuality(3);
+
+		UserSettings->ApplyNonResolutionSettings();
 	}
 }

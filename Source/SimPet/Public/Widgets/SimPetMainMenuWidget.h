@@ -16,7 +16,14 @@ enum class EMainMenuTab : uint8
 	MainMenu,
 	GeneralSettings,
 	DifficultySettings,
-	GraphSettings,
+	GraphSettings
+};
+
+enum class EGraphicsQuality : uint8
+{
+	Low,
+	Medium,
+	High
 };
 
 
@@ -154,4 +161,9 @@ private:
 	
 	void InitializeGraphOptions();
 	void UpdateGraphDisplay();
+	
+	void SetGraphSettings(int32 GraphIndex);
+	void SetLowGraphSettings();
+	void SetMediumGraphSettings();
+	void SetHighGraphSettings();
 };

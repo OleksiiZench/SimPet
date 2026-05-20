@@ -17,8 +17,6 @@ void ASimPetMainLevelGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	SetLowSettings();
-	
 	SpawnFeed();
 }
 
@@ -30,24 +28,4 @@ void ASimPetMainLevelGameMode::SpawnFeed()
 		return;
 	
 	ItemSubsystem->SpawnFeedOnRelevantPoints();
-}
-
-void ASimPetMainLevelGameMode::SetLowSettings()
-{
-	UGameUserSettings *UserSettings = GEngine->GetGameUserSettings();
-	if (UserSettings)
-	{
-		UserSettings->SetViewDistanceQuality(1);
-		UserSettings->SetAntiAliasingQuality(1);
-		UserSettings->SetPostProcessingQuality(0);
-		UserSettings->SetShadowQuality(0);
-		UserSettings->SetGlobalIlluminationQuality(0);
-		UserSettings->SetReflectionQuality(1);
-		UserSettings->SetTextureQuality(1);
-		UserSettings->SetVisualEffectQuality(1);
-		UserSettings->SetFoliageQuality(1);
-		UserSettings->SetShadingQuality(1);
-		
-		UserSettings->ApplySettings(true);
-	}
 }
