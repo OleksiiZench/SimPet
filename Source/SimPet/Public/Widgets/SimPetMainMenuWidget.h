@@ -10,6 +10,7 @@
 class UButton;
 class UTextBlock;
 class UWidgetSwitcher;
+class UGameUserSettings;
 
 enum class EMainMenuTab : uint8
 {
@@ -142,11 +143,16 @@ protected:
 #pragma endregion
 	
 private:
+	UPROPERTY()
+	UGameUserSettings *CachedUserSettings;
+	
 	TArray<FText> DifficultyOptions;
 	int32 CurrentDifficultyIndex;
 	
 	TArray<FText> GraphOptions;
 	int32 CurrentGraphIndex;
+	
+	void CacheUserSettings();
 	
 	void SwitchToTab(EMainMenuTab TabToSwitch);
 	
@@ -160,6 +166,7 @@ private:
 	void UpdateDifficultyDisplay();
 	
 	void InitializeGraphOptions();
+	void InitializeGraphIndexFromEngine();
 	void UpdateGraphDisplay();
 	
 	void SetGraphSettings(int32 GraphIndex);

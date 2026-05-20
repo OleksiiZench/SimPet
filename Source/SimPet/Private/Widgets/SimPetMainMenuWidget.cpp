@@ -15,6 +15,8 @@ void USimPetMainMenuWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 	
+	CacheUserSettings();
+	
 	SetupButtonBindings();
 	
 	InitializeDifficultyOptions();
@@ -114,6 +116,11 @@ void USimPetMainMenuWidget::OnGraphBackClicked()
 	SwitchToTab(EMainMenuTab::GeneralSettings);
 }
 
+void USimPetMainMenuWidget::CacheUserSettings()
+{
+	CachedUserSettings = GEngine->GetGameUserSettings();
+}
+
 // ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetMainMenuWidget::SwitchToTab(EMainMenuTab TabToSwitch)
 {
@@ -207,7 +214,20 @@ void USimPetMainMenuWidget::InitializeGraphOptions()
 	GraphOptions.Add(NSLOCTEXT("Settings", "Graph_Medium", "Medium"));
 	GraphOptions.Add(NSLOCTEXT("Settings", "Graph_High", "High"));
 	
+	InitializeGraphIndexFromEngine();
+	
 	UpdateGraphDisplay();
+}
+
+void USimPetMainMenuWidget::InitializeGraphIndexFromEngine()
+{
+	if (CachedUserSettings)
+	{
+		CurrentGraphIndex = CachedUserSettings->GetViewDistanceQuality() - 1;
+		
+		if (CurrentGraphIndex < 0)
+			CurrentGraphIndex = 0;
+	}
 }
 
 void USimPetMainMenuWidget::UpdateGraphDisplay()
@@ -241,65 +261,62 @@ void USimPetMainMenuWidget::SetGraphSettings(int32 GraphIndex)
 	}
 }
 
-// ReSharper disable once CppMemberFunctionMayBeStatic
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetMainMenuWidget::SetLowGraphSettings()
 {
-	UGameUserSettings *UserSettings = GEngine->GetGameUserSettings();
-	if (UserSettings)
+	if (CachedUserSettings)
 	{
-		UserSettings->SetViewDistanceQuality(1);
-		UserSettings->SetAntiAliasingQuality(1);
-		UserSettings->SetPostProcessingQuality(0);
-		UserSettings->SetShadowQuality(0);
-		UserSettings->SetGlobalIlluminationQuality(0);
-		UserSettings->SetReflectionQuality(1);
-		UserSettings->SetTextureQuality(1);
-		UserSettings->SetVisualEffectQuality(1);
-		UserSettings->SetFoliageQuality(1);
-		UserSettings->SetShadingQuality(1);
+		CachedUserSettings->SetViewDistanceQuality(1);
+		CachedUserSettings->SetAntiAliasingQuality(1);
+		CachedUserSettings->SetPostProcessingQuality(0);
+		CachedUserSettings->SetShadowQuality(0);
+		CachedUserSettings->SetGlobalIlluminationQuality(0);
+		CachedUserSettings->SetReflectionQuality(1);
+		CachedUserSettings->SetTextureQuality(1);
+		CachedUserSettings->SetVisualEffectQuality(1);
+		CachedUserSettings->SetFoliageQuality(1);
+		CachedUserSettings->SetShadingQuality(1);
 
-		UserSettings->ApplyNonResolutionSettings();
+		CachedUserSettings->ApplyNonResolutionSettings();
 	}
 }
 
-// ReSharper disable once CppMemberFunctionMayBeStatic
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetMainMenuWidget::SetMediumGraphSettings()
 {
-	UGameUserSettings *UserSettings = GEngine->GetGameUserSettings();
-	if (UserSettings)
+	if (CachedUserSettings)
 	{
-		UserSettings->SetViewDistanceQuality(2);
-		UserSettings->SetAntiAliasingQuality(2);
-		UserSettings->SetPostProcessingQuality(1);
-		UserSettings->SetShadowQuality(1);
-		UserSettings->SetGlobalIlluminationQuality(1);
-		UserSettings->SetReflectionQuality(2);
-		UserSettings->SetTextureQuality(2);
-		UserSettings->SetVisualEffectQuality(2);
-		UserSettings->SetFoliageQuality(2);
-		UserSettings->SetShadingQuality(2);
+		CachedUserSettings->SetViewDistanceQuality(2);
+		CachedUserSettings->SetAntiAliasingQuality(2);
+		CachedUserSettings->SetPostProcessingQuality(1);
+		CachedUserSettings->SetShadowQuality(1);
+		CachedUserSettings->SetGlobalIlluminationQuality(1);
+		CachedUserSettings->SetReflectionQuality(2);
+		CachedUserSettings->SetTextureQuality(2);
+		CachedUserSettings->SetVisualEffectQuality(2);
+		CachedUserSettings->SetFoliageQuality(2);
+		CachedUserSettings->SetShadingQuality(2);
 
-		UserSettings->ApplyNonResolutionSettings();
+		CachedUserSettings->ApplyNonResolutionSettings();
 	}
 }
 
-// ReSharper disable once CppMemberFunctionMayBeStatic
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetMainMenuWidget::SetHighGraphSettings()
 {
-	UGameUserSettings *UserSettings = GEngine->GetGameUserSettings();
-	if (UserSettings)
+	if (CachedUserSettings)
 	{
-		UserSettings->SetViewDistanceQuality(3);
-		UserSettings->SetAntiAliasingQuality(3);
-		UserSettings->SetPostProcessingQuality(3);
-		UserSettings->SetShadowQuality(3);
-		UserSettings->SetGlobalIlluminationQuality(3);
-		UserSettings->SetReflectionQuality(3);
-		UserSettings->SetTextureQuality(3);
-		UserSettings->SetVisualEffectQuality(3);
-		UserSettings->SetFoliageQuality(3);
-		UserSettings->SetShadingQuality(3);
+		CachedUserSettings->SetViewDistanceQuality(3);
+		CachedUserSettings->SetAntiAliasingQuality(3);
+		CachedUserSettings->SetPostProcessingQuality(3);
+		CachedUserSettings->SetShadowQuality(3);
+		CachedUserSettings->SetGlobalIlluminationQuality(3);
+		CachedUserSettings->SetReflectionQuality(3);
+		CachedUserSettings->SetTextureQuality(3);
+		CachedUserSettings->SetVisualEffectQuality(3);
+		CachedUserSettings->SetFoliageQuality(3);
+		CachedUserSettings->SetShadingQuality(3);
 
-		UserSettings->ApplyNonResolutionSettings();
+		CachedUserSettings->ApplyNonResolutionSettings();
 	}
 }
