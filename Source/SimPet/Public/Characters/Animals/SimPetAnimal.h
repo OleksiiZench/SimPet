@@ -16,6 +16,7 @@ class USimPetAnimalNeedsStatusWidget;
 class USimPetNeedsComponent;
 class USimPetAutoHidingWidgetComponent;
 class ASimPetAnimalWaste;
+class USimPetAnimalConfigData;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAnimalDiedSignature, ASimPetAnimal *, DeadAnimal);
 
@@ -101,6 +102,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Needs")
 	TSubclassOf<ASimPetAnimalWaste> WasteClass;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Config")
+	USimPetAnimalConfigData *AnimalConfigAsset;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|UI")
 	USimPetAutoHidingWidgetComponent *StatusWidgetComponent;
 	
@@ -131,6 +135,7 @@ private:
 	UFUNCTION()
 	void HandleWasteCleaned();
 	
+	void SetDifficultyNeeds();
 	void InitializeBaseBody();
 	void SetupComponents();
 	void InitializeAnimalStatusWidget() const;

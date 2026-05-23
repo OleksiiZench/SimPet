@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 
 #include "SimPetEnumTypes.h"
+#include "SimPetTypes/SimPetNeedsConfig.h"
 
 #include "SimPetNeedsComponent.generated.h"
 
@@ -25,8 +26,7 @@ class SIMPET_API USimPetNeedsComponent : public UActorComponent
 public:
 	USimPetNeedsComponent();
 	
-	virtual void BeginPlay() override;
-	
+	void InitializeNeeds(const FSimPetNeedsConfig &InConfig);
 	void DisableNeedsAndBecomeHappy();
 	void EnableNeeds();
 	ESimPetAnimalState GetAnimalState() const;
@@ -53,18 +53,6 @@ public:
 	FOnHappyTickSignature OnHappyTick;
 	
 private:
-	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Config")
-	float SecondsPerGameHour;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Config")
-	float HungryThresholdHours;
-
-	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Config")
-	float DeathThresholdHours;
-
-	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Config")
-	float DirtyThresholdHours;
-	
 	UPROPERTY(VisibleAnywhere, Category = "SimPet|State")
 	bool bNeedsCleaning;
 	
@@ -79,6 +67,8 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "SimPet|State")
 	ESimPetAnimalState AnimalState;
+	
+	FSimPetNeedsConfig CurrentConfig;
 	
 	FTimerHandle NeedsTimerHandle;
 	

@@ -5,22 +5,16 @@
 
 USimPetNeedsComponent::USimPetNeedsComponent()
 {
-	SecondsPerGameHour = 1.0f;
-	
 	bNeedsCleaning = false;
 	bNeedsFeed = false;
 	TimeSinceLastMeal = 0.0f;
 	TimeSinceLastClean = 0.0f;
 	AnimalState = ESimPetAnimalState::Happy;
-
-	HungryThresholdHours = 8.0f;
-	DeathThresholdHours = 24.0f;
-	DirtyThresholdHours = 12.0f;
 }
 
-void USimPetNeedsComponent::BeginPlay()
+void USimPetNeedsComponent::InitializeNeeds(const FSimPetNeedsConfig &InConfig)
 {
-	Super::BeginPlay();
+	CurrentConfig = InConfig;
 	
 	StartNeedsTimer();
 }
@@ -71,7 +65,9 @@ void USimPetNeedsComponent::Wash()
 
 void USimPetNeedsComponent::StartNeedsTimer()
 {
-	GetWorld()->GetTimerManager().SetTimer(NeedsTimerHandle, this, &USimPetNeedsComponent::OnNeedsTick, SecondsPerGameHour, true);
+	StopNeedsTimer();
+	
+	GetWorld()->GetTimerManager().SetTimer(NeedsTimerHandle, this, &USimPetNeedsComponent::OnNeedsTick, CurrentConfig.SecondsPerGameHour, true);
 }
 
 void USimPetNeedsComponent::StopNeedsTimer()
@@ -95,18 +91,18 @@ void USimPetNeedsComponent::OnNeedsTick()
 
 void USimPetNeedsComponent::CheckPhysicalCharacterState()
 {
-	if (TimeSinceLastMeal >= DeathThresholdHours)
+	if (TimeSinceLastMeal >= CurrentConfig.DeathThresholdHours)
 	{
 		Die();
 		return;
 	}
 	
-	if (!bNeedsFeed && TimeSinceLastMeal >= HungryThresholdHours)
+	if (!bNeedsFeed && TimeSinceLastMeal >= CurrentConfig.HungryThresholdHours)
 	{
 		BecomeHungry();
 	}
 	
-	if (!bNeedsCleaning && TimeSinceLastClean >= DirtyThresholdHours)
+	if (!bNeedsCleaning && TimeSinceLastClean >= CurrentConfig.DirtyThresholdHours)
 	{
 		BecomeDirty();
 	}

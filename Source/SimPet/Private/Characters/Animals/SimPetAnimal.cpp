@@ -15,6 +15,7 @@
 #include "Items/SimPetAnimalWaste.h"
 #include "Characters/SimPetPlayer.h"
 #include "AI/SimPetAIController.h"
+#include "DataAsset/SimPetAnimalConfigData.h"
 
 ASimPetAnimal::ASimPetAnimal()
 {
@@ -44,6 +45,8 @@ void ASimPetAnimal::OnConstruction(const FTransform &Transform)
 void ASimPetAnimal::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	SetDifficultyNeeds();
 	
 	InitializeAnimalStatusWidget();
 	
@@ -209,6 +212,32 @@ void ASimPetAnimal::HandleGotDirty()
 void ASimPetAnimal::HandleWasteCleaned()
 {
 	CleanAnimal();
+}
+
+void ASimPetAnimal::SetDifficultyNeeds()
+{
+	if (AnimalConfigAsset && NeedsComponent)
+	{
+		// TODO: Реалізувати діставання складності з SaveSubsystem
+		int32 CurrentDifficultyIndex = 0;
+		
+		FSimPetNeedsConfig SelectedConfig;
+		
+		if (CurrentDifficultyIndex == 1)
+		{
+			SelectedConfig = AnimalConfigAsset->NormalConfig;
+		}
+		else if (CurrentDifficultyIndex == 2)
+		{
+			SelectedConfig = AnimalConfigAsset->HardConfig;
+		}
+		else
+		{
+			SelectedConfig = AnimalConfigAsset->EasyConfig;
+		}
+		
+		NeedsComponent->InitializeNeeds(SelectedConfig);
+	}
 }
 
 void ASimPetAnimal::InitializeBaseBody()
