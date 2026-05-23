@@ -6,4 +6,5 @@
 USimPetSaveGame::USimPetSaveGame()
 {
     MaxPoints = 0;
+    DifficultyIndex = EGameDifficulty::Easy;
 }

@@ -18,7 +18,15 @@ enum class ESimPetAnimals : uint8
 {
     EA_Canary	UMETA(DisplayName = "Canary"),
     EA_Dog		UMETA(DisplayName = "Dog"),
-    EA_Lizard	UMETA(DisplayName = "Lizard"),
+    EA_Lizard	UMETA(DisplayName = "Lizard")
+};
+
+UENUM(BlueprintType)
+enum class EGameDifficulty : uint8
+{
+    Easy     UMETA(DisplayName = "Easy"),
+    Normal   UMETA(DisplayName = "Normal"),
+    Hard     UMETA(DisplayName = "Hard")
 };
 
 UCLASS()

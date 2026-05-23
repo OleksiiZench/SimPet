@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
+#include "SimPetEnumTypes.h"
 
 #include "SimPetSaveGame.generated.h"
 
@@ -18,6 +19,9 @@ class SIMPET_API USimPetSaveGame : public USaveGame
 public:
 	USimPetSaveGame();
 
-	UPROPERTY(VisibleAnywhere, Category = "SimPet | Stats")
+	UPROPERTY(VisibleAnywhere, Category = "SimPet|Stats")
 	int32 MaxPoints;
+	
+	UPROPERTY(VisibleAnywhere, Category = "SimPet|Stats")
+	EGameDifficulty DifficultyIndex;
 };

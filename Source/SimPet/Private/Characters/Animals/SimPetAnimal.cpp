@@ -16,6 +16,7 @@
 #include "Characters/SimPetPlayer.h"
 #include "AI/SimPetAIController.h"
 #include "DataAsset/SimPetAnimalConfigData.h"
+#include "SimPetEnumTypes.h"
 
 ASimPetAnimal::ASimPetAnimal()
 {
@@ -219,15 +220,15 @@ void ASimPetAnimal::SetDifficultyNeeds()
 	if (AnimalConfigAsset && NeedsComponent)
 	{
 		// TODO: Реалізувати діставання складності з SaveSubsystem
-		int32 CurrentDifficultyIndex = 0;
+		EGameDifficulty CurrentDifficulty = EGameDifficulty::Easy;
 		
 		FSimPetNeedsConfig SelectedConfig;
 		
-		if (CurrentDifficultyIndex == 1)
+		if (CurrentDifficulty == EGameDifficulty::Normal)
 		{
 			SelectedConfig = AnimalConfigAsset->NormalConfig;
 		}
-		else if (CurrentDifficultyIndex == 2)
+		else if (CurrentDifficulty == EGameDifficulty::Hard)
 		{
 			SelectedConfig = AnimalConfigAsset->HardConfig;
 		}
