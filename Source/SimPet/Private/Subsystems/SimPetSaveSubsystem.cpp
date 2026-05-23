@@ -11,6 +11,8 @@ void USimPetSaveSubsystem::Initialize(FSubsystemCollectionBase &Collection)
 {
 	Super::Initialize(Collection);
 	
+	CacheSaveGame();
+	
 	LoadMaxPoints();
 }
 
@@ -29,14 +31,23 @@ int32 USimPetSaveSubsystem::GetMaxPoints() const
 	return MaxPoints;
 }
 
-void USimPetSaveSubsystem::LoadMaxPoints()
+void USimPetSaveSubsystem::CacheSaveGame()
 {
 	if (UGameplayStatics::DoesSaveGameExist(SaveSlotName, 0))
 	{
-		if (USimPetSaveGame *LoadedGame = Cast<USimPetSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0)))
-		{
-			MaxPoints = LoadedGame->MaxPoints;
-		}
+		CachedSaveGame = Cast<USimPetSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
+	}
+	else
+	{
+		CachedSaveGame = Cast<USimPetSaveGame>(UGameplayStatics::CreateSaveGameObject(USimPetSaveGame::StaticClass()));
+	}
+}
+
+void USimPetSaveSubsystem::LoadMaxPoints()
+{
+	if (CachedSaveGame)
+	{
+		MaxPoints = CachedSaveGame->MaxPoints;
 	}
 	else
 	{
@@ -46,10 +57,17 @@ void USimPetSaveSubsystem::LoadMaxPoints()
 
 void USimPetSaveSubsystem::SaveMaxPoints() const
 {
-	USimPetSaveGame *SaveGameInstance = Cast<USimPetSaveGame>(UGameplayStatics::CreateSaveGameObject(USimPetSaveGame::StaticClass()));
-	if (SaveGameInstance)
+	if (CachedSaveGame)
 	{
-		SaveGameInstance->MaxPoints = MaxPoints;
-		UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveSlotName, 0);
+		CachedSaveGame->MaxPoints = MaxPoints;
+		UGameplayStatics::SaveGameToSlot(CachedSaveGame, SaveSlotName, 0);
 	}
+}
+
+void USimPetSaveSubsystem::LoadDifficulty()
+{
+}
+
+void USimPetSaveSubsystem::SaveDifficulty() const
+{
 }

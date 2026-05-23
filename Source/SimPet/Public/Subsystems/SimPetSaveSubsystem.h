@@ -7,6 +7,8 @@
 
 #include "SimPetSaveSubsystem.generated.h"
 
+class USimPetSaveGame;
+
 /**
  * 
  */
@@ -22,9 +24,17 @@ public:
 	int32 GetMaxPoints() const;
 	
 private:
+	UPROPERTY()
+	USimPetSaveGame *CachedSaveGame;
+	
 	const FString SaveSlotName = TEXT("SimPet_SaveSlot");
 	int32 MaxPoints;
 	
+	void CacheSaveGame();
+	
 	void LoadMaxPoints();
 	void SaveMaxPoints() const;
+	
+	void LoadDifficulty();
+	void SaveDifficulty() const;
 };
