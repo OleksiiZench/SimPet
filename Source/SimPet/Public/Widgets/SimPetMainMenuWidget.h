@@ -11,6 +11,7 @@ class UButton;
 class UTextBlock;
 class UWidgetSwitcher;
 class UGameUserSettings;
+class USimPetSaveSubsystem;
 
 enum class EMainMenuTab : uint8
 {
@@ -146,6 +147,9 @@ private:
 	UPROPERTY()
 	UGameUserSettings *CachedUserSettings;
 	
+	UPROPERTY()
+	USimPetSaveSubsystem *CachedSaveSubsystem;
+	
 	TArray<FText> DifficultyOptions;
 	int32 CurrentDifficultyIndex;
 	
@@ -153,6 +157,7 @@ private:
 	int32 CurrentGraphIndex;
 	
 	void CacheUserSettings();
+	void CacheSaveSubsystem();
 	
 	void SwitchToTab(EMainMenuTab TabToSwitch);
 	
@@ -163,6 +168,7 @@ private:
 	void SetupGraphSettingsButtonBindings();
 	
 	void InitializeDifficultyOptions();
+	void InitializeDifficultyIndexFromSaveSubsystem();
 	void UpdateDifficultyDisplay();
 	
 	void InitializeGraphOptions();

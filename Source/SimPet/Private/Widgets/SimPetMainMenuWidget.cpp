@@ -18,6 +18,7 @@ void USimPetMainMenuWidget::NativeOnInitialized()
 	Super::NativeOnInitialized();
 	
 	CacheUserSettings();
+	CacheSaveSubsystem();
 	
 	SetupButtonBindings();
 	
@@ -125,6 +126,14 @@ void USimPetMainMenuWidget::CacheUserSettings()
 	CachedUserSettings = GEngine->GetGameUserSettings();
 }
 
+void USimPetMainMenuWidget::CacheSaveSubsystem()
+{
+	if (GetWorld())
+	{
+		CachedSaveSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<USimPetSaveSubsystem>();
+	}
+}
+
 // ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetMainMenuWidget::SwitchToTab(EMainMenuTab TabToSwitch)
 {
@@ -200,7 +209,17 @@ void USimPetMainMenuWidget::InitializeDifficultyOptions()
 	DifficultyOptions.Add(NSLOCTEXT("Settings", "Diff_Normal", "Normal"));
 	DifficultyOptions.Add(NSLOCTEXT("Settings", "Diff_Hard", "Hard"));
 	
+	InitializeDifficultyIndexFromSaveSubsystem();
+	
 	UpdateDifficultyDisplay();
+}
+
+void USimPetMainMenuWidget::InitializeDifficultyIndexFromSaveSubsystem()
+{
+	if (CachedSaveSubsystem)
+	{
+		CurrentDifficultyIndex = static_cast<int32>(CachedSaveSubsystem->GetDifficulty());
+	}
 }
 
 void USimPetMainMenuWidget::UpdateDifficultyDisplay()
@@ -327,11 +346,10 @@ void USimPetMainMenuWidget::SetHighGraphSettings()
 
 void USimPetMainMenuWidget::SaveDifficultySettings()
 {
-	USimPetSaveSubsystem *SaveSubsystem = GetWorld()->GetSubsystem<USimPetSaveSubsystem>();
-	if (SaveSubsystem)
+	if (CachedSaveSubsystem)
 	{
 		EGameDifficulty Difficulty = static_cast<EGameDifficulty>(CurrentDifficultyIndex);
 		
-		SaveSubsystem->SaveDifficulty(Difficulty);
+		CachedSaveSubsystem->SaveDifficulty(Difficulty);
 	}
 }

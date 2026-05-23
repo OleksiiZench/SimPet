@@ -14,6 +14,7 @@ void USimPetSaveSubsystem::Initialize(FSubsystemCollectionBase &Collection)
 	CacheSaveGame();
 	
 	LoadMaxPoints();
+	LoadDifficulty();
 }
 
 void USimPetSaveSubsystem::CheckAndUpdateMaxPoints(int32 InCurrentPoints)
@@ -31,8 +32,15 @@ int32 USimPetSaveSubsystem::GetMaxPoints() const
 	return MaxPoints;
 }
 
-void USimPetSaveSubsystem::SaveDifficulty(EGameDifficulty CurrentDifficulty) const
+EGameDifficulty USimPetSaveSubsystem::GetDifficulty() const
 {
+	return Difficulty;
+}
+
+void USimPetSaveSubsystem::SaveDifficulty(EGameDifficulty CurrentDifficulty)
+{
+	Difficulty = CurrentDifficulty;
+	
 	if (CachedSaveGame)
 	{
 		CachedSaveGame->Difficulty = CurrentDifficulty;
@@ -75,4 +83,12 @@ void USimPetSaveSubsystem::SaveMaxPoints() const
 
 void USimPetSaveSubsystem::LoadDifficulty()
 {
+	if (CachedSaveGame)
+	{
+		Difficulty = CachedSaveGame->Difficulty;
+	}
+	else
+	{
+		Difficulty = EGameDifficulty::Easy;
+	}
 }

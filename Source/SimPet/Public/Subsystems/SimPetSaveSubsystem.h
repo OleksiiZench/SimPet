@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Subsystems/WorldSubsystem.h"
+#include "Subsystems/GameInstanceSubsystem.h"
 #include "SimPetEnumTypes.h"
 
 #include "SimPetSaveSubsystem.generated.h"
@@ -14,7 +14,7 @@ class USimPetSaveGame;
  * 
  */
 UCLASS()
-class SIMPET_API USimPetSaveSubsystem : public UWorldSubsystem
+class SIMPET_API USimPetSaveSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 	
@@ -23,7 +23,8 @@ public:
 	
 	void CheckAndUpdateMaxPoints(int32 InCurrentPoints);
 	int32 GetMaxPoints() const;
-	void SaveDifficulty(EGameDifficulty CurrentDifficulty) const;
+	EGameDifficulty GetDifficulty() const;
+	void SaveDifficulty(EGameDifficulty CurrentDifficulty);
 	
 private:
 	UPROPERTY()
@@ -31,6 +32,7 @@ private:
 	
 	const FString SaveSlotName = TEXT("SimPet_SaveSlot");
 	int32 MaxPoints;
+	EGameDifficulty Difficulty;
 	
 	void CacheSaveGame();
 	

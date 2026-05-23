@@ -70,6 +70,6 @@ void ASimPetPlayerState::CacheSaveSubsystem()
 {
 	if (GetWorld())
 	{
-		CachedSaveSubsystem = GetWorld()->GetSubsystem<USimPetSaveSubsystem>();
+		CachedSaveSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<USimPetSaveSubsystem>();
 	}
 }
