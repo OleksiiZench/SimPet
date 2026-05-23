@@ -23,5 +23,5 @@ public:
 	int32 MaxPoints;
 	
 	UPROPERTY(VisibleAnywhere, Category = "SimPet|Stats")
-	EGameDifficulty DifficultyIndex;
+	EGameDifficulty Difficulty;
 };

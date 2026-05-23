@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/WorldSubsystem.h"
+#include "SimPetEnumTypes.h"
 
 #include "SimPetSaveSubsystem.generated.h"
 
@@ -22,6 +23,7 @@ public:
 	
 	void CheckAndUpdateMaxPoints(int32 InCurrentPoints);
 	int32 GetMaxPoints() const;
+	void SaveDifficulty(EGameDifficulty CurrentDifficulty) const;
 	
 private:
 	UPROPERTY()
@@ -36,5 +38,4 @@ private:
 	void SaveMaxPoints() const;
 	
 	void LoadDifficulty();
-	void SaveDifficulty() const;
 };

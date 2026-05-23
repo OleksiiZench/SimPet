@@ -169,8 +169,9 @@ private:
 	void InitializeGraphIndexFromEngine();
 	void UpdateGraphDisplay();
 	
-	void SetGraphSettings(int32 GraphIndex);
+	void SetGraphSettings();
 	void SetLowGraphSettings();
 	void SetMediumGraphSettings();
 	void SetHighGraphSettings();
+	void SaveDifficultySettings();
 };

@@ -8,6 +8,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/WidgetSwitcher.h"
 #include "GameFramework/GameUserSettings.h"
+#include "SimPetEnumTypes.h"
+#include "Subsystems/SimPetSaveSubsystem.h"
 
 #include "SimPetDebugHelper.h"
 
@@ -88,6 +90,8 @@ void USimPetMainMenuWidget::OnDifficultyRightClicked()
 
 void USimPetMainMenuWidget::OnDifficultyBackClicked()
 {
+	SaveDifficultySettings();
+	
 	SwitchToTab(EMainMenuTab::GeneralSettings);
 }
 
@@ -111,7 +115,7 @@ void USimPetMainMenuWidget::OnGraphRightClicked()
 
 void USimPetMainMenuWidget::OnGraphBackClicked()
 {
-	SetGraphSettings(CurrentGraphIndex);
+	SetGraphSettings();
 	
 	SwitchToTab(EMainMenuTab::GeneralSettings);
 }
@@ -238,9 +242,9 @@ void USimPetMainMenuWidget::UpdateGraphDisplay()
 	}
 }
 
-void USimPetMainMenuWidget::SetGraphSettings(int32 GraphIndex)
+void USimPetMainMenuWidget::SetGraphSettings()
 {
-	EGraphicsQuality QualityLevel = static_cast<EGraphicsQuality>(GraphIndex);
+	EGraphicsQuality QualityLevel = static_cast<EGraphicsQuality>(CurrentGraphIndex);
 	switch (QualityLevel)
 	{
 	case EGraphicsQuality::Low:
@@ -318,5 +322,16 @@ void USimPetMainMenuWidget::SetHighGraphSettings()
 		CachedUserSettings->SetShadingQuality(3);
 
 		CachedUserSettings->ApplyNonResolutionSettings();
+	}
+}
+
+void USimPetMainMenuWidget::SaveDifficultySettings()
+{
+	USimPetSaveSubsystem *SaveSubsystem = GetWorld()->GetSubsystem<USimPetSaveSubsystem>();
+	if (SaveSubsystem)
+	{
+		EGameDifficulty Difficulty = static_cast<EGameDifficulty>(CurrentDifficultyIndex);
+		
+		SaveSubsystem->SaveDifficulty(Difficulty);
 	}
 }

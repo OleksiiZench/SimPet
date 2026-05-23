@@ -31,6 +31,15 @@ int32 USimPetSaveSubsystem::GetMaxPoints() const
 	return MaxPoints;
 }
 
+void USimPetSaveSubsystem::SaveDifficulty(EGameDifficulty CurrentDifficulty) const
+{
+	if (CachedSaveGame)
+	{
+		CachedSaveGame->Difficulty = CurrentDifficulty;
+		UGameplayStatics::SaveGameToSlot(CachedSaveGame, SaveSlotName, 0);
+	}
+}
+
 void USimPetSaveSubsystem::CacheSaveGame()
 {
 	if (UGameplayStatics::DoesSaveGameExist(SaveSlotName, 0))
@@ -65,9 +74,5 @@ void USimPetSaveSubsystem::SaveMaxPoints() const
 }
 
 void USimPetSaveSubsystem::LoadDifficulty()
-{
-}
-
-void USimPetSaveSubsystem::SaveDifficulty() const
 {
 }
