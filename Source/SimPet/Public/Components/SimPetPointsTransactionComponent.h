@@ -38,5 +38,8 @@ private:
 	int32 PointsPerHappyTick;
 	int32 PointsPerPenalty;
 	
+	void InitializeEconomySettings();
 	void CachePlayerState();
+	
+	EGameDifficulty GetDifficulty() const;
 };

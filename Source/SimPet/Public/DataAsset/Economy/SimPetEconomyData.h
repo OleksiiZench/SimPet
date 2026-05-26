@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 
-#include "SimPetEnumTypes.h"
 #include "SimPetTypes/SimPetAnimalPriceConfig.h"
 
 #include "SimPetEconomyData.generated.h"

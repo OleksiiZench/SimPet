@@ -12,8 +12,7 @@ void USimPetPointsTransactionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	PointsPerHappyTick = EconomyData->HappyTickReward;
-	PointsPerPenalty = EconomyData->PenaltyPoints;
+	InitializeEconomySettings();
 	
 	CachePlayerState();
 }
@@ -52,31 +51,11 @@ int32 USimPetPointsTransactionComponent::GetAnimalPrice(ESimPetAnimals AnimalTyp
 	
 	if (EconomyData && EconomyData->AnimalPrices.Contains(AnimalType))
 	{
-		FSimPetAnimalPriceConfig AnimalPrices = EconomyData->AnimalPrices[AnimalType];
+		const FSimPetAnimalPriceConfig &AnimalPrices = EconomyData->AnimalPrices[AnimalType];
 		
-		EGameDifficulty GameDifficulty = EGameDifficulty::Easy;
+		EGameDifficulty GameDifficulty = GetDifficulty();
 		
-		if (UWorld *World = GetWorld())
-		{
-			if (UGameInstance *GI = World->GetGameInstance())
-			{
-				USimPetSaveSubsystem *SaveSubsystem = GI->GetSubsystem<USimPetSaveSubsystem>();
-				if (SaveSubsystem)
-					GameDifficulty = SaveSubsystem->GetDifficulty();
-			}
-		}
-		
-		switch (GameDifficulty)
-		{
-			case EGameDifficulty::Normal: 
-				return AnimalPrices.NormalPrice;
-			
-			case EGameDifficulty::Hard: 
-				return AnimalPrices.HardPrice;
-			
-			default: 
-				return AnimalPrices.EasyPrice;
-		}
+		return AnimalPrices.PriceByDifficulty.FindRef(GameDifficulty);
 	}
 	
 	Debug::PrintError(TEXT("Animal Price not found in EconomyData!"));	
@@ -91,6 +70,19 @@ bool USimPetPointsTransactionComponent::CanAfford(int32 Cost) const
 	return false;
 }
 
+void USimPetPointsTransactionComponent::InitializeEconomySettings()
+{
+	if (EconomyData)
+	{
+		PointsPerHappyTick = EconomyData->HappyTickReward;
+		PointsPerPenalty = EconomyData->PenaltyPoints;
+	}
+	else
+	{
+		Debug::PrintError(TEXT("EconomyData is nullptr"));
+	}
+}
+
 void USimPetPointsTransactionComponent::CachePlayerState()
 {
 	UWorld* World = GetWorld();
@@ -102,4 +94,19 @@ void USimPetPointsTransactionComponent::CachePlayerState()
 		return;
 	
 	PlayerState = PC->GetPlayerState<ASimPetPlayerState>();
+}
+
+EGameDifficulty USimPetPointsTransactionComponent::GetDifficulty() const
+{
+	if (UWorld *World = GetWorld())
+	{
+		if (UGameInstance *GI = World->GetGameInstance())
+		{
+			USimPetSaveSubsystem *SaveSubsystem = GI->GetSubsystem<USimPetSaveSubsystem>();
+			if (SaveSubsystem)
+				return SaveSubsystem->GetDifficulty();
+		}
+	}
+	
+	return EGameDifficulty::Easy;
 }
