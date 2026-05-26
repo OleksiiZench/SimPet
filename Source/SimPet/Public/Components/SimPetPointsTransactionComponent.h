@@ -33,13 +33,16 @@ public:
 	
 private:
 	UPROPERTY()
-	ASimPetPlayerState *PlayerState;
+	ASimPetPlayerState *CachedPlayerState;
+	
+	UPROPERTY()
+	EGameDifficulty CachedGameDifficulty;
 	
 	int32 PointsPerHappyTick;
 	int32 PointsPerPenalty;
 	
-	void InitializeEconomySettings();
 	void CachePlayerState();
+	void CacheGameDifficulty();
 	
-	EGameDifficulty GetDifficulty() const;
+	void InitializeEconomySettings();
 };

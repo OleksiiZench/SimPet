@@ -12,50 +12,50 @@ void USimPetPointsTransactionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	InitializeEconomySettings();
-	
 	CachePlayerState();
+	CacheGameDifficulty();
+	
+	InitializeEconomySettings();
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetPointsTransactionComponent::RegisterAnimalPurchase()
 {
-	PlayerState->MarkFirstAnimalBought();
+	if (CachedPlayerState)
+		CachedPlayerState->MarkFirstAnimalBought();
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetPointsTransactionComponent::ConsumePoints(int32 Cost)
 {
-	if (PlayerState)
-		PlayerState->SpendPoints(Cost);
+	if (CachedPlayerState)
+		CachedPlayerState->SpendPoints(Cost);
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetPointsTransactionComponent::GeneratePassivePoints()
 {
-	if (PlayerState)
-		PlayerState->AddPoints(PointsPerHappyTick);
+	if (CachedPlayerState)
+		CachedPlayerState->AddPoints(PointsPerHappyTick);
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetPointsTransactionComponent::GeneratePenaltyPoints()
 {
-	if (PlayerState)
-		PlayerState->ApplyPenalty(PointsPerPenalty);
+	if (CachedPlayerState)
+		CachedPlayerState->ApplyPenalty(PointsPerPenalty);
 }
 
 int32 USimPetPointsTransactionComponent::GetAnimalPrice(ESimPetAnimals AnimalType) const
 {
-	if (!PlayerState->HasBoughtFirstAnimal())
+	if (!CachedPlayerState || !CachedPlayerState->HasBoughtFirstAnimal())
 		return 0;
 	
 	if (EconomyData && EconomyData->AnimalPrices.Contains(AnimalType))
 	{
 		const FSimPetAnimalPriceConfig &AnimalPrices = EconomyData->AnimalPrices[AnimalType];
 		
-		EGameDifficulty GameDifficulty = GetDifficulty();
-		
-		return AnimalPrices.PriceByDifficulty.FindRef(GameDifficulty);
+		return AnimalPrices.PriceByDifficulty.FindRef(CachedGameDifficulty);
 	}
 	
 	Debug::PrintError(TEXT("Animal Price not found in EconomyData!"));	
@@ -64,8 +64,8 @@ int32 USimPetPointsTransactionComponent::GetAnimalPrice(ESimPetAnimals AnimalTyp
 
 bool USimPetPointsTransactionComponent::CanAfford(int32 Cost) const
 {
-	if (PlayerState)
-		return PlayerState->HasRequiredPoints(Cost);
+	if (CachedPlayerState)
+		return CachedPlayerState->HasRequiredPoints(Cost);
 	
 	return false;
 }
@@ -74,10 +74,8 @@ void USimPetPointsTransactionComponent::InitializeEconomySettings()
 {
 	if (EconomyData)
 	{
-		EGameDifficulty GameDifficulty = GetDifficulty();
-		
-		PointsPerHappyTick = EconomyData->HappyTickReward.FindRef(GameDifficulty);
-		PointsPerPenalty = EconomyData->PenaltyPoints.FindRef(GameDifficulty);
+		PointsPerHappyTick = EconomyData->HappyTickReward.FindRef(CachedGameDifficulty);
+		PointsPerPenalty = EconomyData->PenaltyPoints.FindRef(CachedGameDifficulty);
 	}
 	else
 	{
@@ -95,20 +93,20 @@ void USimPetPointsTransactionComponent::CachePlayerState()
 	if (!PC)
 		return;
 	
-	PlayerState = PC->GetPlayerState<ASimPetPlayerState>();
+	CachedPlayerState = PC->GetPlayerState<ASimPetPlayerState>();
 }
 
-EGameDifficulty USimPetPointsTransactionComponent::GetDifficulty() const
+void USimPetPointsTransactionComponent::CacheGameDifficulty()
 {
+	CachedGameDifficulty = EGameDifficulty::Easy;
+	
 	if (UWorld *World = GetWorld())
 	{
 		if (UGameInstance *GI = World->GetGameInstance())
 		{
 			USimPetSaveSubsystem *SaveSubsystem = GI->GetSubsystem<USimPetSaveSubsystem>();
 			if (SaveSubsystem)
-				return SaveSubsystem->GetDifficulty();
+				CachedGameDifficulty = SaveSubsystem->GetDifficulty();
 		}
 	}
-	
-	return EGameDifficulty::Easy;
 }
