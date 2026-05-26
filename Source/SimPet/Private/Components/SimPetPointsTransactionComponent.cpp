@@ -74,8 +74,10 @@ void USimPetPointsTransactionComponent::InitializeEconomySettings()
 {
 	if (EconomyData)
 	{
-		PointsPerHappyTick = EconomyData->HappyTickReward;
-		PointsPerPenalty = EconomyData->PenaltyPoints;
+		EGameDifficulty GameDifficulty = GetDifficulty();
+		
+		PointsPerHappyTick = EconomyData->HappyTickReward.FindRef(GameDifficulty);
+		PointsPerPenalty = EconomyData->PenaltyPoints.FindRef(GameDifficulty);
 	}
 	else
 	{

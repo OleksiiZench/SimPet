@@ -22,8 +22,8 @@ public:
 	TMap<ESimPetAnimals, FSimPetAnimalPriceConfig> AnimalPrices;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SimPet | Economy")
-	int32 HappyTickReward;
+	TMap<EGameDifficulty, int32> HappyTickReward;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SimPet | Economy")
-	int32 PenaltyPoints;
+	TMap<EGameDifficulty, int32> PenaltyPoints;
 };
