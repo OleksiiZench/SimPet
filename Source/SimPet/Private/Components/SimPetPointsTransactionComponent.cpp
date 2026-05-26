@@ -4,6 +4,7 @@
 #include "Components/SimPetPointsTransactionComponent.h"
 
 #include "Core/SimPetPlayerState.h"
+#include "Subsystems/SimPetSaveSubsystem.h"
 
 #include "SimPetDebugHelper.h"
 
@@ -51,7 +52,31 @@ int32 USimPetPointsTransactionComponent::GetAnimalPrice(ESimPetAnimals AnimalTyp
 	
 	if (EconomyData && EconomyData->AnimalPrices.Contains(AnimalType))
 	{
-		return EconomyData->AnimalPrices[AnimalType];
+		FSimPetAnimalPriceConfig AnimalPrices = EconomyData->AnimalPrices[AnimalType];
+		
+		EGameDifficulty GameDifficulty = EGameDifficulty::Easy;
+		
+		if (UWorld *World = GetWorld())
+		{
+			if (UGameInstance *GI = World->GetGameInstance())
+			{
+				USimPetSaveSubsystem *SaveSubsystem = GI->GetSubsystem<USimPetSaveSubsystem>();
+				if (SaveSubsystem)
+					GameDifficulty = SaveSubsystem->GetDifficulty();
+			}
+		}
+		
+		switch (GameDifficulty)
+		{
+			case EGameDifficulty::Normal: 
+				return AnimalPrices.NormalPrice;
+			
+			case EGameDifficulty::Hard: 
+				return AnimalPrices.HardPrice;
+			
+			default: 
+				return AnimalPrices.EasyPrice;
+		}
 	}
 	
 	Debug::PrintError(TEXT("Animal Price not found in EconomyData!"));	

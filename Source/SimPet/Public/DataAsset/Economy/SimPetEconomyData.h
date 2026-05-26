@@ -6,6 +6,7 @@
 #include "Engine/DataAsset.h"
 
 #include "SimPetEnumTypes.h"
+#include "SimPetTypes/SimPetAnimalPriceConfig.h"
 
 #include "SimPetEconomyData.generated.h"
 
@@ -19,7 +20,7 @@ class SIMPET_API USimPetEconomyData : public UPrimaryDataAsset
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SimPet | Economy")
-	TMap<ESimPetAnimals, int32> AnimalPrices;
+	TMap<ESimPetAnimals, FSimPetAnimalPriceConfig> AnimalPrices;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SimPet | Economy")
 	int32 HappyTickReward;
