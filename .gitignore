@@ -169,3 +169,7 @@ Backup*/
 .vscode/
 .ignore
 *SimPet.code-workspace
+
+# Local developer scripts
+run_editor.sh
+gen_files.sh
