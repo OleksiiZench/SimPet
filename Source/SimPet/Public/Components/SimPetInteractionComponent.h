@@ -18,10 +18,15 @@ class SIMPET_API USimPetInteractionComponent : public UActorComponent
 public:
 	USimPetInteractionComponent();
 	
+	UFUNCTION(BlueprintCallable)
+	ASimPetItem *GetTakenItem() const;
+	
+	UFUNCTION(BlueprintCallable)
+	void TakeOrDropOrSwapItem(AActor *Actor);
+	
 	AActor *DoInteractionTrace();
 	
 	bool TryUseEquippedItemOn(AActor *TargetActor);
-	void TakeOrDropOrSwapItem(AActor *Actor);
 	void SetHoldPoint(USceneComponent *InHoldPoint);
 	
 private:

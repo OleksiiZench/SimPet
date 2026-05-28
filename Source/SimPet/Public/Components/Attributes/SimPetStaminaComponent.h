@@ -23,11 +23,14 @@ public:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 	
+	UFUNCTION(BlueprintPure)
+	float GetCurrentStamina() const;
+	
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentStamina(float NewStamina);
+	
 	void SetSprint(bool bIsSprint);
 	
-	/**
-	 * 
-	 */
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnStaminaChanged OnStaminaChanged;
 	
@@ -60,6 +63,7 @@ private:
 	bool bIsSprinting = false;
 	
 	void UpdateStamina(float DeltaTime);
+	void HandleStaminaChange(float OldStamina) const;
 	bool IsMovingHorizontally() const;
 	bool IsMovingBackward() const;
 	

@@ -54,6 +54,20 @@ void USimPetStaminaComponent::SetSprint(bool bIsSprint)
 	}
 }
 
+float USimPetStaminaComponent::GetCurrentStamina() const
+{
+	return CurrentStamina;
+}
+
+void USimPetStaminaComponent::SetCurrentStamina(float NewStamina)
+{
+	float OldStamina = CurrentStamina;
+	
+	CurrentStamina = FMath::Clamp(NewStamina, 0.0f, MaxStamina);
+	
+	HandleStaminaChange(OldStamina);
+}
+
 void USimPetStaminaComponent::UpdateStamina(float DeltaTime)
 {
 	if (!CharacterMovementComp)
@@ -85,13 +99,18 @@ void USimPetStaminaComponent::UpdateStamina(float DeltaTime)
 		CurrentStamina += StaminaRegenRate * DeltaTime;
 	}
 	
+	HandleStaminaChange(OldStamina);
+}
+
+void USimPetStaminaComponent::HandleStaminaChange(float OldStamina) const
+{
 	if (!FMath::IsNearlyEqual(OldStamina, CurrentStamina))
 	{
 		float StaminaPercent = FMath::Clamp(CurrentStamina / MaxStamina, 0.0f, 1.0f);
 		
 		if (OnStaminaChanged.IsBound())
 			OnStaminaChanged.Broadcast(StaminaPercent);
-	}
+	}	
 }
 
 bool USimPetStaminaComponent::IsMovingHorizontally() const

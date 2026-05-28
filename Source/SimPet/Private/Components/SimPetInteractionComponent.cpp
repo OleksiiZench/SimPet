@@ -16,6 +16,36 @@ USimPetInteractionComponent::USimPetInteractionComponent()
 	InteractionTraceChanel = TraceTypeQuery2;
 }
 
+ASimPetItem * USimPetInteractionComponent::GetTakenItem() const
+{
+	if (CachedTakenItem)
+		return CachedTakenItem;
+	
+	return nullptr;
+}
+
+void USimPetInteractionComponent::TakeOrDropOrSwapItem(AActor *Actor)
+{
+	ASimPetItem *Item = Cast<ASimPetItem>(Actor);
+	
+	if (!Item)
+		return;
+	
+	if (IsValid(CachedTakenItem) && CachedTakenItem == Item)
+	{
+		DropItem(Item);
+	}
+	else if (!IsValid(CachedTakenItem))
+	{
+		TakeItem(Item);
+	}
+	else
+	{
+		DropItem(CachedTakenItem);
+		TakeItem(Item);
+	}
+}
+
 // ReSharper disable once CppMemberFunctionMayBeConst
 AActor *USimPetInteractionComponent::DoInteractionTrace()
 {
@@ -73,28 +103,6 @@ bool USimPetInteractionComponent::TryUseEquippedItemOn(AActor *TargetActor)
 	}
 	
 	return bWasUsed;
-}
-
-void USimPetInteractionComponent::TakeOrDropOrSwapItem(AActor *Actor)
-{
-	ASimPetItem *Item = Cast<ASimPetItem>(Actor);
-	
-	if (!Item)
-		return;
-	
-	if (IsValid(CachedTakenItem) && CachedTakenItem == Item)
-	{
-		DropItem(Item);
-	}
-	else if (!IsValid(CachedTakenItem))
-	{
-		TakeItem(Item);
-	}
-	else
-	{
-		DropItem(CachedTakenItem);
-		TakeItem(Item);
-	}
 }
 
 void USimPetInteractionComponent::SetHoldPoint(USceneComponent *InHoldPoint)
