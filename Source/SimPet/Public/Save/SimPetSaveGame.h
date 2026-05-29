@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
 
+#include "Save/Structures/SimPetPlayerSaveData.h"
+
 #include "SimPetSaveGame.generated.h"
 
 /**
@@ -15,4 +17,6 @@ class SIMPET_API USimPetSaveGame : public USaveGame
 {
 	GENERATED_BODY()
 
+public:
+	FSimPetPlayerSaveData PlayerSaveData;
 };
