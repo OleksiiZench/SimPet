@@ -5,7 +5,7 @@
 
 #include "Kismet/GameplayStatics.h"
 
-#include "Core/SimPetSaveGame.h"
+#include "Save/SimPetGlobalSave.h"
 #include "Subsystems/SimPetUISubsystem.h"
 
 void USimPetSaveSubsystem::Initialize(FSubsystemCollectionBase &Collection)
@@ -59,15 +59,15 @@ void USimPetSaveSubsystem::CacheSaveGame()
 {
 	if (UGameplayStatics::DoesSaveGameExist(SaveSlotName, 0))
 	{
-		CachedSaveGame = Cast<USimPetSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
+		CachedSaveGame = Cast<USimPetGlobalSave>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
 	}
 	else
 	{
-		CachedSaveGame = Cast<USimPetSaveGame>(UGameplayStatics::CreateSaveGameObject(USimPetSaveGame::StaticClass()));
+		CachedSaveGame = Cast<USimPetGlobalSave>(UGameplayStatics::CreateSaveGameObject(USimPetGlobalSave::StaticClass()));
 	}
 }
 
-USimPetUISubsystem *USimPetSaveSubsystem::GetUISubsystem()
+USimPetUISubsystem *USimPetSaveSubsystem::GetUISubsystem() const
 {
 	if (GetWorld())
 	{

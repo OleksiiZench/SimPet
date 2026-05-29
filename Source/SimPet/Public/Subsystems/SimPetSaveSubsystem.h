@@ -9,7 +9,7 @@
 
 #include "SimPetSaveSubsystem.generated.h"
 
-class USimPetSaveGame;
+class USimPetGlobalSave;
 class USimPetUISubsystem;
 
 /**
@@ -32,14 +32,14 @@ public:
 	
 private:
 	UPROPERTY()
-	USimPetSaveGame *CachedSaveGame;
+	USimPetGlobalSave *CachedSaveGame;
 	
 	const FString SaveSlotName = TEXT("SimPet_SaveSlot");
 	int32 MaxPoints;
 	EGameDifficulty Difficulty;
 	
 	void CacheSaveGame();
-	USimPetUISubsystem *GetUISubsystem();
+	USimPetUISubsystem *GetUISubsystem() const;
 	
 	void LoadMaxPoints();
 	void SaveMaxPoints() const;

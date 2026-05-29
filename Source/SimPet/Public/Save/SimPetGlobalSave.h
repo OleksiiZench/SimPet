@@ -6,18 +6,18 @@
 #include "GameFramework/SaveGame.h"
 #include "SimPetEnumTypes.h"
 
-#include "SimPetSaveGame.generated.h"
+#include "SimPetGlobalSave.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SIMPET_API USimPetSaveGame : public USaveGame
+class SIMPET_API USimPetGlobalSave : public USaveGame
 {
 	GENERATED_BODY()
-	
+		
 public:
-	USimPetSaveGame();
+	USimPetGlobalSave();
 
 	UPROPERTY(VisibleAnywhere, Category = "SimPet|Stats")
 	int32 MaxPoints;
