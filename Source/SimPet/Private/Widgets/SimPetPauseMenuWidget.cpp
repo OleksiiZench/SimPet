@@ -50,7 +50,14 @@ void USimPetPauseMenuWidget::OnToMainMenuClicked()
 
 void USimPetPauseMenuWidget::OnSaveGameClicked()
 {
-	Debug::Print(TEXT("OnSaveGameClicked"));
+	if (GetWorld())
+	{
+		USimPetSaveSubsystem *SaveSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<USimPetSaveSubsystem>();
+		if (SaveSubsystem)
+		{
+			SaveSubsystem->SaveGame();
+		}
+	}
 }
 
 void USimPetPauseMenuWidget::SetupButtonBindings()

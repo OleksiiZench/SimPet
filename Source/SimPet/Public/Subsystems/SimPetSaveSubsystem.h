@@ -4,11 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+
 #include "SimPetEnumTypes.h"
 
 #include "SimPetSaveSubsystem.generated.h"
 
 class USimPetSaveGame;
+class USimPetUISubsystem;
 
 /**
  * 
@@ -26,6 +28,8 @@ public:
 	EGameDifficulty GetDifficulty() const;
 	void SaveDifficulty(EGameDifficulty CurrentDifficulty);
 	
+	void SaveGame();
+	
 private:
 	UPROPERTY()
 	USimPetSaveGame *CachedSaveGame;
@@ -35,6 +39,7 @@ private:
 	EGameDifficulty Difficulty;
 	
 	void CacheSaveGame();
+	USimPetUISubsystem *GetUISubsystem();
 	
 	void LoadMaxPoints();
 	void SaveMaxPoints() const;

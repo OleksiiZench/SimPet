@@ -14,6 +14,7 @@
 #include "Widgets/SimPetPauseMenuWidget.h"
 
 #include "SimPetDebugHelper.h"
+#include "Subsystems/SimPetSaveSubsystem.h"
 
 void ASimPetPlayerController::BeginPlay()
 {
@@ -114,5 +115,12 @@ void ASimPetPlayerController::Input_Pause(const FInputActionValue &InputActionVa
 
 void ASimPetPlayerController::Input_SaveGame(const FInputActionValue &InputActionValue)
 {
-	Debug::Print(TEXT("Input_SaveGame"));
+	if (GetWorld())
+	{
+		USimPetSaveSubsystem *SaveSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<USimPetSaveSubsystem>();
+		if (SaveSubsystem)
+		{
+			SaveSubsystem->SaveGame();
+		}
+	}
 }

@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "Core/SimPetSaveGame.h"
+#include "Subsystems/SimPetUISubsystem.h"
 
 void USimPetSaveSubsystem::Initialize(FSubsystemCollectionBase &Collection)
 {
@@ -48,6 +49,12 @@ void USimPetSaveSubsystem::SaveDifficulty(EGameDifficulty CurrentDifficulty)
 	}
 }
 
+void USimPetSaveSubsystem::SaveGame()
+{
+	if (USimPetUISubsystem *UISubsystem= GetUISubsystem())
+		UISubsystem->BroadcastNotification(true, TEXT("Successful save!"));
+}
+
 void USimPetSaveSubsystem::CacheSaveGame()
 {
 	if (UGameplayStatics::DoesSaveGameExist(SaveSlotName, 0))
@@ -58,6 +65,16 @@ void USimPetSaveSubsystem::CacheSaveGame()
 	{
 		CachedSaveGame = Cast<USimPetSaveGame>(UGameplayStatics::CreateSaveGameObject(USimPetSaveGame::StaticClass()));
 	}
+}
+
+USimPetUISubsystem *USimPetSaveSubsystem::GetUISubsystem()
+{
+	if (GetWorld())
+	{
+		return GetWorld()->GetSubsystem<USimPetUISubsystem>();
+	}
+	
+	return nullptr;
 }
 
 void USimPetSaveSubsystem::LoadMaxPoints()
