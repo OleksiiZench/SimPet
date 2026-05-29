@@ -48,6 +48,11 @@ void USimPetPauseMenuWidget::OnToMainMenuClicked()
 	UGameplayStatics::OpenLevel(this, MainMenuLevelName);
 }
 
+void USimPetPauseMenuWidget::OnSaveGameClicked()
+{
+	Debug::Print(TEXT("OnSaveGameClicked"));
+}
+
 void USimPetPauseMenuWidget::SetupButtonBindings()
 {
 	if (Btn_Resume)
@@ -55,6 +60,9 @@ void USimPetPauseMenuWidget::SetupButtonBindings()
 	
 	if (Btn_ToMainMenu)
 		Btn_ToMainMenu->OnClicked.AddDynamic(this, &USimPetPauseMenuWidget::OnToMainMenuClicked);
+	
+	if (Btn_SaveGame)
+		Btn_SaveGame->OnClicked.AddDynamic(this, &USimPetPauseMenuWidget::OnSaveGameClicked);
 }
 
 void USimPetPauseMenuWidget::UpdateAssignedText()

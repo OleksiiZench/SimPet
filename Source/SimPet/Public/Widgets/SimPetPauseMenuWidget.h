@@ -34,6 +34,9 @@ protected:
 	UButton *Btn_Resume;
 	
 	UPROPERTY(meta = (BindWidget))
+	UButton *Btn_SaveGame;
+	
+	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_ToMainMenu;
 	
 	UPROPERTY(meta = (BindWidget))
@@ -49,6 +52,9 @@ protected:
 	
 	UFUNCTION()
 	void OnToMainMenuClicked();
+	
+	UFUNCTION()
+	void OnSaveGameClicked();
 #pragma endregion
 	
 private:
