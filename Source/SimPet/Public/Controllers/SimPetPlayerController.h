@@ -33,17 +33,20 @@ public:
 	void TogglePauseMenu();
 	
 private:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
-	UInputMappingContext *DefaultMappingContext;
-	
+#pragma region Inputs
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	USimPetInputConfig *InputConfigDataAsset;
+	
+	void Input_Pause(const FInputActionValue &InputActionValue);
+	void Input_SaveGame(const FInputActionValue &InputActionValue);
+	
+#pragma endregion
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	UInputMappingContext *DefaultMappingContext;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<USimPetPauseMenuWidget> PauseMenuWidgetClass;
 	
 	UPROPERTY()
 	USimPetPauseMenuWidget *CurrentPauseMenuWidget;
-	
-	void Input_Pause(const FInputActionValue &InputActionValue);
 };

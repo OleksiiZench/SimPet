@@ -13,6 +13,8 @@
 #include "Widgets/SimPetHUD.h"
 #include "Widgets/SimPetPauseMenuWidget.h"
 
+#include "SimPetDebugHelper.h"
+
 void ASimPetPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -37,6 +39,10 @@ void ASimPetPlayerController::SetupInputComponent()
 		const UInputAction *PauseAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_Pause);
 		if (PauseAction)
 			EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &ASimPetPlayerController::Input_Pause);
+		
+		const UInputAction *SaveGameAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_SaveGame);
+		if (SaveGameAction)
+			EnhancedInputComponent->BindAction(SaveGameAction, ETriggerEvent::Started, this, &ASimPetPlayerController::Input_SaveGame);
 	}
 }
 
@@ -60,11 +66,6 @@ void ASimPetPlayerController::SetInputMode_UI(UUserWidget *FocusWidget)
 	}
 	
 	SetInputMode(InputMode);
-}
-
-void ASimPetPlayerController::Input_Pause(const FInputActionValue &InputActionValue)
-{
-	TogglePauseMenu();
 }
 
 void ASimPetPlayerController::TogglePauseMenu()
@@ -104,4 +105,14 @@ void ASimPetPlayerController::TogglePauseMenu()
 		
 		SetInputMode_Game();
 	}
+}
+
+void ASimPetPlayerController::Input_Pause(const FInputActionValue &InputActionValue)
+{
+	TogglePauseMenu();
+}
+
+void ASimPetPlayerController::Input_SaveGame(const FInputActionValue &InputActionValue)
+{
+	Debug::Print(TEXT("Input_SaveGame"));
 }
