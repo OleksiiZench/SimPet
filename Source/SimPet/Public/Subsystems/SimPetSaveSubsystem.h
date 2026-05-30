@@ -11,6 +11,7 @@
 
 class USimPetGlobalSave;
 class USimPetUISubsystem;
+class USimPetSaveGame;
 
 /**
  * 
@@ -32,13 +33,20 @@ public:
 	
 private:
 	UPROPERTY()
-	USimPetGlobalSave *CachedSaveGame;
+	USimPetGlobalSave *CachedGlobalSave;
 	
-	const FString SaveSlotName = TEXT("SimPet_SaveSlot");
+	UPROPERTY()
+	USimPetSaveGame *CachedSaveGame;
+	
+	const FString GlobalSaveSlotName = TEXT("SimPet_GlobalSaveSlot");
+	const FString SaveGameSlotName = TEXT("SimPet_SaveGameSlot");
+	
 	int32 MaxPoints;
 	EGameDifficulty Difficulty;
 	
+	void CacheGlobalSave();
 	void CacheSaveGame();
+	
 	USimPetUISubsystem *GetUISubsystem() const;
 	
 	void LoadMaxPoints();

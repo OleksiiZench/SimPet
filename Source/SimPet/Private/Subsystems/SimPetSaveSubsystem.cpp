@@ -6,12 +6,15 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "Save/SimPetGlobalSave.h"
+#include "Save/SimPetSaveGame.h"
 #include "Subsystems/SimPetUISubsystem.h"
+#include "Interfaces/SimPetSavable.h"
 
 void USimPetSaveSubsystem::Initialize(FSubsystemCollectionBase &Collection)
 {
 	Super::Initialize(Collection);
 	
+	CacheGlobalSave();
 	CacheSaveGame();
 	
 	LoadMaxPoints();
@@ -42,28 +45,58 @@ void USimPetSaveSubsystem::SaveDifficulty(EGameDifficulty CurrentDifficulty)
 {
 	Difficulty = CurrentDifficulty;
 	
-	if (CachedSaveGame)
+	if (CachedGlobalSave)
 	{
-		CachedSaveGame->Difficulty = CurrentDifficulty;
-		UGameplayStatics::SaveGameToSlot(CachedSaveGame, SaveSlotName, 0);
+		CachedGlobalSave->Difficulty = CurrentDifficulty;
+		UGameplayStatics::SaveGameToSlot(CachedGlobalSave, GlobalSaveSlotName, 0);
 	}
 }
 
 void USimPetSaveSubsystem::SaveGame()
 {
+	CacheSaveGame();
+	
+	// Прибрати GetAllActorsWithInterface, реалізувати патерн "Реєстратура"
+	TArray<AActor *> SavableActors;
+	UGameplayStatics::GetAllActorsWithInterface(GetWorld(), USimPetSavable::StaticClass(), SavableActors);
+	
+	for (AActor *Actor : SavableActors)
+	{
+		ISimPetSavable::Execute_SaveActorData(Actor, CachedSaveGame);
+	}
+	
+	bool bIsSaved = UGameplayStatics::SaveGameToSlot(CachedSaveGame, SaveGameSlotName, 0);
+	
 	if (USimPetUISubsystem *UISubsystem= GetUISubsystem())
-		UISubsystem->BroadcastNotification(true, TEXT("Successful save!"));
+	{
+		if (bIsSaved)
+			UISubsystem->BroadcastNotification(true, TEXT("Game Saved!"));
+		else
+			UISubsystem->BroadcastNotification(false, TEXT("Save Error!"));
+	}
+}
+
+void USimPetSaveSubsystem::CacheGlobalSave()
+{
+	if (UGameplayStatics::DoesSaveGameExist(GlobalSaveSlotName, 0))
+	{
+		CachedGlobalSave = Cast<USimPetGlobalSave>(UGameplayStatics::LoadGameFromSlot(GlobalSaveSlotName, 0));
+	}
+	else
+	{
+		CachedGlobalSave = Cast<USimPetGlobalSave>(UGameplayStatics::CreateSaveGameObject(USimPetGlobalSave::StaticClass()));
+	}
 }
 
 void USimPetSaveSubsystem::CacheSaveGame()
 {
-	if (UGameplayStatics::DoesSaveGameExist(SaveSlotName, 0))
+	if (UGameplayStatics::DoesSaveGameExist(SaveGameSlotName, 0))
 	{
-		CachedSaveGame = Cast<USimPetGlobalSave>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
+		CachedSaveGame = Cast<USimPetSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveGameSlotName, 0));
 	}
 	else
 	{
-		CachedSaveGame = Cast<USimPetGlobalSave>(UGameplayStatics::CreateSaveGameObject(USimPetGlobalSave::StaticClass()));
+		CachedSaveGame = Cast<USimPetSaveGame>(UGameplayStatics::CreateSaveGameObject(USimPetSaveGame::StaticClass()));
 	}
 }
 
@@ -79,9 +112,9 @@ USimPetUISubsystem *USimPetSaveSubsystem::GetUISubsystem() const
 
 void USimPetSaveSubsystem::LoadMaxPoints()
 {
-	if (CachedSaveGame)
+	if (CachedGlobalSave)
 	{
-		MaxPoints = CachedSaveGame->MaxPoints;
+		MaxPoints = CachedGlobalSave->MaxPoints;
 	}
 	else
 	{
@@ -91,18 +124,18 @@ void USimPetSaveSubsystem::LoadMaxPoints()
 
 void USimPetSaveSubsystem::SaveMaxPoints() const
 {
-	if (CachedSaveGame)
+	if (CachedGlobalSave)
 	{
-		CachedSaveGame->MaxPoints = MaxPoints;
-		UGameplayStatics::SaveGameToSlot(CachedSaveGame, SaveSlotName, 0);
+		CachedGlobalSave->MaxPoints = MaxPoints;
+		UGameplayStatics::SaveGameToSlot(CachedGlobalSave, GlobalSaveSlotName, 0);
 	}
 }
 
 void USimPetSaveSubsystem::LoadDifficulty()
 {
-	if (CachedSaveGame)
+	if (CachedGlobalSave)
 	{
-		Difficulty = CachedSaveGame->Difficulty;
+		Difficulty = CachedGlobalSave->Difficulty;
 	}
 	else
 	{
