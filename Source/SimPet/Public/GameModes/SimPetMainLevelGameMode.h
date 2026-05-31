@@ -19,6 +19,7 @@ class SIMPET_API ASimPetMainLevelGameMode : public ASimPetBaseGameMode
 public:
 	ASimPetMainLevelGameMode();
 	
+	virtual void StartPlay() override;
 	virtual void BeginPlay() override;
 	
 private:

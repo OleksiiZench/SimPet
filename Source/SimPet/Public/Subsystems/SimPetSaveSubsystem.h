@@ -22,6 +22,8 @@ class SIMPET_API USimPetSaveSubsystem : public UGameInstanceSubsystem
 	GENERATED_BODY()
 	
 public:
+	USimPetSaveSubsystem();
+	
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	
 	void CheckAndUpdateMaxPoints(int32 InCurrentPoints);
@@ -35,6 +37,9 @@ public:
 	void RegisterSavableActor(AActor *ActorToRegister);
 	void UnregisterSavableActor(AActor *ActorToRemove);
 	
+	void RequestLoadGame();
+	bool IsLoadGameRequested();
+	void ClearLoadGameRequested();
 private:
 	UPROPERTY()
 	USimPetGlobalSave *CachedGlobalSave;
@@ -44,6 +49,8 @@ private:
 	
 	UPROPERTY()
 	TArray<AActor *> RegisteredSavableActors;
+	
+	bool bLoadGameRequested;
 	
 	const FString GlobalSaveSlotName = TEXT("SimPet_GlobalSaveSlot");
 	const FString SaveGameSlotName = TEXT("SimPet_SaveGameSlot");

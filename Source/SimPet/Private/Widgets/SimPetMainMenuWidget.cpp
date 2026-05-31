@@ -36,10 +36,10 @@ void USimPetMainMenuWidget::NativeConstruct()
 
 void USimPetMainMenuWidget::OnContinueClicked()
 {
-	UGameplayStatics::OpenLevel(this, GameplayLevelName);
-	
 	if (CachedSaveSubsystem)
-		CachedSaveSubsystem->LoadGame();
+		CachedSaveSubsystem->RequestLoadGame();
+	
+	UGameplayStatics::OpenLevel(this, GameplayLevelName);
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst

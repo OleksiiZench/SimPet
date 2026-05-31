@@ -3,14 +3,28 @@
 
 #include "GameModes/SimPetMainLevelGameMode.h"
 
-#include "GameFramework/GameUserSettings.h"
-
 #include "Characters/SimPetPlayer.h"
 #include "Subsystems/SimPetItemSubsystem.h"
+#include "Subsystems/SimPetSaveSubsystem.h"
 
 ASimPetMainLevelGameMode::ASimPetMainLevelGameMode()
 {
 	DefaultPawnClass = ASimPetPlayer::StaticClass();
+}
+
+void ASimPetMainLevelGameMode::StartPlay()
+{
+	Super::StartPlay();
+	
+	USimPetSaveSubsystem *SaveSubsystem = GetGameInstance()->GetSubsystem<USimPetSaveSubsystem>();
+	if (SaveSubsystem)
+	{
+		if (SaveSubsystem->IsLoadGameRequested())
+		{
+			SaveSubsystem->LoadGame();
+			SaveSubsystem->ClearLoadGameRequested();
+		}
+	}
 }
 
 void ASimPetMainLevelGameMode::BeginPlay()

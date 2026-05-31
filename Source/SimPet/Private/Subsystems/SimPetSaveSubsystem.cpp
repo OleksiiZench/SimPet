@@ -12,6 +12,11 @@
 
 #include "SimPetDebugHelper.h"
 
+USimPetSaveSubsystem::USimPetSaveSubsystem()
+{
+	bLoadGameRequested = false;
+}
+
 void USimPetSaveSubsystem::Initialize(FSubsystemCollectionBase &Collection)
 {
 	Super::Initialize(Collection);
@@ -104,6 +109,21 @@ void USimPetSaveSubsystem::UnregisterSavableActor(AActor *ActorToRemove)
 	{
 		RegisteredSavableActors.Remove(ActorToRemove);
 	}
+}
+
+void USimPetSaveSubsystem::RequestLoadGame()
+{
+	bLoadGameRequested = true;
+}
+
+bool USimPetSaveSubsystem::IsLoadGameRequested()
+{
+	return bLoadGameRequested;
+}
+
+void USimPetSaveSubsystem::ClearLoadGameRequested()
+{
+	bLoadGameRequested = false;
 }
 
 void USimPetSaveSubsystem::CacheGlobalSave()

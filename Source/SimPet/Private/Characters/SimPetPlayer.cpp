@@ -18,6 +18,7 @@
 #include "Save/Structures/SimPetPlayerSaveData.h"
 
 #include "Items/SimPetItem.h"
+#include "SimPetDebugHelper.h"
 
 ASimPetPlayer::ASimPetPlayer()
 {
@@ -110,15 +111,20 @@ void ASimPetPlayer::LoadActorData_Implementation(USimPetSaveGame *SaveObject)
 	
 	FSimPetPlayerSaveData PlayerSaveData = SaveObject->PlayerSaveData;
 	
-	SetActorLocation(PlayerSaveData.Transform.GetLocation());
+	SetActorTransform(PlayerSaveData.Transform, false, nullptr, ETeleportType::TeleportPhysics);
 	
 	TSubclassOf<ASimPetItem> ItemClass = PlayerSaveData.EquippedItemData.ItemClass;
-	ASimPetItem *SpawnedItem = GetWorld()->SpawnActor<ASimPetItem>(*ItemClass, GetTransform());
-	InteractionComponent->TakeOrDropOrSwapItem(SpawnedItem);
+	if (ItemClass)
+	{
+		ASimPetItem *SpawnedItem = GetWorld()->SpawnActor<ASimPetItem>(ItemClass, GetTransform());
+		if (SpawnedItem)
+			InteractionComponent->TakeOrDropOrSwapItem(SpawnedItem);
+	}
 	
 	StaminaComponent->SetCurrentStamina(PlayerSaveData.Stamina);
 	
-	FaceRotation(PlayerSaveData.ControlRotation);
+	if (Controller)
+		Controller->SetControlRotation(PlayerSaveData.ControlRotation);
 }
 
 USimPetStaminaComponent *ASimPetPlayer::GetStaminaComponent() const

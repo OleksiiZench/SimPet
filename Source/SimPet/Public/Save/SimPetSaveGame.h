@@ -18,5 +18,6 @@ class SIMPET_API USimPetSaveGame : public USaveGame
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category = "SimPet|Save Data")
 	FSimPetPlayerSaveData PlayerSaveData;
 };
