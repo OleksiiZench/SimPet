@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 
 #include "Characters/SimPetBaseCharacter.h"
+#include "Interfaces/SimPetSavable.h"
 
 #include "SimPetPlayer.generated.h"
 
@@ -16,6 +17,7 @@ class ASimPetItem;
 class USimPetInteractionComponent;
 class USimPetCameraComponent;
 class USimPetStaminaComponent;
+class USimPetSaveSubsystem;
 
 struct FInputActionValue;
 
@@ -23,7 +25,7 @@ struct FInputActionValue;
  * 
  */
 UCLASS()
-class SIMPET_API ASimPetPlayer : public ASimPetBaseCharacter
+class SIMPET_API ASimPetPlayer : public ASimPetBaseCharacter, public ISimPetSavable
 {
 	GENERATED_BODY()
 	
@@ -31,8 +33,14 @@ public:
 	ASimPetPlayer();
 	
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void SetupPlayerInputComponent(UInputComponent *PlayerInputComponent) override;
 	virtual FVector GetPawnViewLocation() const override;
+	
+	//~ Begin ISimPetSavable Interface
+	virtual void SaveActorData_Implementation(USimPetSaveGame* SaveObject) override;
+	virtual void LoadActorData_Implementation(USimPetSaveGame *SaveObject) override;
+	//~ End ISimPetSavable Interface
 	
 	USimPetStaminaComponent *GetStaminaComponent() const;
 	
@@ -68,4 +76,12 @@ private:
 	void Input_Sprint_Completed(const FInputActionValue &InputActionValue);
 
 #pragma endregion
+	
+	UPROPERTY()
+	USimPetSaveSubsystem *CachedSaveSubsystem;
+	
+	void CacheSaveSubsystem();
+	
+	void RegisterWithSaveSystem();
+	void UnregisterFromSaveSystem();
 };

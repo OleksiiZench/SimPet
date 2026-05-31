@@ -13,6 +13,7 @@
 #include "Components/SimPetInteractionComponent.h"
 #include "Components/SimPetCameraComponent.h"
 #include "Components/Attributes/SimPetStaminaComponent.h"
+#include "Subsystems/SimPetSaveSubsystem.h"
 
 ASimPetPlayer::ASimPetPlayer()
 {
@@ -24,6 +25,17 @@ void ASimPetPlayer::BeginPlay()
 	Super::BeginPlay();
 	
 	CurrentMovementComp = GetCharacterMovement();
+	
+	CacheSaveSubsystem();
+	
+	RegisterWithSaveSystem();
+}
+
+void ASimPetPlayer::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	UnregisterFromSaveSystem();
+	
+	Super::EndPlay(EndPlayReason);
 }
 
 void ASimPetPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
@@ -68,6 +80,16 @@ FVector ASimPetPlayer::GetPawnViewLocation() const
 	}
 	
 	return Super::GetPawnViewLocation();
+}
+
+void ASimPetPlayer::SaveActorData_Implementation(USimPetSaveGame *SaveObject)
+{
+	// TODO: Реалізувати логіку збереження
+}
+
+void ASimPetPlayer::LoadActorData_Implementation(USimPetSaveGame *SaveObject)
+{
+	// TODO: Реалізувати логіку завантаження
 }
 
 USimPetStaminaComponent *ASimPetPlayer::GetStaminaComponent() const
@@ -143,4 +165,28 @@ void ASimPetPlayer::Input_Sprint_Started(const FInputActionValue& InputActionVal
 void ASimPetPlayer::Input_Sprint_Completed(const FInputActionValue& InputActionValue)
 {
 	StaminaComponent->SetSprint(false);
+}
+
+void ASimPetPlayer::CacheSaveSubsystem()
+{
+	if (GetWorld())
+	{
+		CachedSaveSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<USimPetSaveSubsystem>();
+	}
+}
+
+void ASimPetPlayer::RegisterWithSaveSystem()
+{
+	if (CachedSaveSubsystem)
+	{
+		CachedSaveSubsystem->RegisterSavableActor(this);
+	}
+}
+
+void ASimPetPlayer::UnregisterFromSaveSystem()
+{
+	if (CachedSaveSubsystem)
+	{
+		CachedSaveSubsystem->UnregisterSavableActor(this);
+	}
 }

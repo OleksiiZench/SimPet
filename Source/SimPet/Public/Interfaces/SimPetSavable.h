@@ -28,5 +28,5 @@ public:
 	void SaveActorData(USimPetSaveGame* SaveObject);
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "SimPet|Save System")
-	void LoadDataActor(USimPetSaveGame *SaveObject);
+	void LoadActorData(USimPetSaveGame *SaveObject);
 };

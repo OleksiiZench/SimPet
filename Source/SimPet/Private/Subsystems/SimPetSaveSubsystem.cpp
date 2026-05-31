@@ -56,11 +56,7 @@ void USimPetSaveSubsystem::SaveGame()
 {
 	CacheSaveGame();
 	
-	// Прибрати GetAllActorsWithInterface, реалізувати патерн "Реєстратура"
-	TArray<AActor *> SavableActors;
-	UGameplayStatics::GetAllActorsWithInterface(GetWorld(), USimPetSavable::StaticClass(), SavableActors);
-	
-	for (AActor *Actor : SavableActors)
+	for (AActor *Actor : RegisteredSavableActors)
 	{
 		ISimPetSavable::Execute_SaveActorData(Actor, CachedSaveGame);
 	}
@@ -73,6 +69,22 @@ void USimPetSaveSubsystem::SaveGame()
 			UISubsystem->BroadcastNotification(true, TEXT("Game Saved!"));
 		else
 			UISubsystem->BroadcastNotification(false, TEXT("Save Error!"));
+	}
+}
+
+void USimPetSaveSubsystem::RegisterSavableActor(AActor *ActorToRegister)
+{
+	if (ActorToRegister && ActorToRegister->Implements<USimPetSavable>())
+	{
+		RegisteredSavableActors.AddUnique(ActorToRegister);
+	}
+}
+
+void USimPetSaveSubsystem::UnregisterSavableActor(AActor *ActorToRemove)
+{
+	if (ActorToRemove)
+	{
+		RegisteredSavableActors.Remove(ActorToRemove);
 	}
 }
 

@@ -31,12 +31,18 @@ public:
 	
 	void SaveGame();
 	
+	void RegisterSavableActor(AActor *ActorToRegister);
+	void UnregisterSavableActor(AActor *ActorToRemove);
+	
 private:
 	UPROPERTY()
 	USimPetGlobalSave *CachedGlobalSave;
 	
 	UPROPERTY()
 	USimPetSaveGame *CachedSaveGame;
+	
+	UPROPERTY()
+	TArray<AActor *> RegisteredSavableActors;
 	
 	const FString GlobalSaveSlotName = TEXT("SimPet_GlobalSaveSlot");
 	const FString SaveGameSlotName = TEXT("SimPet_SaveGameSlot");
