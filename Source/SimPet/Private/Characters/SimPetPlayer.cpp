@@ -13,7 +13,11 @@
 #include "Components/SimPetInteractionComponent.h"
 #include "Components/SimPetCameraComponent.h"
 #include "Components/Attributes/SimPetStaminaComponent.h"
+#include "Save/SimPetSaveGame.h"
 #include "Subsystems/SimPetSaveSubsystem.h"
+#include "Save/Structures/SimPetPlayerSaveData.h"
+
+#include "Items/SimPetItem.h"
 
 ASimPetPlayer::ASimPetPlayer()
 {
@@ -84,12 +88,37 @@ FVector ASimPetPlayer::GetPawnViewLocation() const
 
 void ASimPetPlayer::SaveActorData_Implementation(USimPetSaveGame *SaveObject)
 {
-	// TODO: Реалізувати логіку збереження
+	if (SaveObject == nullptr)
+		return;
+	
+	FSimPetPlayerSaveData PlayerSaveData;
+	
+	PlayerSaveData.Transform = GetActorTransform();
+	PlayerSaveData.EquippedItemData.ItemClass = InteractionComponent->GetTakenItemClass();
+	// TODO: Потрібно заповнити PlayerSaveData.EquippedItemData.PayloadClasses
+	PlayerSaveData.Stamina = StaminaComponent->GetCurrentStamina();
+	PlayerSaveData.ControlRotation = GetControlRotation();
+	
+	SaveObject->PlayerSaveData = PlayerSaveData;
+	
 }
 
 void ASimPetPlayer::LoadActorData_Implementation(USimPetSaveGame *SaveObject)
 {
-	// TODO: Реалізувати логіку завантаження
+	if (SaveObject == nullptr)
+		return;
+	
+	FSimPetPlayerSaveData PlayerSaveData = SaveObject->PlayerSaveData;
+	
+	SetActorLocation(PlayerSaveData.Transform.GetLocation());
+	
+	TSubclassOf<ASimPetItem> ItemClass = PlayerSaveData.EquippedItemData.ItemClass;
+	ASimPetItem *SpawnedItem = GetWorld()->SpawnActor<ASimPetItem>(*ItemClass, GetTransform());
+	InteractionComponent->TakeOrDropOrSwapItem(SpawnedItem);
+	
+	StaminaComponent->SetCurrentStamina(PlayerSaveData.Stamina);
+	
+	FaceRotation(PlayerSaveData.ControlRotation);
 }
 
 USimPetStaminaComponent *ASimPetPlayer::GetStaminaComponent() const

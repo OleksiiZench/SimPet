@@ -105,6 +105,16 @@ void USimPetInteractionComponent::SetHoldPoint(USceneComponent *InHoldPoint)
 	}
 }
 
+TSubclassOf<ASimPetItem> USimPetInteractionComponent::GetTakenItemClass() const
+{
+	if (CachedTakenItem)
+	{
+		return CachedTakenItem->GetClass();
+	}
+	
+	return nullptr;
+}
+
 void USimPetInteractionComponent::TakeItem(ASimPetItem *Item)
 {
 	Item->DisablePhysics();

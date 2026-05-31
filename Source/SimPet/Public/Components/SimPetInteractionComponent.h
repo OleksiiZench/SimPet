@@ -24,6 +24,8 @@ public:
 	void TakeOrDropOrSwapItem(AActor *Actor);
 	void SetHoldPoint(USceneComponent *InHoldPoint);
 	
+	TSubclassOf<ASimPetItem> GetTakenItemClass() const;
+	
 private:
 	UPROPERTY()
 	ASimPetItem *CachedTakenItem;

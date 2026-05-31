@@ -30,6 +30,7 @@ public:
 	void SaveDifficulty(EGameDifficulty CurrentDifficulty);
 	
 	void SaveGame();
+	void LoadGame();
 	
 	void RegisterSavableActor(AActor *ActorToRegister);
 	void UnregisterSavableActor(AActor *ActorToRemove);

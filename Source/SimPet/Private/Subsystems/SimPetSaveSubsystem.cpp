@@ -10,6 +10,8 @@
 #include "Subsystems/SimPetUISubsystem.h"
 #include "Interfaces/SimPetSavable.h"
 
+#include "SimPetDebugHelper.h"
+
 void USimPetSaveSubsystem::Initialize(FSubsystemCollectionBase &Collection)
 {
 	Super::Initialize(Collection);
@@ -69,6 +71,22 @@ void USimPetSaveSubsystem::SaveGame()
 			UISubsystem->BroadcastNotification(true, TEXT("Game Saved!"));
 		else
 			UISubsystem->BroadcastNotification(false, TEXT("Save Error!"));
+	}
+}
+
+void USimPetSaveSubsystem::LoadGame()
+{
+	USaveGame *LoadedGame = UGameplayStatics::LoadGameFromSlot(SaveGameSlotName, 0);
+	if (LoadedGame != nullptr)
+	{
+		Debug::Print(TEXT("RegisteredSavableActors.Num() > 0"), RegisteredSavableActors.Num() > 0);
+		
+		CachedSaveGame = Cast<USimPetSaveGame>(LoadedGame);
+		
+		for (AActor *Actor : RegisteredSavableActors)
+		{
+			ISimPetSavable::Execute_LoadActorData(Actor, CachedSaveGame);
+		}
 	}
 }
 

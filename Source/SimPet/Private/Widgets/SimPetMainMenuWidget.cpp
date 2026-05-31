@@ -36,7 +36,10 @@ void USimPetMainMenuWidget::NativeConstruct()
 
 void USimPetMainMenuWidget::OnContinueClicked()
 {
-	Debug::Print(TEXT("Continue Button Clicked! (Save system not implemented yet)"));
+	UGameplayStatics::OpenLevel(this, GameplayLevelName);
+	
+	if (CachedSaveSubsystem)
+		CachedSaveSubsystem->LoadGame();
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
