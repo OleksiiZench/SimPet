@@ -173,3 +173,6 @@ Backup*/
 # Local developer scripts
 run_editor.sh
 gen_files.sh
+
+# txt files you should ignore
+set_of_rules_for_AI.txt
