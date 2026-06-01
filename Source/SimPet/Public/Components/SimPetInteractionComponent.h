@@ -35,7 +35,7 @@ private:
 	UPROPERTY()
 	USceneComponent *HoldPoint;
 	
-	TEnumAsByte<ETraceTypeQuery> InteractionTraceChanel;
+	TEnumAsByte<ETraceTypeQuery> InteractionTraceChannel;
 	
 	void TakeItem(ASimPetItem *Item);
 	void DropItem(ASimPetItem *Item);

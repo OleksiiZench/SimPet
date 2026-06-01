@@ -11,14 +11,12 @@
 #include "Interfaces/SimPetItemContainer.h"
 #include "Subsystems/SimPetItemSubsystem.h"
 
-#include "SimPetDebugHelper.h"
-
 USimPetInteractionComponent::USimPetInteractionComponent()
 {
 	CachedTakenItem = nullptr;
 	HoldPoint = nullptr;
 	
-	InteractionTraceChanel = TraceTypeQuery2;
+	InteractionTraceChannel = TraceTypeQuery2;
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
@@ -44,7 +42,7 @@ AActor *USimPetInteractionComponent::DoInteractionTrace()
 		StartLocation,
 		EndLocation,
 		InteractionRadius,
-		InteractionTraceChanel,
+		InteractionTraceChannel,
 		false,
 		ActorsToIgnore,
 		EDrawDebugTrace::None,
