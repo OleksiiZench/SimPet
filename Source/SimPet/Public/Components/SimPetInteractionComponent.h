@@ -9,6 +9,7 @@
 
 class ASimPetItem;
 class USceneComponent;
+struct FSimPetItemSaveData;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SIMPET_API USimPetInteractionComponent : public UActorComponent
@@ -24,7 +25,7 @@ public:
 	void TakeOrDropOrSwapItem(AActor *Actor);
 	void SetHoldPoint(USceneComponent *InHoldPoint);
 	
-	TSubclassOf<ASimPetItem> GetTakenItemClass() const;
+	FSimPetItemSaveData GetSaveDataEquippedItem() const;
 	
 private:
 	UPROPERTY()

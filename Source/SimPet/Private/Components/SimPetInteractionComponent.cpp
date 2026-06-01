@@ -7,6 +7,8 @@
 
 #include "Interfaces/SimPetInteractable.h"
 #include "Items/SimPetItem.h"
+#include "Save/Structures/SimPetItemSaveData.h"
+#include "Interfaces/SimPetItemContainer.h"
 
 USimPetInteractionComponent::USimPetInteractionComponent()
 {
@@ -105,14 +107,21 @@ void USimPetInteractionComponent::SetHoldPoint(USceneComponent *InHoldPoint)
 	}
 }
 
-TSubclassOf<ASimPetItem> USimPetInteractionComponent::GetTakenItemClass() const
+FSimPetItemSaveData USimPetInteractionComponent::GetSaveDataEquippedItem() const
 {
-	if (CachedTakenItem)
+	FSimPetItemSaveData ItemSaveData;
+	
+	if (IsValid(CachedTakenItem))
 	{
-		return CachedTakenItem->GetClass();
+		ItemSaveData.ItemClass = CachedTakenItem->GetClass();
+	
+		if (CachedTakenItem->Implements<USimPetItemContainer>())
+		{
+			ISimPetItemContainer::Execute_GetContainerPayloadClasses(CachedTakenItem, ItemSaveData.PayloadClasses);
+		}
 	}
 	
-	return nullptr;
+	return ItemSaveData;
 }
 
 void USimPetInteractionComponent::TakeItem(ASimPetItem *Item)

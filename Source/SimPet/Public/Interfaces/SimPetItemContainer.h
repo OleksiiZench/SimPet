@@ -27,4 +27,7 @@ class SIMPET_API ISimPetItemContainer
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
 	bool TryAddItemToContainer(ASimPetItem *Item);
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
+	void GetContainerPayloadClasses(TArray<TSubclassOf<ASimPetItem>> &OutPayloadClasses);
 };

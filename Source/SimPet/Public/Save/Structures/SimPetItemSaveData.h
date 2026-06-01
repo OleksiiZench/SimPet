@@ -14,9 +14,9 @@ struct FSimPetItemSaveData
 public:
 	FSimPetItemSaveData();
 	
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|Save Data")
 	TSubclassOf<ASimPetItem> ItemClass;
 	
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|Save Data")
 	TArray<TSubclassOf<ASimPetItem>> PayloadClasses;
 };

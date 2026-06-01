@@ -18,7 +18,6 @@
 #include "Save/Structures/SimPetPlayerSaveData.h"
 
 #include "Items/SimPetItem.h"
-#include "SimPetDebugHelper.h"
 
 ASimPetPlayer::ASimPetPlayer()
 {
@@ -95,8 +94,7 @@ void ASimPetPlayer::SaveActorData_Implementation(USimPetSaveGame *SaveObject)
 	FSimPetPlayerSaveData PlayerSaveData;
 	
 	PlayerSaveData.Transform = GetActorTransform();
-	PlayerSaveData.EquippedItemData.ItemClass = InteractionComponent->GetTakenItemClass();
-	// TODO: Потрібно заповнити PlayerSaveData.EquippedItemData.PayloadClasses
+	PlayerSaveData.EquippedItemData = InteractionComponent->GetSaveDataEquippedItem();
 	PlayerSaveData.Stamina = StaminaComponent->GetCurrentStamina();
 	PlayerSaveData.ControlRotation = GetControlRotation();
 	

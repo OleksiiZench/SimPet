@@ -15,6 +15,17 @@ bool ASimPetBackPack::TryAddItemToContainer_Implementation(ASimPetItem *Item)
 	return TryAddItem(Item);
 }
 
+void ASimPetBackPack::GetContainerPayloadClasses_Implementation(TArray<TSubclassOf<ASimPetItem>> &OutPayloadClasses)
+{
+	OutPayloadClasses.Empty();
+	
+	for (ASimPetItem *Item : StoredItems)
+	{
+		if (IsValid(Item))
+			OutPayloadClasses.Add(Item->GetClass());
+	}
+}
+
 bool ASimPetBackPack::TryInteractWithAnotherActor(AActor *TargetActor)
 {
 	ASimPetItem *Item = Cast<ASimPetItem>(TargetActor);

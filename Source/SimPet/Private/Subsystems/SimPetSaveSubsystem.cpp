@@ -10,8 +10,6 @@
 #include "Subsystems/SimPetUISubsystem.h"
 #include "Interfaces/SimPetSavable.h"
 
-#include "SimPetDebugHelper.h"
-
 USimPetSaveSubsystem::USimPetSaveSubsystem()
 {
 	bLoadGameRequested = false;
@@ -84,8 +82,6 @@ void USimPetSaveSubsystem::LoadGame()
 	USaveGame *LoadedGame = UGameplayStatics::LoadGameFromSlot(SaveGameSlotName, 0);
 	if (LoadedGame != nullptr)
 	{
-		Debug::Print(TEXT("RegisteredSavableActors.Num() > 0"), RegisteredSavableActors.Num() > 0);
-		
 		CachedSaveGame = Cast<USimPetSaveGame>(LoadedGame);
 		
 		for (AActor *Actor : RegisteredSavableActors)
