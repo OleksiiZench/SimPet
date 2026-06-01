@@ -60,7 +60,7 @@ void ASimPetHUD::CreateWidgets()
 		CurrentNotificationWidget = CreateWidget<USimPetNotificationWidget>(GetOwningPlayerController(), NotificationWidgetClass);
 		if (CurrentNotificationWidget)
 		{
-			CurrentNotificationWidget->AddToViewport(10);
+			CurrentNotificationWidget->AddToViewport(100);
 			
 			CurrentNotificationWidget->SetVisibility(ESlateVisibility::Hidden);
 		}
