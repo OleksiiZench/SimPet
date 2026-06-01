@@ -9,6 +9,9 @@
 #include "Items/SimPetItem.h"
 #include "Save/Structures/SimPetItemSaveData.h"
 #include "Interfaces/SimPetItemContainer.h"
+#include "Subsystems/SimPetItemSubsystem.h"
+
+#include "SimPetDebugHelper.h"
 
 USimPetInteractionComponent::USimPetInteractionComponent()
 {
@@ -122,6 +125,34 @@ FSimPetItemSaveData USimPetInteractionComponent::GetSaveDataEquippedItem() const
 	}
 	
 	return ItemSaveData;
+}
+
+void USimPetInteractionComponent::ApplyLoadedDataOfEquippedItem(FSimPetItemSaveData ItemSaveData)
+{
+	USimPetItemSubsystem *ItemSubsystem = GetWorld()->GetSubsystem<USimPetItemSubsystem>();
+	if (ItemSubsystem == nullptr)
+		return;
+	
+	ASimPetItem *SpawnedItem = ItemSubsystem->SpawnItem(ItemSaveData.ItemClass, GetOwner()->GetTransform());
+	if (SpawnedItem)
+	{
+		TakeOrDropOrSwapItem(SpawnedItem);
+		
+		if (ItemSaveData.PayloadClasses.Num() > 0)
+		{
+			for (TSubclassOf<ASimPetItem> PayloadItemClass : ItemSaveData.PayloadClasses)
+			{
+				ASimPetItem *SpawnedPayloadItem = ItemSubsystem->SpawnItem(PayloadItemClass, GetOwner()->GetTransform());
+				
+				if (SpawnedItem->Implements<USimPetItemContainer>())
+				{
+					Debug::Print(TEXT("SpawnedPayloadItem->Implements<USimPetItemContainer>"));
+					
+					ISimPetItemContainer::Execute_TryAddItemToContainer(SpawnedItem, SpawnedPayloadItem);
+				}
+			}
+		}
+	}
 }
 
 void USimPetInteractionComponent::TakeItem(ASimPetItem *Item)

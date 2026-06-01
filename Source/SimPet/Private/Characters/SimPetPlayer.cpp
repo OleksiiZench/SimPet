@@ -17,8 +17,6 @@
 #include "Subsystems/SimPetSaveSubsystem.h"
 #include "Save/Structures/SimPetPlayerSaveData.h"
 
-#include "Items/SimPetItem.h"
-
 ASimPetPlayer::ASimPetPlayer()
 {
 	SetupComponents();
@@ -109,18 +107,16 @@ void ASimPetPlayer::LoadActorData_Implementation(USimPetSaveGame *SaveObject)
 	
 	FSimPetPlayerSaveData PlayerSaveData = SaveObject->PlayerSaveData;
 	
+	// 1. Завантаження трансформу
 	SetActorTransform(PlayerSaveData.Transform, false, nullptr, ETeleportType::TeleportPhysics);
 	
-	TSubclassOf<ASimPetItem> ItemClass = PlayerSaveData.EquippedItemData.ItemClass;
-	if (ItemClass)
-	{
-		ASimPetItem *SpawnedItem = GetWorld()->SpawnActor<ASimPetItem>(ItemClass, GetTransform());
-		if (SpawnedItem)
-			InteractionComponent->TakeOrDropOrSwapItem(SpawnedItem);
-	}
+	// 2. Завантаження Предмету в руках на його нагрузки
+	InteractionComponent->ApplyLoadedDataOfEquippedItem(PlayerSaveData.EquippedItemData);
 	
+	// 3. Завантаження стаміни
 	StaminaComponent->SetCurrentStamina(PlayerSaveData.Stamina);
 	
+	// 4. Завантаження обертання
 	if (Controller)
 		Controller->SetControlRotation(PlayerSaveData.ControlRotation);
 }

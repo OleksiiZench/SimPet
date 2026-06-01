@@ -53,6 +53,17 @@ void USimPetItemSubsystem::SpawnFeedOnRelevantPoints()
 	}
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
+ASimPetItem *USimPetItemSubsystem::SpawnItem(TSubclassOf<ASimPetItem> ItemClass, FTransform Transform)
+{
+	if (ItemClass)
+	{
+		return GetWorld()->SpawnActor<ASimPetItem>(ItemClass, Transform);
+	}
+	
+	return nullptr;
+}
+
 void USimPetItemSubsystem::CacheSpawnFeedClassFromItemSettings()
 {
 	const USimPetItemSettings *Settings = GetDefault<USimPetItemSettings>();

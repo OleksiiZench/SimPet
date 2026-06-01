@@ -8,6 +8,7 @@
 #include "SimPetItemSubsystem.generated.h"
 
 class ASimPetAnimalFeed;
+class ASimPetItem;
 
 /**
  * 
@@ -21,6 +22,7 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	
 	void SpawnFeedOnRelevantPoints();
+	ASimPetItem *SpawnItem(TSubclassOf<ASimPetItem> ItemClass, FTransform Transform);
 	
 private:
 	void CacheSpawnFeedClassFromItemSettings();
