@@ -9,6 +9,7 @@
 
 class ASimPetAnimalFeed;
 class ASimPetItem;
+struct FSimPetItemSaveData;
 
 /**
  * 
@@ -22,9 +23,13 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	
 	void SpawnFeedOnRelevantPoints();
-	ASimPetItem *SpawnItem(TSubclassOf<ASimPetItem> ItemClass, FTransform Transform);
+	ASimPetItem *RestoreItemFromSaveData(const FSimPetItemSaveData &ItemSaveData, const FTransform &SpawnTransform);
+	
 	
 private:
+	void RestoreItemPayload(ASimPetItem *ContainerItem, const TArray<TSubclassOf<ASimPetItem>> &PayloadClasses, const FTransform &SpawnTransform);
+	ASimPetItem *SpawnItem(TSubclassOf<ASimPetItem> ItemClass, FTransform Transform);
+	
 	void CacheSpawnFeedClassFromItemSettings();
 	
 	TSubclassOf<ASimPetAnimalFeed> CachedSpawnFeedClass;

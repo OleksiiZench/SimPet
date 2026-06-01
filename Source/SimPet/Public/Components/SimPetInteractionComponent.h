@@ -26,7 +26,7 @@ public:
 	void SetHoldPoint(USceneComponent *InHoldPoint);
 	
 	FSimPetItemSaveData GetSaveDataEquippedItem() const;
-	void ApplyLoadedDataOfEquippedItem(FSimPetItemSaveData SaveData);
+	void ApplyLoadedDataOfEquippedItem(const FSimPetItemSaveData &ItemSaveData);
 	
 private:
 	UPROPERTY()

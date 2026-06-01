@@ -8,6 +8,8 @@
 #include "Subsystems/SimPetAnimalSubsystem.h"
 #include "WorldObjects/SimPetSpawnPoint.h"
 #include "SimPetGameplayTags.h"
+#include "Interfaces/SimPetItemContainer.h"
+#include "Save/Structures/SimPetItemSaveData.h"
 
 void USimPetItemSubsystem::Initialize(FSubsystemCollectionBase &Collection)
 {
@@ -53,12 +55,50 @@ void USimPetItemSubsystem::SpawnFeedOnRelevantPoints()
 	}
 }
 
+ASimPetItem *USimPetItemSubsystem::RestoreItemFromSaveData(const FSimPetItemSaveData &ItemSaveData, const FTransform &SpawnTransform)
+{
+	if (!IsValid(ItemSaveData.ItemClass))
+		return nullptr;
+	
+	ASimPetItem *MainItem = SpawnItem(ItemSaveData.ItemClass, SpawnTransform);
+	if (MainItem == nullptr)
+		return nullptr;
+	
+	RestoreItemPayload(MainItem, ItemSaveData.PayloadClasses, SpawnTransform);
+	
+	return MainItem;
+}
+
+void USimPetItemSubsystem::RestoreItemPayload(ASimPetItem *ContainerItem, const TArray<TSubclassOf<ASimPetItem>> &PayloadClasses, const FTransform &SpawnTransform)
+{
+	if (!IsValid(ContainerItem) || PayloadClasses.IsEmpty() || !ContainerItem->Implements<USimPetItemContainer>())
+		return;
+
+	for (TSubclassOf<ASimPetItem> PayloadItemClass : PayloadClasses)
+	{
+		if (!IsValid(PayloadItemClass))
+			continue;
+		
+		ASimPetItem *SpawnedPayloadItem = SpawnItem(PayloadItemClass, SpawnTransform);
+		if (SpawnedPayloadItem)
+		{
+			const bool bAdded= ISimPetItemContainer::Execute_TryAddItemToContainer(ContainerItem, SpawnedPayloadItem);
+			if (!bAdded)
+				SpawnedPayloadItem->Destroy();
+		}
+	}
+	
+}
+
 // ReSharper disable once CppMemberFunctionMayBeConst
 ASimPetItem *USimPetItemSubsystem::SpawnItem(TSubclassOf<ASimPetItem> ItemClass, FTransform Transform)
 {
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	
 	if (ItemClass)
 	{
-		return GetWorld()->SpawnActor<ASimPetItem>(ItemClass, Transform);
+		return GetWorld()->SpawnActor<ASimPetItem>(ItemClass, Transform, SpawnParams);
 	}
 	
 	return nullptr;

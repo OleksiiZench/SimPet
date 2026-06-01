@@ -127,31 +127,16 @@ FSimPetItemSaveData USimPetInteractionComponent::GetSaveDataEquippedItem() const
 	return ItemSaveData;
 }
 
-void USimPetInteractionComponent::ApplyLoadedDataOfEquippedItem(FSimPetItemSaveData ItemSaveData)
+void USimPetInteractionComponent::ApplyLoadedDataOfEquippedItem(const FSimPetItemSaveData &ItemSaveData)
 {
 	USimPetItemSubsystem *ItemSubsystem = GetWorld()->GetSubsystem<USimPetItemSubsystem>();
 	if (ItemSubsystem == nullptr)
 		return;
 	
-	ASimPetItem *SpawnedItem = ItemSubsystem->SpawnItem(ItemSaveData.ItemClass, GetOwner()->GetTransform());
-	if (SpawnedItem)
+	ASimPetItem *RestoredItem = ItemSubsystem->RestoreItemFromSaveData(ItemSaveData, GetOwner()->GetActorTransform());
+	if (RestoredItem)
 	{
-		TakeOrDropOrSwapItem(SpawnedItem);
-		
-		if (ItemSaveData.PayloadClasses.Num() > 0)
-		{
-			for (TSubclassOf<ASimPetItem> PayloadItemClass : ItemSaveData.PayloadClasses)
-			{
-				ASimPetItem *SpawnedPayloadItem = ItemSubsystem->SpawnItem(PayloadItemClass, GetOwner()->GetTransform());
-				
-				if (SpawnedItem->Implements<USimPetItemContainer>())
-				{
-					Debug::Print(TEXT("SpawnedPayloadItem->Implements<USimPetItemContainer>"));
-					
-					ISimPetItemContainer::Execute_TryAddItemToContainer(SpawnedItem, SpawnedPayloadItem);
-				}
-			}
-		}
+		TakeOrDropOrSwapItem(RestoredItem);
 	}
 }
 
