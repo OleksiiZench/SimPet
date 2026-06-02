@@ -57,6 +57,11 @@ void USimPetSaveSubsystem::SaveDifficulty(EGameDifficulty CurrentDifficulty)
 	}
 }
 
+bool USimPetSaveSubsystem::HasAnySaveGame() const
+{
+	return UGameplayStatics::DoesSaveGameExist(SaveGameSlotName, 0);
+}
+
 void USimPetSaveSubsystem::SaveGame()
 {
 	CacheSaveGame();

@@ -167,6 +167,8 @@ private:
 	void SetupDifficultySettingsButtonBindings();
 	void SetupGraphSettingsButtonBindings();
 	
+	void InitializeContinueButton();
+	
 	void InitializeDifficultyOptions();
 	void InitializeDifficultyIndexFromSaveSubsystem();
 	void UpdateDifficultyDisplay();

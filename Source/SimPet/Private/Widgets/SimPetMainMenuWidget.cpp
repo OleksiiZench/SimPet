@@ -30,21 +30,26 @@ void USimPetMainMenuWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 	
-	if (Btn_Continue)
-		Btn_Continue->SetUserFocus(GetOwningPlayer());
+	InitializeContinueButton();
 }
 
 void USimPetMainMenuWidget::OnContinueClicked()
 {
+	SetIsEnabled(false);
+	
 	if (CachedSaveSubsystem)
+	{
 		CachedSaveSubsystem->RequestLoadGame();
 	
-	UGameplayStatics::OpenLevel(this, GameplayLevelName);
+		UGameplayStatics::OpenLevel(this, GameplayLevelName);
+	}
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetMainMenuWidget::OnNewGameClicked()
 {
+	SetIsEnabled(false);
+	
 	UGameplayStatics::OpenLevel(this, GameplayLevelName);
 }
 
@@ -203,6 +208,18 @@ void USimPetMainMenuWidget::SetupGraphSettingsButtonBindings()
 	
 	if (Btn_GraphSettingsBack)
 		Btn_GraphSettingsBack->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnGraphBackClicked);
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void USimPetMainMenuWidget::InitializeContinueButton()
+{
+	bool bHasSave = false;
+	
+	if (CachedSaveSubsystem)
+		bHasSave = CachedSaveSubsystem->HasAnySaveGame();
+	
+	if (Btn_Continue)
+		Btn_Continue->SetIsEnabled(bHasSave);
 }
 
 void USimPetMainMenuWidget::InitializeDifficultyOptions()

@@ -31,6 +31,7 @@ public:
 	EGameDifficulty GetDifficulty() const;
 	void SaveDifficulty(EGameDifficulty CurrentDifficulty);
 	
+	bool HasAnySaveGame() const;
 	void SaveGame();
 	void LoadGame();
 	
