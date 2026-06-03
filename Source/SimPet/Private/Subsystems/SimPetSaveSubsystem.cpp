@@ -9,6 +9,7 @@
 #include "Save/SimPetSaveGame.h"
 #include "Subsystems/SimPetUISubsystem.h"
 #include "Interfaces/SimPetSavable.h"
+#include "Subsystems/SimPetItemSubsystem.h"
 
 USimPetSaveSubsystem::USimPetSaveSubsystem()
 {
@@ -66,10 +67,16 @@ void USimPetSaveSubsystem::SaveGame()
 {
 	CacheSaveGame();
 	
+	// 1. Зберігаємо окремі актори які мають інтерфейс Savable
 	for (AActor *Actor : RegisteredSavableActors)
 	{
 		ISimPetSavable::Execute_SaveActorData(Actor, CachedSaveGame);
 	}
+	
+	// 2. Зберігаємо Dropped Items
+	USimPetItemSubsystem *ItemSubsystem = GetWorld()->GetSubsystem<USimPetItemSubsystem>();
+	if (ItemSubsystem)
+		CachedSaveGame->DroppedItemsSaveData = ItemSubsystem->GetDroppedItemsSaveData();
 	
 	bool bIsSaved = UGameplayStatics::SaveGameToSlot(CachedSaveGame, SaveGameSlotName, 0);
 	
@@ -89,10 +96,16 @@ void USimPetSaveSubsystem::LoadGame()
 	{
 		CachedSaveGame = Cast<USimPetSaveGame>(LoadedGame);
 		
+		// 1. Завантажуємо окремі актори які мають інтерфейс Savable
 		for (AActor *Actor : RegisteredSavableActors)
 		{
 			ISimPetSavable::Execute_LoadActorData(Actor, CachedSaveGame);
 		}
+		
+		// 2. Завантажуємо Dropped Items
+		USimPetItemSubsystem *ItemSubsystem = GetWorld()->GetSubsystem<USimPetItemSubsystem>();
+		if (ItemSubsystem)
+			ItemSubsystem->RestoreDroppedItemsFromSaveData(CachedSaveGame->DroppedItemsSaveData);
 	}
 }
 
@@ -117,7 +130,7 @@ void USimPetSaveSubsystem::RequestLoadGame()
 	bLoadGameRequested = true;
 }
 
-bool USimPetSaveSubsystem::IsLoadGameRequested()
+bool USimPetSaveSubsystem::IsLoadGameRequested() const
 {
 	return bLoadGameRequested;
 }

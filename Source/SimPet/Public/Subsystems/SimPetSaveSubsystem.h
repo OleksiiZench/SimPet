@@ -39,7 +39,7 @@ public:
 	void UnregisterSavableActor(AActor *ActorToRemove);
 	
 	void RequestLoadGame();
-	bool IsLoadGameRequested();
+	bool IsLoadGameRequested() const;
 	void ClearLoadGameRequested();
 private:
 	UPROPERTY()

@@ -6,6 +6,7 @@
 #include "GameFramework/SaveGame.h"
 
 #include "Save/Structures/SimPetPlayerSaveData.h"
+#include "Save/Structures/SimPetDroppedItemSaveData.h"
 
 #include "SimPetSaveGame.generated.h"
 
@@ -18,6 +19,9 @@ class SIMPET_API USimPetSaveGame : public USaveGame
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category = "SimPet|Save Data")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|Save Data")
 	FSimPetPlayerSaveData PlayerSaveData;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|Save Data")
+	TArray<FSimPetDroppedItemSaveData> DroppedItemsSaveData;
 };

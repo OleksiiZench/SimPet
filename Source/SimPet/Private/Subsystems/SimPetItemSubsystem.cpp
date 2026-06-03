@@ -3,6 +3,8 @@
 
 #include "Subsystems/SimPetItemSubsystem.h"
 
+#include "Kismet/GameplayStatics.h"
+
 #include "Core/Settings/SimPetItemSettings.h"
 #include "Items/SimPetAnimalFeed.h"
 #include "Subsystems/SimPetAnimalSubsystem.h"
@@ -67,6 +69,60 @@ ASimPetItem *USimPetItemSubsystem::RestoreItemFromSaveData(const FSimPetItemSave
 	RestoreItemPayload(MainItem, ItemSaveData.PayloadClasses, SpawnTransform);
 	
 	return MainItem;
+}
+
+TArray<FSimPetDroppedItemSaveData> USimPetItemSubsystem::GetDroppedItemsSaveData() const
+{
+	TArray<FSimPetDroppedItemSaveData> ResultArray;
+	
+	TArray<AActor *> AllItems;
+	// TODO: Варто позбутися GetAllActorsOfClass і реалізувати це через патерн Реєстратор
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASimPetItem::StaticClass(), AllItems);
+	
+	for (AActor *Actor : AllItems)
+	{
+		ASimPetItem *Item = Cast<ASimPetItem>(Actor);
+		
+		if (!IsValid(Item) || Item->GetAttachParentActor() != nullptr)
+		{// TODO:: Цю перевірку варто змінити на Item->bIsDropped або через Enum (Enum описує в якій "позиції" перебуває предмет)
+			continue;
+		}
+		
+		FSimPetDroppedItemSaveData DroppedItemData;
+		DroppedItemData.Transform = Item->GetActorTransform();
+		DroppedItemData.ItemData.ItemClass = Item->GetClass();
+		
+		if (Item->Implements<USimPetItemContainer>())
+		{
+			ISimPetItemContainer::Execute_GetContainerPayloadClasses(Item, DroppedItemData.ItemData.PayloadClasses);
+		}
+		
+		ResultArray.Add(DroppedItemData);
+	}
+	
+	return ResultArray;
+}
+
+void USimPetItemSubsystem::RestoreDroppedItemsFromSaveData(const TArray<FSimPetDroppedItemSaveData> &SavedDroppedItems)
+{
+	// 1. Очищення існуючих предметів на рівні
+	// TODO: Обміркувати доцільність знищення всіх предметів на карті
+	TArray<AActor *> AllItems;
+	// TODO: Варто позбутися GetAllActorsOfClass і реалізувати це через патерн Реєстратор
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASimPetItem::StaticClass(), AllItems);
+	
+	for (AActor *Actor : AllItems)
+	{
+		ASimPetItem *Item = Cast<ASimPetItem>(Actor);
+		if (IsValid(Item) && Item->GetAttachParentActor() == nullptr)
+			Item->Destroy();
+	}
+	
+	// 2. Спавн предметів зі збереження
+	for (const FSimPetDroppedItemSaveData &DroppedItemData : SavedDroppedItems)
+	{
+		RestoreItemFromSaveData(DroppedItemData.ItemData, DroppedItemData.Transform);
+	}
 }
 
 void USimPetItemSubsystem::RestoreItemPayload(ASimPetItem *ContainerItem, const TArray<TSubclassOf<ASimPetItem>> &PayloadClasses, const FTransform &SpawnTransform)
