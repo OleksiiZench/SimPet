@@ -95,16 +95,8 @@ TArray<FSimPetDroppedItemSaveData> USimPetItemSubsystem::GetDroppedItemsSaveData
 
 void USimPetItemSubsystem::RestoreDroppedItemsFromSaveData(const TArray<FSimPetDroppedItemSaveData> &SavedDroppedItems)
 {
-	// 1. Очищення існуючих предметів на рівні
-	// TODO: Обміркувати доцільність знищення всіх предметів на карті
-	for (int i = AllActiveItems.Num() - 1; i >= 0; --i)
-	{
-		ASimPetItem *Item = AllActiveItems[i];
-		if (IsValid(Item) && Item->GetItemState() == ESimPetItemState::Dropped)
-			Item->Destroy();
-	}
+	ClearDroppedItemsFromLevel();
 	
-	// 2. Спавн предметів зі збереження
 	for (const FSimPetDroppedItemSaveData &DroppedItemData : SavedDroppedItems)
 	{
 		RestoreItemFromSaveData(DroppedItemData.ItemData, DroppedItemData.Transform);
@@ -160,6 +152,16 @@ ASimPetItem *USimPetItemSubsystem::SpawnItem(TSubclassOf<ASimPetItem> ItemClass,
 	}
 	
 	return nullptr;
+}
+
+void USimPetItemSubsystem::ClearDroppedItemsFromLevel()
+{
+	for (int i = AllActiveItems.Num() - 1; i >= 0; --i)
+	{
+		ASimPetItem *Item = AllActiveItems[i];
+		if (IsValid(Item) && Item->GetItemState() == ESimPetItemState::Dropped)
+			Item->Destroy();
+	}
 }
 
 void USimPetItemSubsystem::CacheSpawnFeedClassFromItemSettings()

@@ -42,5 +42,7 @@ private:
 	void RestoreItemPayload(ASimPetItem *ContainerItem, const TArray<TSubclassOf<ASimPetItem>> &PayloadClasses, const FTransform &SpawnTransform);
 	ASimPetItem *SpawnItem(TSubclassOf<ASimPetItem> ItemClass, FTransform Transform);
 	
+	void ClearDroppedItemsFromLevel();
+	
 	void CacheSpawnFeedClassFromItemSettings();
 };
