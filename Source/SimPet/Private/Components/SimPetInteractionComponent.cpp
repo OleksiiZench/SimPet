@@ -145,6 +145,8 @@ void USimPetInteractionComponent::TakeItem(ASimPetItem *Item)
 	if (HoldPoint)
 		Item->AttachToComponent(HoldPoint, GetRuleForAttachingItems());
 	
+	Item->SetItemState(ESimPetItemState::Equipped);
+	
 	CachedTakenItem = Item;
 }
 
@@ -152,6 +154,8 @@ void USimPetInteractionComponent::DropItem(ASimPetItem *Item)
 {
 	Item->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	Item->EnablePhysics();
+	
+	Item->SetItemState(ESimPetItemState::Dropped);
 	
 	CachedTakenItem = nullptr;
 }

@@ -49,6 +49,8 @@ void USimPetItemSubsystem::SpawnFeedOnRelevantPoints()
 		ASimPetAnimalFeed *NewFeed = GetWorld()->SpawnActor<ASimPetAnimalFeed>(CachedSpawnFeedClass, FeedTransform);
 		if (NewFeed)
 		{
+			NewFeed->SetItemState(ESimPetItemState::ManagedBySpawnPoint);
+			
 			SpawnPoint->AddGameplayTags(SimPetGameplayTags::Spawn_Point_HasFeed);
 			
 			NewFeed->OnFeedPickedUp.AddDynamic(SpawnPoint, &ASimPetSpawnPoint::HandleFeedPickedUp);
@@ -83,10 +85,8 @@ TArray<FSimPetDroppedItemSaveData> USimPetItemSubsystem::GetDroppedItemsSaveData
 	{
 		ASimPetItem *Item = Cast<ASimPetItem>(Actor);
 		
-		if (!IsValid(Item) || Item->GetAttachParentActor() != nullptr)
-		{// TODO:: Цю перевірку варто змінити на Item->bIsDropped або через Enum (Enum описує в якій "позиції" перебуває предмет)
+		if (!IsValid(Item) || Item->GetItemState() != ESimPetItemState::Dropped)
 			continue;
-		}
 		
 		FSimPetDroppedItemSaveData DroppedItemData;
 		DroppedItemData.Transform = Item->GetActorTransform();
@@ -114,7 +114,7 @@ void USimPetItemSubsystem::RestoreDroppedItemsFromSaveData(const TArray<FSimPetD
 	for (AActor *Actor : AllItems)
 	{
 		ASimPetItem *Item = Cast<ASimPetItem>(Actor);
-		if (IsValid(Item) && Item->GetAttachParentActor() == nullptr)
+		if (IsValid(Item) && Item->GetItemState() == ESimPetItemState::Dropped)
 			Item->Destroy();
 	}
 	

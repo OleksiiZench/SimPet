@@ -43,6 +43,8 @@ bool ASimPetBackPack::TryAddItem(ASimPetItem *Item)
 	
 	if (StoredItems.Num() < MaxCapacity)
 	{
+		Item->SetItemState(ESimPetItemState::InContainer);
+		
 		HideAndOptimizeItem(Item);
 		AttachItemToBackpack(Item);
 		
@@ -64,6 +66,8 @@ void ASimPetBackPack::ExtractItem()
 	}
 	
 	ASimPetItem *ItemToExtract = StoredItems.Pop();
+	
+	ItemToExtract->SetItemState(ESimPetItemState::Dropped);
 	
 	ShowAndDetachItem(ItemToExtract);
 	EnablePhysicsAndApplyImpulse(ItemToExtract);

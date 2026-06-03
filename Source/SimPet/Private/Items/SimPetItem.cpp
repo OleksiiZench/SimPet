@@ -9,6 +9,7 @@ ASimPetItem::ASimPetItem()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	
+	CurrentItemState = ESimPetItemState::Dropped;
 	CacheStaticMeshComp = nullptr;
 }
 
@@ -66,4 +67,14 @@ void ASimPetItem::DisablePhysics()
 		CacheStaticMeshComp->SetSimulatePhysics(false);
 		CacheStaticMeshComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	}
+}
+
+ESimPetItemState ASimPetItem::GetItemState() const
+{
+	return CurrentItemState;
+}
+
+void ASimPetItem::SetItemState(const ESimPetItemState NewItemState)
+{
+	CurrentItemState = NewItemState;
 }

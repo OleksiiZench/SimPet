@@ -7,6 +7,7 @@
 #include "GameplayTagAssetInterface.h"
 
 #include "Interfaces/SimPetInteractable.h"
+#include "SimPetTypes/SimPetEnumTypes.h"
 
 #include "SimPetItem.generated.h"
 
@@ -32,10 +33,15 @@ public:
 	
 	void EnablePhysics();
 	void DisablePhysics();
+	
+	ESimPetItemState GetItemState() const;
+	void SetItemState(const ESimPetItemState NewItemState);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tags")
 	FGameplayTagContainer GameplayTags;
+	
+	ESimPetItemState CurrentItemState;
 	
 private:
 	UPROPERTY()
