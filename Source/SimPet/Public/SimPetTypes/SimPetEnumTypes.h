@@ -29,6 +29,14 @@ enum class EGameDifficulty : uint8
     Hard     UMETA(DisplayName = "Hard")
 };
 
+UENUM(BlueprintType)
+enum class ESimPetItemState : uint8
+{
+    Dropped        UMETA(DisplayName = "Easy"),
+    Equipped       UMETA(DisplayName = "Normal"),
+    InContainer    UMETA(DisplayName = "Hard")
+};
+
 UCLASS()
 class SIMPET_API USimPetEnumTypes : public UObject
 {
