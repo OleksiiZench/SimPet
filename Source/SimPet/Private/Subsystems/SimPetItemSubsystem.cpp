@@ -3,8 +3,6 @@
 
 #include "Subsystems/SimPetItemSubsystem.h"
 
-#include "Kismet/GameplayStatics.h"
-
 #include "Core/Settings/SimPetItemSettings.h"
 #include "Items/SimPetAnimalFeed.h"
 #include "Subsystems/SimPetAnimalSubsystem.h"
@@ -86,12 +84,8 @@ TArray<FSimPetDroppedItemSaveData> USimPetItemSubsystem::GetDroppedItemsSaveData
 		
 		FSimPetDroppedItemSaveData DroppedItemData;
 		DroppedItemData.Transform = Item->GetActorTransform();
-		DroppedItemData.ItemData.ItemClass = Item->GetClass();
 		
-		if (Item->Implements<USimPetItemContainer>())
-		{
-			ISimPetItemContainer::Execute_GetContainerPayloadClasses(Item, DroppedItemData.ItemData.PayloadClasses);
-		}
+		DroppedItemData.ItemData = Item->GetSaveData();
 		
 		ResultArray.Add(DroppedItemData);
 	}

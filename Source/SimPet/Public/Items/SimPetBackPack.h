@@ -26,7 +26,7 @@ public:
 	
 	//~ Begin ISimPetItemContainer Interface
 	virtual bool TryAddItemToContainer_Implementation(ASimPetItem *Item) override;
-	virtual void GetContainerPayloadClasses_Implementation(TArray<TSubclassOf<ASimPetItem>> &OutPayloadClasses) override;
+	virtual void GetContainerPayloadClasses_Implementation(TArray<TSubclassOf<ASimPetItem>> &OutPayloadClasses) const override;
 	//~ End ISimPetItemContainer Interface
 	
 	virtual bool TryInteractWithAnotherActor(AActor *TargetActor) override;

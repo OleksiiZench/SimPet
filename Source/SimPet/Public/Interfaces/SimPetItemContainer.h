@@ -29,5 +29,5 @@ public:
 	bool TryAddItemToContainer(ASimPetItem *Item);
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
-	void GetContainerPayloadClasses(TArray<TSubclassOf<ASimPetItem>> &OutPayloadClasses);
+	void GetContainerPayloadClasses(TArray<TSubclassOf<ASimPetItem>> &OutPayloadClasses) const;
 };

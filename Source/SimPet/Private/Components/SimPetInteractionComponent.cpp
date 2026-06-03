@@ -110,19 +110,12 @@ void USimPetInteractionComponent::SetHoldPoint(USceneComponent *InHoldPoint)
 
 FSimPetItemSaveData USimPetInteractionComponent::GetSaveDataEquippedItem() const
 {
-	FSimPetItemSaveData ItemSaveData;
-	
 	if (IsValid(CachedTakenItem))
 	{
-		ItemSaveData.ItemClass = CachedTakenItem->GetClass();
-	
-		if (CachedTakenItem->Implements<USimPetItemContainer>())
-		{
-			ISimPetItemContainer::Execute_GetContainerPayloadClasses(CachedTakenItem, ItemSaveData.PayloadClasses);
-		}
+		return CachedTakenItem->GetSaveData();
 	}
 	
-	return ItemSaveData;
+	return FSimPetItemSaveData();
 }
 
 void USimPetInteractionComponent::ApplyLoadedDataOfEquippedItem(const FSimPetItemSaveData &ItemSaveData)

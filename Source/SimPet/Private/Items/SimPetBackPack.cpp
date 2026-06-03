@@ -15,7 +15,7 @@ bool ASimPetBackPack::TryAddItemToContainer_Implementation(ASimPetItem *Item)
 	return TryAddItem(Item);
 }
 
-void ASimPetBackPack::GetContainerPayloadClasses_Implementation(TArray<TSubclassOf<ASimPetItem>> &OutPayloadClasses)
+void ASimPetBackPack::GetContainerPayloadClasses_Implementation(TArray<TSubclassOf<ASimPetItem>> &OutPayloadClasses) const
 {
 	OutPayloadClasses.Empty();
 	

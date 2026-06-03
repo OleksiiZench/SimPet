@@ -4,6 +4,7 @@
 #include "Items/SimPetItem.h"
 
 #include "Components/SimPetInteractionComponent.h"
+#include "Interfaces/SimPetItemContainer.h"
 #include "Subsystems/SimPetItemSubsystem.h"
 
 ASimPetItem::ASimPetItem()
@@ -95,4 +96,18 @@ ESimPetItemState ASimPetItem::GetItemState() const
 void ASimPetItem::SetItemState(const ESimPetItemState NewItemState)
 {
 	CurrentItemState = NewItemState;
+}
+
+FSimPetItemSaveData ASimPetItem::GetSaveData() const
+{
+	FSimPetItemSaveData SaveData;
+	
+	SaveData.ItemClass = GetClass();
+	
+	if (Implements<USimPetItemContainer>())
+	{
+		ISimPetItemContainer::Execute_GetContainerPayloadClasses(this, SaveData.PayloadClasses);
+	}
+	
+	return SaveData;
 }

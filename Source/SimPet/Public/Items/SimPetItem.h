@@ -11,6 +11,8 @@
 
 #include "SimPetItem.generated.h"
 
+struct FSimPetItemSaveData;
+
 UCLASS()
 class SIMPET_API ASimPetItem : public AActor, public IGameplayTagAssetInterface, public ISimPetInteractable
 {
@@ -37,6 +39,8 @@ public:
 	
 	ESimPetItemState GetItemState() const;
 	void SetItemState(const ESimPetItemState NewItemState);
+	
+	FSimPetItemSaveData GetSaveData() const;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tags")
