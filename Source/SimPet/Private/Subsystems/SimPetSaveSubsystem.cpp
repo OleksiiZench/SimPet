@@ -67,46 +67,21 @@ void USimPetSaveSubsystem::SaveGame()
 {
 	CacheSaveGame();
 	
-	// 1. Зберігаємо окремі актори які мають інтерфейс Savable
-	for (AActor *Actor : RegisteredSavableActors)
-	{
-		ISimPetSavable::Execute_SaveActorData(Actor, CachedSaveGame);
-	}
+	SaveRegisteredActorsData();
 	
-	// 2. Зберігаємо Dropped Items
-	USimPetItemSubsystem *ItemSubsystem = GetWorld()->GetSubsystem<USimPetItemSubsystem>();
-	if (ItemSubsystem)
-		CachedSaveGame->DroppedItemsSaveData = ItemSubsystem->GetDroppedItemsSaveData();
+	SaveDroppedItemsData();
 	
-	bool bIsSaved = UGameplayStatics::SaveGameToSlot(CachedSaveGame, SaveGameSlotName, 0);
-	
-	if (USimPetUISubsystem *UISubsystem= GetUISubsystem())
-	{
-		if (bIsSaved)
-			UISubsystem->BroadcastNotification(true, TEXT("Game Saved!"));
-		else
-			UISubsystem->BroadcastNotification(false, TEXT("Save Error!"));
-	}
+	bool bIsSaved = WriteSaveGameToDisk();
+	NotifySaveResult(bIsSaved);
 }
 
 void USimPetSaveSubsystem::LoadGame()
 {
-	USaveGame *LoadedGame = UGameplayStatics::LoadGameFromSlot(SaveGameSlotName, 0);
-	if (LoadedGame != nullptr)
-	{
-		CachedSaveGame = Cast<USimPetSaveGame>(LoadedGame);
-		
-		// 1. Завантажуємо окремі актори які мають інтерфейс Savable
-		for (AActor *Actor : RegisteredSavableActors)
-		{
-			ISimPetSavable::Execute_LoadActorData(Actor, CachedSaveGame);
-		}
-		
-		// 2. Завантажуємо Dropped Items
-		USimPetItemSubsystem *ItemSubsystem = GetWorld()->GetSubsystem<USimPetItemSubsystem>();
-		if (ItemSubsystem)
-			ItemSubsystem->RestoreDroppedItemsFromSaveData(CachedSaveGame->DroppedItemsSaveData);
-	}
+	ReadSaveGameFromDisk();
+	
+	LoadRegisteredActorsData();
+	
+	RestoreDroppedItemsData();
 }
 
 void USimPetSaveSubsystem::RegisterSavableActor(AActor *ActorToRegister)
@@ -205,4 +180,75 @@ void USimPetSaveSubsystem::LoadDifficulty()
 	{
 		Difficulty = EGameDifficulty::Easy;
 	}
+}
+
+void USimPetSaveSubsystem::SaveRegisteredActorsData()
+{
+	for (AActor *Actor : RegisteredSavableActors)
+	{
+		ISimPetSavable::Execute_SaveActorData(Actor, CachedSaveGame);
+	}
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void USimPetSaveSubsystem::SaveDroppedItemsData()
+{
+	USimPetItemSubsystem *ItemSubsystem = GetWorld()->GetSubsystem<USimPetItemSubsystem>();
+	if (ItemSubsystem)
+		CachedSaveGame->DroppedItemsSaveData = ItemSubsystem->GetDroppedItemsSaveData();
+}
+
+bool USimPetSaveSubsystem::WriteSaveGameToDisk() const
+{
+	if (!IsValid(CachedSaveGame))
+		return false;
+	
+	return UGameplayStatics::SaveGameToSlot(CachedSaveGame, SaveGameSlotName, 0);
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void USimPetSaveSubsystem::NotifySaveResult(const bool bIsSuccess)
+{
+	USimPetUISubsystem *UISubsystem= GetUISubsystem();
+	if (UISubsystem == nullptr)
+		return;
+
+	if (bIsSuccess)
+		UISubsystem->BroadcastNotification(true, TEXT("Game Saved!"));
+	else
+		UISubsystem->BroadcastNotification(false, TEXT("Save Error!"));
+	
+}
+
+bool USimPetSaveSubsystem::ReadSaveGameFromDisk()
+{
+	USaveGame *LoadedGame = UGameplayStatics::LoadGameFromSlot(SaveGameSlotName, 0);
+	if (LoadedGame == nullptr)
+		return false;
+	
+	CachedSaveGame = Cast<USimPetSaveGame>(LoadedGame);
+	
+	return IsValid(CachedSaveGame);
+}
+
+void USimPetSaveSubsystem::LoadRegisteredActorsData()
+{
+	if (!IsValid(CachedSaveGame))
+		return;
+	
+	for (AActor *Actor : RegisteredSavableActors)
+	{
+		if (IsValid(Actor))
+			ISimPetSavable::Execute_LoadActorData(Actor, CachedSaveGame);
+	}
+}
+
+void USimPetSaveSubsystem::RestoreDroppedItemsData()
+{
+	if (!IsValid(CachedSaveGame))
+		return;
+	
+	USimPetItemSubsystem *ItemSubsystem = GetWorld()->GetSubsystem<USimPetItemSubsystem>();
+	if (ItemSubsystem)
+		ItemSubsystem->RestoreDroppedItemsFromSaveData(CachedSaveGame->DroppedItemsSaveData);
 }

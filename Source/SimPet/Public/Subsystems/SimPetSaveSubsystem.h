@@ -68,4 +68,13 @@ private:
 	void SaveMaxPoints() const;
 	
 	void LoadDifficulty();
+	
+	void SaveRegisteredActorsData();
+	void SaveDroppedItemsData();
+	bool WriteSaveGameToDisk() const;
+	void NotifySaveResult(const bool bIsSuccess);
+	
+	bool ReadSaveGameFromDisk();
+	void LoadRegisteredActorsData();
+	void RestoreDroppedItemsData();
 };
