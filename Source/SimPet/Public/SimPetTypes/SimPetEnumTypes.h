@@ -32,9 +32,9 @@ enum class EGameDifficulty : uint8
 UENUM(BlueprintType)
 enum class ESimPetItemState : uint8
 {
-    Dropped        UMETA(DisplayName = "Easy"),
-    Equipped       UMETA(DisplayName = "Normal"),
-    InContainer    UMETA(DisplayName = "Hard")
+    Dropped        UMETA(DisplayName = "Dropped on Level"),
+    Equipped       UMETA(DisplayName = "Equipped by Actor"),
+    InContainer    UMETA(DisplayName = "Inside a Container")
 };
 
 UCLASS()
