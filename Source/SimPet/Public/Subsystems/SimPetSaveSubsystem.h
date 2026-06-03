@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 
-#include "SimPetEnumTypes.h"
+#include "SimPetTypes/SimPetEnumTypes.h"
 
 #include "SimPetSaveSubsystem.generated.h"
 

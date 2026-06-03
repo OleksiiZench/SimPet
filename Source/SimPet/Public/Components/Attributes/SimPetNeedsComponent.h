@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 
-#include "SimPetEnumTypes.h"
+#include "SimPetTypes/SimPetEnumTypes.h"
 #include "SimPetTypes/SimPetNeedsConfig.h"
 
 #include "SimPetNeedsComponent.generated.h"

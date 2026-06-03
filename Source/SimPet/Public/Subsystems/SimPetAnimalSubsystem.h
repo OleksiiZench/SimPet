@@ -6,7 +6,7 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "GameplayTagContainer.h"
 
-#include "SimPetEnumTypes.h"
+#include "SimPetTypes/SimPetEnumTypes.h"
 
 #include "SimPetAnimalSubsystem.generated.h"
 

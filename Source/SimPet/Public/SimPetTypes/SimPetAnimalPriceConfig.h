@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 
-#include "SimPetEnumTypes.h"
+#include "SimPetTypes/SimPetEnumTypes.h"
 
 #include "SimPetAnimalPriceConfig.generated.h"
 

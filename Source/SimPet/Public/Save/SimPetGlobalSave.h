@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
-#include "SimPetEnumTypes.h"
+#include "SimPetTypes/SimPetEnumTypes.h"
 
 #include "SimPetGlobalSave.generated.h"
 

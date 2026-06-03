@@ -10,7 +10,7 @@
 #include "Components/Attributes/SimPetStaminaComponent.h"
 #include "Core/SimPetPlayerState.h"
 #include "Subsystems/SimPetAnimalSubsystem.h"
-#include "SimPetEnumTypes.h"
+#include "SimPetTypes/SimPetEnumTypes.h"
 
 void USimPetHUDWidget::NativeConstruct()
 {

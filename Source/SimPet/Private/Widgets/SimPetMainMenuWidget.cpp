@@ -8,7 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/WidgetSwitcher.h"
 #include "GameFramework/GameUserSettings.h"
-#include "SimPetEnumTypes.h"
+#include "SimPetTypes/SimPetEnumTypes.h"
 #include "Subsystems/SimPetSaveSubsystem.h"
 
 #include "SimPetDebugHelper.h"

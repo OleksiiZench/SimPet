@@ -8,7 +8,7 @@
 
 #include "WorldObjects/SimPetFabricator.h"
 #include "Components/SimPetPointsTransactionComponent.h"
-#include "SimPetEnumTypes.h"
+#include "SimPetTypes/SimPetEnumTypes.h"
 #include "Widgets/SimPetHUD.h"
 #include "Core/SimPetPlayerState.h"
 

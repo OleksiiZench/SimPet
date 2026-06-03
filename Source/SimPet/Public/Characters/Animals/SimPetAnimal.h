@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Characters/SimPetBaseCharacter.h"
-#include "SimPetEnumTypes.h"
+#include "SimPetTypes/SimPetEnumTypes.h"
 
 #include "Interfaces/SimPetInteractable.h"
 

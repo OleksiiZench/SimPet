@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DeveloperSettings.h"
 
-#include "SimPetEnumTypes.h"
+#include "SimPetTypes/SimPetEnumTypes.h"
 #include "Characters/Animals/SimPetAnimal.h"
 
 #include "SimPetAnimalSettings.generated.h"

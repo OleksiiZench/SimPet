@@ -16,7 +16,7 @@
 #include "Characters/SimPetPlayer.h"
 #include "AI/SimPetAIController.h"
 #include "DataAsset/SimPetAnimalConfigData.h"
-#include "SimPetEnumTypes.h"
+#include "SimPetTypes/SimPetEnumTypes.h"
 #include "Subsystems/SimPetSaveSubsystem.h"
 
 ASimPetAnimal::ASimPetAnimal()
