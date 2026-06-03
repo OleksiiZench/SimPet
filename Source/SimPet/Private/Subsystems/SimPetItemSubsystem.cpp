@@ -99,7 +99,9 @@ void USimPetItemSubsystem::RestoreDroppedItemsFromSaveData(const TArray<FSimPetD
 	
 	for (const FSimPetDroppedItemSaveData &DroppedItemData : SavedDroppedItems)
 	{
-		RestoreItemFromSaveData(DroppedItemData.ItemData, DroppedItemData.Transform);
+		ASimPetItem *RestoredItem = RestoreItemFromSaveData(DroppedItemData.ItemData, DroppedItemData.Transform);
+		if (IsValid(RestoredItem))
+			RestoredItem->EnablePhysics();
 	}
 }
 
