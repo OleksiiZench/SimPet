@@ -4,6 +4,7 @@
 #include "Items/SimPetItem.h"
 
 #include "Components/SimPetInteractionComponent.h"
+#include "Subsystems/SimPetItemSubsystem.h"
 
 ASimPetItem::ASimPetItem()
 {
@@ -18,6 +19,23 @@ void ASimPetItem::BeginPlay()
 	Super::BeginPlay();
 	
 	CacheStaticMeshComp = FindComponentByClass<UStaticMeshComponent>();
+	
+	USimPetItemSubsystem *ItemSubsystem = GetWorld()->GetSubsystem<USimPetItemSubsystem>();
+	if (ItemSubsystem)
+	{
+		ItemSubsystem->RegisterActiveItem(this);
+	}
+}
+
+void ASimPetItem::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	USimPetItemSubsystem *ItemSubsystem = GetWorld()->GetSubsystem<USimPetItemSubsystem>();
+	if (ItemSubsystem)
+	{
+		ItemSubsystem->UnregisterActiveItem(this);
+	}
+	
+	Super::EndPlay(EndPlayReason);
 }
 
 void ASimPetItem::Interact_Implementation(AActor *InstigatorActor)

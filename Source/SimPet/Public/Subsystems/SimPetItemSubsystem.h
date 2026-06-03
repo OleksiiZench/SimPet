@@ -29,11 +29,18 @@ public:
 	
 	TArray<FSimPetDroppedItemSaveData> GetDroppedItemsSaveData() const;
 	void RestoreDroppedItemsFromSaveData(const TArray<FSimPetDroppedItemSaveData> &SavedDroppedItems);
+	
+	void RegisterActiveItem(ASimPetItem *ItemToRegister);
+	void UnregisterActiveItem(ASimPetItem *ItemToRemove);
 private:
+	UPROPERTY()
+	TSubclassOf<ASimPetAnimalFeed> CachedSpawnFeedClass;
+	
+	UPROPERTY()
+	TArray<ASimPetItem *> AllActiveItems;
+	
 	void RestoreItemPayload(ASimPetItem *ContainerItem, const TArray<TSubclassOf<ASimPetItem>> &PayloadClasses, const FTransform &SpawnTransform);
 	ASimPetItem *SpawnItem(TSubclassOf<ASimPetItem> ItemClass, FTransform Transform);
 	
 	void CacheSpawnFeedClassFromItemSettings();
-	
-	TSubclassOf<ASimPetAnimalFeed> CachedSpawnFeedClass;
 };

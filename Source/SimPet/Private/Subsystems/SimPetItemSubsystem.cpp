@@ -77,11 +77,7 @@ TArray<FSimPetDroppedItemSaveData> USimPetItemSubsystem::GetDroppedItemsSaveData
 {
 	TArray<FSimPetDroppedItemSaveData> ResultArray;
 	
-	TArray<AActor *> AllItems;
-	// TODO: Варто позбутися GetAllActorsOfClass і реалізувати це через патерн Реєстратор
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASimPetItem::StaticClass(), AllItems);
-	
-	for (AActor *Actor : AllItems)
+	for (AActor *Actor : AllActiveItems)
 	{
 		ASimPetItem *Item = Cast<ASimPetItem>(Actor);
 		
@@ -107,13 +103,9 @@ void USimPetItemSubsystem::RestoreDroppedItemsFromSaveData(const TArray<FSimPetD
 {
 	// 1. Очищення існуючих предметів на рівні
 	// TODO: Обміркувати доцільність знищення всіх предметів на карті
-	TArray<AActor *> AllItems;
-	// TODO: Варто позбутися GetAllActorsOfClass і реалізувати це через патерн Реєстратор
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASimPetItem::StaticClass(), AllItems);
-	
-	for (AActor *Actor : AllItems)
+	for (int i = AllActiveItems.Num() - 1; i >= 0; --i)
 	{
-		ASimPetItem *Item = Cast<ASimPetItem>(Actor);
+		ASimPetItem *Item = AllActiveItems[i];
 		if (IsValid(Item) && Item->GetItemState() == ESimPetItemState::Dropped)
 			Item->Destroy();
 	}
@@ -122,6 +114,22 @@ void USimPetItemSubsystem::RestoreDroppedItemsFromSaveData(const TArray<FSimPetD
 	for (const FSimPetDroppedItemSaveData &DroppedItemData : SavedDroppedItems)
 	{
 		RestoreItemFromSaveData(DroppedItemData.ItemData, DroppedItemData.Transform);
+	}
+}
+
+void USimPetItemSubsystem::RegisterActiveItem(ASimPetItem *ItemToRegister)
+{
+	if (IsValid(ItemToRegister) && !AllActiveItems.Contains(ItemToRegister))
+	{
+		AllActiveItems.Add(ItemToRegister);
+	}
+}
+
+void USimPetItemSubsystem::UnregisterActiveItem(ASimPetItem *ItemToRemove)
+{
+	if (ItemToRemove)
+	{
+		AllActiveItems.Remove(ItemToRemove);
 	}
 }
 
