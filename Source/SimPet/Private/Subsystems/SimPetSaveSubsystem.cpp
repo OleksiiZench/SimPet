@@ -79,9 +79,9 @@ void USimPetSaveSubsystem::LoadGame()
 {
 	ReadSaveGameFromDisk();
 	
-	LoadRegisteredActorsData();
-	
 	RestoreDroppedItemsData();
+	
+	LoadRegisteredActorsData();
 }
 
 void USimPetSaveSubsystem::RegisterSavableActor(AActor *ActorToRegister)

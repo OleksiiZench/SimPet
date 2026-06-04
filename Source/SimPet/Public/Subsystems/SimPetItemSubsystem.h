@@ -12,6 +12,7 @@
 
 class ASimPetAnimalFeed;
 class ASimPetItem;
+class ASimPetSpawnPoint;
 
 /**
  * 
@@ -25,6 +26,7 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	
 	void SpawnFeedOnRelevantPoints();
+	void SpawnFeedOnSinglePoint(ASimPetSpawnPoint *SpawnPoint);
 	ASimPetItem *RestoreItemFromSaveData(const FSimPetItemSaveData &ItemSaveData, const FTransform &SpawnTransform);
 	
 	TArray<FSimPetDroppedItemSaveData> GetDroppedItemsSaveData() const;

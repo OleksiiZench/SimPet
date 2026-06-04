@@ -43,17 +43,25 @@ void USimPetItemSubsystem::SpawnFeedOnRelevantPoints()
 			continue;
 		}
 		
-		FTransform FeedTransform = SpawnPoint->GetTransform();
-		ASimPetAnimalFeed *NewFeed = GetWorld()->SpawnActor<ASimPetAnimalFeed>(CachedSpawnFeedClass, FeedTransform);
-		if (NewFeed)
-		{
-			NewFeed->SetItemState(ESimPetItemState::ManagedBySpawnPoint);
+		SpawnFeedOnSinglePoint(SpawnPoint);
+	}
+}
+
+void USimPetItemSubsystem::SpawnFeedOnSinglePoint(ASimPetSpawnPoint *SpawnPoint)
+{
+	if (SpawnPoint == nullptr || !CachedSpawnFeedClass)
+		return;
+	
+	FTransform FeedTransform = SpawnPoint->GetTransform();
+	ASimPetAnimalFeed *NewFeed = GetWorld()->SpawnActor<ASimPetAnimalFeed>(CachedSpawnFeedClass, FeedTransform);
+	if (NewFeed)
+	{
+		NewFeed->SetItemState(ESimPetItemState::ManagedBySpawnPoint);
 			
-			SpawnPoint->AddGameplayTags(SimPetGameplayTags::Spawn_Point_HasFeed);
+		SpawnPoint->AddGameplayTags(SimPetGameplayTags::Spawn_Point_HasFeed);
 			
-			NewFeed->OnFeedPickedUp.AddDynamic(SpawnPoint, &ASimPetSpawnPoint::HandleFeedPickedUp);
-			NewFeed->OnDestroyed.AddDynamic(SpawnPoint, &ASimPetSpawnPoint::HandleFeedDestroyed);
-		}
+		NewFeed->OnFeedPickedUp.AddDynamic(SpawnPoint, &ASimPetSpawnPoint::HandleFeedPickedUp);
+		NewFeed->OnDestroyed.AddDynamic(SpawnPoint, &ASimPetSpawnPoint::HandleFeedDestroyed);
 	}
 }
 
@@ -161,7 +169,7 @@ void USimPetItemSubsystem::ClearDroppedItemsFromLevel()
 	for (int i = AllActiveItems.Num() - 1; i >= 0; --i)
 	{
 		ASimPetItem *Item = AllActiveItems[i];
-		if (IsValid(Item) && Item->GetItemState() == ESimPetItemState::Dropped)
+		if (IsValid(Item) && (Item->GetItemState() == ESimPetItemState::Dropped || Item->GetItemState() == ESimPetItemState::ManagedBySpawnPoint))
 			Item->Destroy();
 	}
 }
