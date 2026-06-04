@@ -39,8 +39,11 @@ public:
 	void HandleFeedDestroyed(AActor *DestroyedActor);
 	
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tags")
-	FGameplayTagContainer GameplayTags;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SimPet|Tags")
+	FGameplayTagContainer ConfigTags;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient, Category = "SimPet|Tags")
+	FGameplayTagContainer DynamicTags;
 	
 private:
 	void RegisterSpawnPointInAnimalSubsystem();

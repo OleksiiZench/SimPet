@@ -27,13 +27,14 @@ void ASimPetSpawnPoint::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void ASimPetSpawnPoint::GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const
 {
-	TagContainer.AppendTags(GameplayTags);
+	TagContainer.AppendTags(ConfigTags);
+	TagContainer.AppendTags(DynamicTags);
 }
 
 void ASimPetSpawnPoint::SaveActorData_Implementation(USimPetSaveGame *SaveObject)
 {
 	if (SaveObject)
-		SaveObject->SavedSpawnPointsTags.Add(GetFName(), GameplayTags);
+		SaveObject->SavedSpawnPointsTags.Add(GetFName(), DynamicTags);
 }
 
 void ASimPetSpawnPoint::LoadActorData_Implementation(USimPetSaveGame *SaveObject)
@@ -41,11 +42,11 @@ void ASimPetSpawnPoint::LoadActorData_Implementation(USimPetSaveGame *SaveObject
 	if (!SaveObject || !SaveObject->SavedSpawnPointsTags.Contains(GetFName()))
 		return;
 	
-	GameplayTags = SaveObject->SavedSpawnPointsTags[GetFName()];
+	DynamicTags = SaveObject->SavedSpawnPointsTags[GetFName()];
 	
-	if (GameplayTags.HasTag(SimPetGameplayTags::Spawn_Point_HasFeed))
+	if (DynamicTags.HasTag(SimPetGameplayTags::Spawn_Point_HasFeed))
 	{
-		GameplayTags.RemoveTag(SimPetGameplayTags::Spawn_Point_HasFeed);
+		DynamicTags.RemoveTag(SimPetGameplayTags::Spawn_Point_HasFeed);
 		
 		USimPetItemSubsystem *ItemSubsystem = GetWorld()->GetSubsystem<USimPetItemSubsystem>();
 		if (ItemSubsystem)
@@ -56,13 +57,13 @@ void ASimPetSpawnPoint::LoadActorData_Implementation(USimPetSaveGame *SaveObject
 void ASimPetSpawnPoint::AddGameplayTags(const FGameplayTag& Tag)
 {
 	if (Tag.IsValid())
-		GameplayTags.AddTag(Tag);
+		DynamicTags.AddTag(Tag);
 }
 
 void ASimPetSpawnPoint::RemoveGameplayTags(const FGameplayTag &Tag)
 {
 	if (Tag.IsValid())
-		GameplayTags.RemoveTag(Tag);
+		DynamicTags.RemoveTag(Tag);
 }
 
 void ASimPetSpawnPoint::HandleFeedPickedUp(ASimPetAnimalFeed *PickedFeed)
@@ -106,5 +107,5 @@ void ASimPetSpawnPoint::RemoveSpawnPointFromSaveSubsystem()
 
 void ASimPetSpawnPoint::ClearFeedTag()
 {
-	GameplayTags.RemoveTag(SimPetGameplayTags::Spawn_Point_HasFeed);
+	DynamicTags.RemoveTag(SimPetGameplayTags::Spawn_Point_HasFeed);
 }
