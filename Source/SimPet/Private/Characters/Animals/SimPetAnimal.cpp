@@ -16,6 +16,8 @@
 #include "Characters/SimPetPlayer.h"
 #include "AI/SimPetAIController.h"
 #include "DataAsset/SimPetAnimalConfigData.h"
+#include "Save/SimPetSaveGame.h"
+#include "Save/Structures/SimPetAnimalSaveData.h"
 #include "SimPetTypes/SimPetEnumTypes.h"
 #include "Subsystems/SimPetSaveSubsystem.h"
 
@@ -58,7 +60,6 @@ void ASimPetAnimal::BeginPlay()
 void ASimPetAnimal::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	UnbindNeedsEvents();
-	ClearWasteBindings();
 	
 	Super::EndPlay(EndPlayReason);
 }
@@ -78,6 +79,15 @@ void ASimPetAnimal::FeedAnimal()
 		NeedsComponent->Feed();
 	}
 }
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void ASimPetAnimal::CleanAnimal()
+{
+	if (NeedsComponent)
+	{
+		NeedsComponent->Wash();
+	}
+}	
 
 void ASimPetAnimal::ApplyForestState()
 {
@@ -100,12 +110,32 @@ ESimPetAnimalState ASimPetAnimal::GetAnimalState() const
 	return NeedsComponent->GetAnimalState();
 }
 
+FSimPetAnimalSaveData ASimPetAnimal::GetAnimalSaveData() const
+{
+	FSimPetAnimalSaveData SaveData;
+	
+	SaveData.Transform = GetActorTransform();
+	SaveData.AnimalClass = GetClass();
+	
+	if (NeedsComponent)
+	{
+		SaveData.TimeSinceLastMeal = NeedsComponent->GetTimeSinceLastMeal();
+		SaveData.TimeSinceLastClean = NeedsComponent->GetTimeSinceLastClean();
+	}
+	
+	return SaveData;
+}
+
+void ASimPetAnimal::RestoreFromSaveData(const FSimPetAnimalSaveData &AnimalSaveData)
+{
+	if (NeedsComponent)
+		NeedsComponent->RestoreNeedsState(AnimalSaveData.TimeSinceLastMeal, AnimalSaveData.TimeSinceLastClean);
+}
+
 void ASimPetAnimal::AnimateLegs(float DeltaTime, float CurrentTime)
 {
 	// 1. Отримуємо поточну швидкість
 	float CurrentVelocity = GetVelocity().Size();
-	
-
 	
 	for (int32 i = 0; i < SpawnedLegs.Num(); i++)
 	{
@@ -216,6 +246,7 @@ void ASimPetAnimal::HandleWasteCleaned()
 	CleanAnimal();
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ASimPetAnimal::SetDifficultyNeeds()
 {
 	if (AnimalConfigAsset && NeedsComponent)
@@ -319,12 +350,7 @@ void ASimPetAnimal::SpawnAnimalWaste()
 	
 	FVector SpawnLocation = GetLocationAboveGround();
 	
-	ASimPetAnimalWaste *SpawnedAnimalWaste = GetWorld()->SpawnActor<ASimPetAnimalWaste>(WasteClass, SpawnLocation, FRotator::ZeroRotator);
-	if (SpawnedAnimalWaste)
-	{
-		SpawnedAnimalWaste->OnWasteCleaned.AddDynamic(this, &ASimPetAnimal::HandleWasteCleaned);
-		TrackedWastes.Add(SpawnedAnimalWaste);
-	}
+	GetWorld()->SpawnActor<ASimPetAnimalWaste>(WasteClass, SpawnLocation, FRotator::ZeroRotator);
 }
 
 FVector ASimPetAnimal::GetLocationAboveGround() const
@@ -349,27 +375,6 @@ FVector ASimPetAnimal::GetLocationAboveGround() const
 	}
 	
 	return SpawnLocation;
-}
-
-void ASimPetAnimal::ClearWasteBindings()
-{
-	for (ASimPetAnimalWaste *Waste : TrackedWastes)
-	{
-		if (IsValid(Waste))
-		{
-			Waste->OnWasteCleaned.RemoveDynamic(this, &ASimPetAnimal::HandleWasteCleaned);
-		}
-	}
-	
-	TrackedWastes.Empty();
-}
-
-void ASimPetAnimal::CleanAnimal() const
-{
-	if (NeedsComponent)
-	{
-		NeedsComponent->Wash();
-	}
 }
 
 void ASimPetAnimal::Die()

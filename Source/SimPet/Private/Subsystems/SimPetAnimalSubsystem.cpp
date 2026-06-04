@@ -46,6 +46,21 @@ ASimPetAnimal * USimPetAnimalSubsystem::SpawnAnimal(ESimPetAnimals AnimalType)
 	return nullptr;
 }
 
+void USimPetAnimalSubsystem::HandleWasteCleaned()
+{
+	const TArray<ASimPetAnimal *> &Animals = GetOwnerAnimal();
+	
+	for (ASimPetAnimal *Animal : Animals)
+	{
+		if (IsValid(Animal) && Animal->GetAnimalState() == ESimPetAnimalState::Tired)
+		{
+			Animal->CleanAnimal();
+			
+			break;
+		}
+	}
+}
+
 void USimPetAnimalSubsystem::MoveAnimalToForest()
 {
 	if (OwnerAnimals.IsEmpty())
@@ -135,6 +150,89 @@ int32 USimPetAnimalSubsystem::GetTotalNumberWildAnimals() const
 	return WildAnimals.Num();
 }
 
+TArray<FSimPetAnimalSaveData> USimPetAnimalSubsystem::GetAnimalsSaveData() const
+{
+	TArray<FSimPetAnimalSaveData> ResultArray;
+	
+	for (ASimPetAnimal *Animal : OwnerAnimals)
+	{
+		if (IsValid(Animal) && Animal->GetAnimalState() != ESimPetAnimalState::Dead)
+		{
+			FSimPetAnimalSaveData Data = Animal->GetAnimalSaveData();
+			Data.bIsOwned = true;
+			
+			ASimPetSpawnPoint *SpawnPoint = AnimalToSpawnPointMap.FindRef(Animal);
+			if (SpawnPoint)
+				Data.BoundSpawnPointName = SpawnPoint->GetFName();
+			
+			ResultArray.Add(Data);
+		}
+	}
+	
+	for (ASimPetAnimal *Animal : WildAnimals)
+    	{
+    		if (IsValid(Animal) && Animal->GetAnimalState() != ESimPetAnimalState::Dead)
+    		{
+    			FSimPetAnimalSaveData Data = Animal->GetAnimalSaveData();
+    			Data.bIsOwned = false;
+    			
+    			ASimPetSpawnPoint *SpawnPoint = AnimalToSpawnPointMap.FindRef(Animal);
+    			if (SpawnPoint)
+    				Data.BoundSpawnPointName = SpawnPoint->GetFName();
+    			
+    			ResultArray.Add(Data);
+    		}
+    	}
+	
+	return ResultArray;
+}
+
+void USimPetAnimalSubsystem::RestoreAnimalsFromSave(const TArray<FSimPetAnimalSaveData> &SavedData)
+{
+	ClearAnimalsFromLevel();
+	
+	for (const FSimPetAnimalSaveData &Data : SavedData)
+	{
+		if (!IsValid(Data.AnimalClass))
+			continue;
+		
+		ASimPetAnimal *SpawnedAnimal = GetWorld()->SpawnActor<ASimPetAnimal>(Data.AnimalClass, Data.Transform);
+		if (SpawnedAnimal)
+		{
+			// 1. Відновлюємо внутрішній стан (голод/чистота)
+			SpawnedAnimal->RestoreFromSaveData(Data);
+			
+			// 2. Підписуємося на смерть
+			SpawnedAnimal->OnAnimalDied.AddDynamic(this, &ThisClass::HandleAnimalDied);
+			
+			// 3. Відновлюємо масиви та стан ШІ
+			if (Data.bIsOwned)
+			{
+				OwnerAnimals.Add(SpawnedAnimal);
+				SpawnedAnimal->ApplyOwnerState();
+			}
+			else
+			{
+				WildAnimals.Add(SpawnedAnimal);
+				SpawnedAnimal->ApplyForestState();
+			}
+			
+			// 4. Відновлюємо зв'язок із точкою спавну
+			if (Data.BoundSpawnPointName != NAME_None)
+			{
+				for (ASimPetSpawnPoint * SpawnPoint : AllSpawnPoints)
+				{
+					if (SpawnPoint->GetFName() == Data.BoundSpawnPointName)
+					{
+						BindAnimalToSpawnPoint(SpawnedAnimal, SpawnPoint);
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
 ASimPetSpawnPoint * USimPetAnimalSubsystem::GetSpawnPointInOwner()
 {
 	return FindAvailableSpawnPointByTag(SimPetGameplayTags::Spawn_Point_ForAnimal_InOwner);
@@ -207,6 +305,25 @@ TSubclassOf<ASimPetAnimal> USimPetAnimalSubsystem::GetAnimalClassByAnimalType(ES
 	}
 	
 	return nullptr;
+}
+
+TArray<ASimPetAnimal *> USimPetAnimalSubsystem::GetOwnerAnimal() const
+{
+	return OwnerAnimals;
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void USimPetAnimalSubsystem::ClearAnimalsFromLevel()
+{
+	TArray<ASimPetAnimal *> AllAnimals;
+	AllAnimals.Append(OwnerAnimals);
+	AllAnimals.Append(WildAnimals);
+	
+	for (int32 i = AllAnimals.Num() - 1; i > 0; --i)
+	{
+		if (IsValid(AllAnimals[i]))
+			AllAnimals[i]->Destroy();
+	}
 }
 
 void USimPetAnimalSubsystem::HandleAnimalDied(ASimPetAnimal *DeadAnimal)

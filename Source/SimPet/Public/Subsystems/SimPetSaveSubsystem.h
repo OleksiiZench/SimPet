@@ -71,10 +71,12 @@ private:
 	
 	void SaveRegisteredActorsData();
 	void SaveDroppedItemsData();
+	void SaveAnimalsData();
 	bool WriteSaveGameToDisk() const;
 	void NotifySaveResult(const bool bIsSuccess);
 	
 	bool ReadSaveGameFromDisk();
 	void LoadRegisteredActorsData();
 	void RestoreDroppedItemsData();
+	void RestoreAnimalsData();
 };

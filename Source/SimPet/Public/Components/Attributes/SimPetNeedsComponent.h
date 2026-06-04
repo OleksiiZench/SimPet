@@ -34,6 +34,10 @@ public:
 	void Feed();
 	void Wash();
 	
+	float GetTimeSinceLastMeal() const;
+	float GetTimeSinceLastClean() const;
+	void RestoreNeedsState(float SavedTimeSinceLastMeal, float SavedTimeSinceLastClean);
+	
 	UPROPERTY()
 	FOnGotHungrySignature OnGotHungry;
 	

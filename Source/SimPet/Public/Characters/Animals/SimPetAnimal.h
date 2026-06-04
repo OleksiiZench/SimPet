@@ -17,6 +17,7 @@ class USimPetNeedsComponent;
 class USimPetAutoHidingWidgetComponent;
 class ASimPetAnimalWaste;
 class USimPetAnimalConfigData;
+struct FSimPetAnimalSaveData;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAnimalDiedSignature, ASimPetAnimal *, DeadAnimal);
 
@@ -37,11 +38,15 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 	void FeedAnimal();
+	void CleanAnimal();
 	
 	void ApplyForestState();
 	void ApplyOwnerState();
 	
 	ESimPetAnimalState GetAnimalState() const;
+	
+	FSimPetAnimalSaveData GetAnimalSaveData() const;
+	void RestoreFromSaveData(const FSimPetAnimalSaveData &AnimalSaveData);
 	
 	UPROPERTY()
 	FOnAnimalDiedSignature OnAnimalDied;
@@ -112,16 +117,13 @@ protected:
 	UCharacterMovementComponent *MovementComponent;
 
 private:
-	bool bAnimalInForest = false;  // Тимчасова змінна, варто прибрати якщо уже продуманий механізм звідки переміщати тварин
+	//bool bAnimalInForest = false;  // Тимчасова змінна, варто прибрати якщо уже продуманий механізм звідки переміщати тварин
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|Components", meta = (AllowPrivateAccess = "true"))
 	USimPetNeedsComponent *NeedsComponent;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|Components", meta = (AllowPrivateAccess = "true"))
 	USimPetPointsTransactionComponent *PointsTransactionComponent;
-	
-	UPROPERTY();
-	TArray<ASimPetAnimalWaste *> TrackedWastes;
 	
 	UFUNCTION()
 	void HandleHappyTick();
@@ -145,9 +147,7 @@ private:
 	
 	void SpawnAnimalWaste();
 	FVector GetLocationAboveGround() const;
-	void ClearWasteBindings();
 	
-	void CleanAnimal() const;
 	void Die();
 	void ScatterMeshParts() const;
 	

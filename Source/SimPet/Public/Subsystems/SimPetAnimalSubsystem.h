@@ -7,6 +7,7 @@
 #include "GameplayTagContainer.h"
 
 #include "SimPetTypes/SimPetEnumTypes.h"
+#include "Save/Structures/SimPetAnimalSaveData.h"
 
 #include "SimPetAnimalSubsystem.generated.h"
 
@@ -26,6 +27,8 @@ public:
 	
 	ASimPetAnimal * SpawnAnimal(ESimPetAnimals AnimalType);
 	
+	void HandleWasteCleaned();
+	
 	void MoveAnimalToForest();
 	void MoveAnimalToOwner();
 	
@@ -34,6 +37,9 @@ public:
 	int32 GetNumberOwnerAnimalsCertainType(ESimPetAnimals AnimalType) const;
 	int32 GetTotalNumberOwnerAnimals() const;
 	int32 GetTotalNumberWildAnimals() const;
+	
+	TArray<FSimPetAnimalSaveData> GetAnimalsSaveData() const;
+	void RestoreAnimalsFromSave(const TArray<FSimPetAnimalSaveData> &SavedData);
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|Stats", meta = (AllowPrivateAccess = "true"))
@@ -56,6 +62,9 @@ private:
 	void UnbindAnimalFromSpawnPoint(ASimPetAnimal *Animal);
 	
 	TSubclassOf<ASimPetAnimal> GetAnimalClassByAnimalType(ESimPetAnimals AnimalType) const;
+	TArray <ASimPetAnimal *> GetOwnerAnimal() const;
+	
+	void ClearAnimalsFromLevel();
 	
 	UFUNCTION()
 	void HandleAnimalDied(ASimPetAnimal *DeadAnimal);

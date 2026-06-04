@@ -23,4 +23,7 @@ public:
 	//~ End ISimPetInteractable Interface
 	
 	FOnWasteCleanedSignature OnWasteCleaned;
+	
+private:
+	void CleanNearestAnimal();
 };

@@ -9,6 +9,7 @@
 #include "Save/SimPetSaveGame.h"
 #include "Subsystems/SimPetUISubsystem.h"
 #include "Interfaces/SimPetSavable.h"
+#include "Subsystems/SimPetAnimalSubsystem.h"
 #include "Subsystems/SimPetItemSubsystem.h"
 
 USimPetSaveSubsystem::USimPetSaveSubsystem()
@@ -70,6 +71,7 @@ void USimPetSaveSubsystem::SaveGame()
 	SaveRegisteredActorsData();
 	
 	SaveDroppedItemsData();
+	SaveAnimalsData();
 	
 	bool bIsSaved = WriteSaveGameToDisk();
 	NotifySaveResult(bIsSaved);
@@ -80,6 +82,7 @@ void USimPetSaveSubsystem::LoadGame()
 	ReadSaveGameFromDisk();
 	
 	RestoreDroppedItemsData();
+	RestoreAnimalsData();
 	
 	LoadRegisteredActorsData();
 }
@@ -198,6 +201,13 @@ void USimPetSaveSubsystem::SaveDroppedItemsData()
 		CachedSaveGame->DroppedItemsSaveData = ItemSubsystem->GetDroppedItemsSaveData();
 }
 
+void USimPetSaveSubsystem::SaveAnimalsData()
+{
+	USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
+	if (AnimalSubsystem)
+		CachedSaveGame->AnimalsSaveData = AnimalSubsystem->GetAnimalsSaveData();
+}
+
 bool USimPetSaveSubsystem::WriteSaveGameToDisk() const
 {
 	if (!IsValid(CachedSaveGame))
@@ -251,4 +261,11 @@ void USimPetSaveSubsystem::RestoreDroppedItemsData()
 	USimPetItemSubsystem *ItemSubsystem = GetWorld()->GetSubsystem<USimPetItemSubsystem>();
 	if (ItemSubsystem)
 		ItemSubsystem->RestoreDroppedItemsFromSaveData(CachedSaveGame->DroppedItemsSaveData);
+}
+
+void USimPetSaveSubsystem::RestoreAnimalsData()
+{
+	USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
+	if (AnimalSubsystem)
+		AnimalSubsystem->RestoreAnimalsFromSave(CachedSaveGame->AnimalsSaveData);
 }

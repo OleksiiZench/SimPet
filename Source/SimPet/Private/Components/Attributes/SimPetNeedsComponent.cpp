@@ -63,6 +63,24 @@ void USimPetNeedsComponent::Wash()
 	TryEnterHappyState();
 }
 
+float USimPetNeedsComponent::GetTimeSinceLastMeal() const
+{
+	return TimeSinceLastMeal;
+}
+
+float USimPetNeedsComponent::GetTimeSinceLastClean() const
+{
+	return TimeSinceLastClean;
+}
+
+void USimPetNeedsComponent::RestoreNeedsState(float SavedTimeSinceLastMeal, float SavedTimeSinceLastClean)
+{
+	TimeSinceLastMeal = SavedTimeSinceLastMeal;
+	TimeSinceLastClean = SavedTimeSinceLastClean;
+	
+	CheckPhysicalCharacterState();
+}
+
 void USimPetNeedsComponent::StartNeedsTimer()
 {
 	StopNeedsTimer();
