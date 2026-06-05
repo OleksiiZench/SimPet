@@ -16,7 +16,6 @@
 #include "Characters/SimPetPlayer.h"
 #include "AI/SimPetAIController.h"
 #include "DataAsset/SimPetAnimalConfigData.h"
-#include "Save/SimPetSaveGame.h"
 #include "Save/Structures/SimPetAnimalSaveData.h"
 #include "SimPetTypes/SimPetEnumTypes.h"
 #include "Subsystems/SimPetSaveSubsystem.h"
@@ -49,6 +48,8 @@ void ASimPetAnimal::OnConstruction(const FTransform &Transform)
 void ASimPetAnimal::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	CacheAIControllerAndBBComponent();
 	
 	SetDifficultyNeeds();
 	
@@ -126,10 +127,11 @@ FSimPetAnimalSaveData ASimPetAnimal::GetAnimalSaveData() const
 	return SaveData;
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ASimPetAnimal::RestoreFromSaveData(const FSimPetAnimalSaveData &AnimalSaveData)
 {
-	if (NeedsComponent)
-		NeedsComponent->RestoreNeedsState(AnimalSaveData.TimeSinceLastMeal, AnimalSaveData.TimeSinceLastClean);
+	RestoreNeedsFromSaveData(AnimalSaveData);
+	SyncBlackboardWithCurrentState();
 }
 
 void ASimPetAnimal::AnimateLegs(float DeltaTime, float CurrentTime)
@@ -427,24 +429,19 @@ void ASimPetAnimal::UpdateBlackboardForOwner()
 
 void ASimPetAnimal::SetBlackboardParam(float BaseRadius, float FlyRadius, float ZigZagRadius, bool bChangeHomeLocation) const
 {
-	ASimPetAIController *AIController = Cast<ASimPetAIController>(GetController());
-	if (!AIController)
+	if (!CachedBlackboardComponent)
 		return;
 	
-	UBlackboardComponent *BBComponent = AIController->GetBlackboardComponent();
-	if (!BBComponent)
-		return;
-	
-	BBComponent->SetValueAsFloat(FName("BaseRadiusAroundHome"), BaseRadius);
-	BBComponent->SetValueAsFloat(FName("FlyRadiusAroundHome"), FlyRadius);
-	BBComponent->SetValueAsFloat(FName("ZigZagRadiusAroundHome"), ZigZagRadius);
+	CachedBlackboardComponent->SetValueAsFloat(FName("BaseRadiusAroundHome"), BaseRadius);
+	CachedBlackboardComponent->SetValueAsFloat(FName("FlyRadiusAroundHome"), FlyRadius);
+	CachedBlackboardComponent->SetValueAsFloat(FName("ZigZagRadiusAroundHome"), ZigZagRadius);
 	
 	if (bChangeHomeLocation)
-		BBComponent->SetValueAsVector(FName("HomeLocation"), GetActorLocation());
+		CachedBlackboardComponent->SetValueAsVector(FName("HomeLocation"), GetActorLocation());
 	
-	AIController->StopMovement();
+	CachedAIController->StopMovement();
 	
-	if (UBrainComponent *BrainComponent = AIController->GetBrainComponent())
+	if (UBrainComponent *BrainComponent = CachedAIController->GetBrainComponent())
 	{
 		BrainComponent->RestartLogic();
 	}
@@ -458,4 +455,27 @@ void ASimPetAnimal::GeneratePointsIfAnimalIsHappy() const
 void ASimPetAnimal::GeneratePenaltyPointsWhenAnimalDied() const
 {
 	PointsTransactionComponent->GeneratePenaltyPoints();
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void ASimPetAnimal::RestoreNeedsFromSaveData(const FSimPetAnimalSaveData &AnimalSaveData)
+{
+	if (NeedsComponent)
+		NeedsComponent->RestoreNeedsState(AnimalSaveData.TimeSinceLastMeal, AnimalSaveData.TimeSinceLastClean);
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void ASimPetAnimal::SyncBlackboardWithCurrentState()
+{
+	if (CachedBlackboardComponent)
+		CachedBlackboardComponent->SetValueAsInt(TEXT("CurrentState"), static_cast<int32>(NeedsComponent->GetAnimalState()));
+}
+
+void ASimPetAnimal::CacheAIControllerAndBBComponent()
+{
+	CachedAIController = Cast<ASimPetAIController>(GetController());
+	if (CachedAIController)
+	{
+		CachedBlackboardComponent = CachedAIController->GetBlackboardComponent();
+	}
 }

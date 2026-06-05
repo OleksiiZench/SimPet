@@ -17,6 +17,8 @@ class USimPetNeedsComponent;
 class USimPetAutoHidingWidgetComponent;
 class ASimPetAnimalWaste;
 class USimPetAnimalConfigData;
+class ASimPetAIController;
+class UBlackboardComponent;
 struct FSimPetAnimalSaveData;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAnimalDiedSignature, ASimPetAnimal *, DeadAnimal);
@@ -125,6 +127,12 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|Components", meta = (AllowPrivateAccess = "true"))
 	USimPetPointsTransactionComponent *PointsTransactionComponent;
 	
+	UPROPERTY()
+	ASimPetAIController *CachedAIController;
+	
+	UPROPERTY()
+	UBlackboardComponent *CachedBlackboardComponent;
+	
 	UFUNCTION()
 	void HandleHappyTick();
 	
@@ -157,4 +165,9 @@ private:
 	
 	void GeneratePointsIfAnimalIsHappy() const;
 	void GeneratePenaltyPointsWhenAnimalDied() const;
+	
+	void RestoreNeedsFromSaveData(const FSimPetAnimalSaveData &AnimalSaveData);
+	void SyncBlackboardWithCurrentState();
+	
+	void CacheAIControllerAndBBComponent();
 };
