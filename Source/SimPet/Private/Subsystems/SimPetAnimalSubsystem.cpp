@@ -35,7 +35,7 @@ ASimPetAnimal * USimPetAnimalSubsystem::SpawnAnimal(ESimPetAnimals AnimalType)
 	ASimPetAnimal *NewAnimal = GetWorld()->SpawnActor<ASimPetAnimal>(*SpawnedAnimalClass, AnimalTransform);
 	if (NewAnimal)
 	{
-		OwnerAnimals.Add(NewAnimal);
+		AddOwnerAnimalAndNotify(NewAnimal);
 		BindAnimalToSpawnPoint(NewAnimal, AnimalSpawnPoint);
 		
 		NewAnimal->OnAnimalDied.AddDynamic(this, &ThisClass::HandleAnimalDied);
@@ -70,7 +70,7 @@ void USimPetAnimalSubsystem::MoveAnimalToForest()
 	if (!Animal)
 		return;
 
-	WildAnimals.Add(Animal);
+	AddWildAnimalAndNotify(Animal);
 	
 	UnbindAnimalFromSpawnPoint(Animal);
 	
@@ -93,7 +93,7 @@ void USimPetAnimalSubsystem::MoveAnimalToOwner()
 	if (!Animal)
 		return;
 
-	OwnerAnimals.Add(Animal);
+	AddOwnerAnimalAndNotify(Animal);
 	
 	ASimPetSpawnPoint *AnimalSpawnPoint = GetSpawnPointInOwner();
 	if (AnimalSpawnPoint == nullptr)
@@ -231,6 +231,8 @@ void USimPetAnimalSubsystem::RestoreAnimalsFromSave(const TArray<FSimPetAnimalSa
 			}
 		}
 	}
+	
+	OnAnimalCountChanged.Broadcast();
 }
 
 ASimPetSpawnPoint * USimPetAnimalSubsystem::GetSpawnPointInOwner()
@@ -326,6 +328,46 @@ void USimPetAnimalSubsystem::ClearAnimalsFromLevel()
 	}
 }
 
+void USimPetAnimalSubsystem::AddOwnerAnimalAndNotify(ASimPetAnimal *Animal)
+{
+	if (Animal == nullptr)
+		return;
+	
+	OwnerAnimals.Add(Animal);
+	
+	OnAnimalCountChanged.Broadcast();
+}
+
+void USimPetAnimalSubsystem::AddWildAnimalAndNotify(ASimPetAnimal *Animal)
+{
+	if (Animal == nullptr)
+		return;
+	
+	WildAnimals.Add(Animal);
+	
+	OnAnimalCountChanged.Broadcast();
+}
+
+void USimPetAnimalSubsystem::RemoveOwnerAnimalAndNotify(ASimPetAnimal *Animal)
+{
+	if (Animal == nullptr)
+		return;
+	
+	OwnerAnimals.RemoveSingle(Animal);
+	
+	OnAnimalCountChanged.Broadcast();
+}
+
+void USimPetAnimalSubsystem::RemoveWildAnimalAndNotify(ASimPetAnimal *Animal)
+{
+	if (Animal == nullptr)
+		return;
+	
+	WildAnimals.RemoveSingle(Animal);
+	
+	OnAnimalCountChanged.Broadcast();
+}
+
 void USimPetAnimalSubsystem::HandleAnimalDied(ASimPetAnimal *DeadAnimal)
 {
 	if (DeadAnimal == nullptr)
@@ -335,6 +377,8 @@ void USimPetAnimalSubsystem::HandleAnimalDied(ASimPetAnimal *DeadAnimal)
 	
 	UnbindAnimalFromSpawnPoint(DeadAnimal);
 	
-	OwnerAnimals.RemoveSingle(DeadAnimal);
-	WildAnimals.RemoveSingle(DeadAnimal);
+	if (OwnerAnimals.Contains(DeadAnimal))
+		RemoveOwnerAnimalAndNotify(DeadAnimal);
+	else if (WildAnimals.Contains(DeadAnimal))
+		RemoveWildAnimalAndNotify(DeadAnimal);
 }

@@ -14,6 +14,8 @@
 class ASimPetAnimal;
 class ASimPetSpawnPoint;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAnimalCountChangedSignature);
+
 /**
  * 
  */
@@ -41,6 +43,8 @@ public:
 	TArray<FSimPetAnimalSaveData> GetAnimalsSaveData() const;
 	void RestoreAnimalsFromSave(const TArray<FSimPetAnimalSaveData> &SavedData);
 	
+	FOnAnimalCountChangedSignature OnAnimalCountChanged;
+	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|Stats", meta = (AllowPrivateAccess = "true"))
 	TArray<ASimPetSpawnPoint *> AllSpawnPoints;
@@ -65,6 +69,11 @@ private:
 	TArray <ASimPetAnimal *> GetOwnerAnimal() const;
 	
 	void ClearAnimalsFromLevel();
+	
+	void AddOwnerAnimalAndNotify(ASimPetAnimal *Animal);
+	void AddWildAnimalAndNotify(ASimPetAnimal *Animal);
+	void RemoveOwnerAnimalAndNotify(ASimPetAnimal *Animal);
+	void RemoveWildAnimalAndNotify(ASimPetAnimal *Animal);
 	
 	UFUNCTION()
 	void HandleAnimalDied(ASimPetAnimal *DeadAnimal);

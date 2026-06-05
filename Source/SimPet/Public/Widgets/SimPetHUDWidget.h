@@ -12,6 +12,7 @@ class UProgressBar;
 class ASimPetPlayer;
 class USimPetStaminaComponent;
 class ASimPetPlayerState;
+class USimPetAnimalSubsystem;
 
 /**
  * 
@@ -66,11 +67,13 @@ private:
 	UPROPERTY()
 	ASimPetPlayerState *CachedPlayerState;
 	
+	UPROPERTY()
+	USimPetAnimalSubsystem *CachedAnimalSubsystem;
+	
 	void CacheDependencies();
+	void CacheAnimalSubsystem();
 	void SetupInitialValues();
 	
-	void InitializeTimer();
-	void ClearTimer();
 	void BindDelegates();
 	void UnbindDelegates();
 };

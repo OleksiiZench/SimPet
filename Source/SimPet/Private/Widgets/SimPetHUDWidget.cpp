@@ -17,9 +17,9 @@ void USimPetHUDWidget::NativeConstruct()
 	Super::NativeConstruct();
 	
 	CacheDependencies();
+	CacheAnimalSubsystem();
 	SetupInitialValues();
 	
-	InitializeTimer();
 	UpdateAnimalStats();
 	
 	BindDelegates();
@@ -28,7 +28,6 @@ void USimPetHUDWidget::NativeConstruct()
 void USimPetHUDWidget::NativeDestruct()
 {
 	UnbindDelegates();
-	ClearTimer();
 	
 	Super::NativeDestruct();
 }
@@ -59,35 +58,33 @@ void USimPetHUDWidget::UpdateAnimalStats()
 	if (!GetWorld())
 		return;
 	
-	USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
-	
-	if (!AnimalSubsystem)
+	if (!CachedAnimalSubsystem)
 		return;
 	
 	if (DogCountText)
 	{
-		int32 NumberOfDogs = AnimalSubsystem->GetNumberOwnerAnimalsCertainType(ESimPetAnimals::EA_Dog);
+		int32 NumberOfDogs = CachedAnimalSubsystem->GetNumberOwnerAnimalsCertainType(ESimPetAnimals::EA_Dog);
 		
 		DogCountText->SetText(FText::AsNumber(NumberOfDogs));
 	}
 	
 	if (CanaryCountText)
 	{
-		int32 NumberOfCanaries = AnimalSubsystem->GetNumberOwnerAnimalsCertainType(ESimPetAnimals::EA_Canary);
+		int32 NumberOfCanaries = CachedAnimalSubsystem->GetNumberOwnerAnimalsCertainType(ESimPetAnimals::EA_Canary);
 		
 		CanaryCountText->SetText(FText::AsNumber(NumberOfCanaries));
 	}
 	
 	if (LizardCountText)
 	{
-		int32 NumberOfLizards = AnimalSubsystem->GetNumberOwnerAnimalsCertainType(ESimPetAnimals::EA_Lizard);
+		int32 NumberOfLizards = CachedAnimalSubsystem->GetNumberOwnerAnimalsCertainType(ESimPetAnimals::EA_Lizard);
 		
 		LizardCountText->SetText(FText::AsNumber(NumberOfLizards));
 	}
 	
 	if (WildAnimalCountText)
 	{
-		int32 NumberOfWildAnimals = AnimalSubsystem->GetTotalNumberWildAnimals();
+		int32 NumberOfWildAnimals = CachedAnimalSubsystem->GetTotalNumberWildAnimals();
 		
 		WildAnimalCountText->SetText(FText::AsNumber(NumberOfWildAnimals));
 	}
@@ -100,6 +97,12 @@ void USimPetHUDWidget::CacheDependencies()
 		CachedPlayerStaminaComponent = SimPetPlayer->GetStaminaComponent();
 		CachedPlayerState = Cast<ASimPetPlayerState>(SimPetPlayer->GetPlayerState());
 	}
+}
+
+void USimPetHUDWidget::CacheAnimalSubsystem()
+{
+	if (GetWorld())
+		CachedAnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
 }
 
 void USimPetHUDWidget::SetupInitialValues()
@@ -116,22 +119,6 @@ void USimPetHUDWidget::SetupInitialValues()
 	}
 }
 
-void USimPetHUDWidget::InitializeTimer()
-{
-	if (GetWorld())
-	{// Оновлення статистики раз на секунду
-		GetWorld()->GetTimerManager().SetTimer(StatsTimerHandle, this, &USimPetHUDWidget::UpdateAnimalStats, 1.0f, true);
-	}
-}
-
-void USimPetHUDWidget::ClearTimer()
-{
-	if (GetWorld())
-	{
-		GetWorld()->GetTimerManager().ClearTimer(StatsTimerHandle);
-	}
-}
-
 void USimPetHUDWidget::BindDelegates()
 {
 	if (CachedPlayerStaminaComponent)
@@ -139,6 +126,9 @@ void USimPetHUDWidget::BindDelegates()
 	
 	if (CachedPlayerState)
 		CachedPlayerState->OnPointsChanged.AddDynamic(this, &USimPetHUDWidget::UpdatePointsText);
+	
+	if (CachedAnimalSubsystem)
+		CachedAnimalSubsystem->OnAnimalCountChanged.AddDynamic(this, &USimPetHUDWidget::UpdateAnimalStats);
 }
 
 void USimPetHUDWidget::UnbindDelegates()
@@ -148,4 +138,7 @@ void USimPetHUDWidget::UnbindDelegates()
 	
 	if (CachedPlayerState)
 		CachedPlayerState->OnPointsChanged.RemoveDynamic(this, &USimPetHUDWidget::UpdatePointsText);
+	
+	if (CachedAnimalSubsystem)
+		CachedAnimalSubsystem->OnAnimalCountChanged.RemoveDynamic(this, &USimPetHUDWidget::UpdateAnimalStats);
 }
