@@ -35,15 +35,12 @@ ASimPetAnimal * USimPetAnimalSubsystem::SpawnAnimal(ESimPetAnimals AnimalType)
 	ASimPetAnimal *NewAnimal = GetWorld()->SpawnActor<ASimPetAnimal>(*SpawnedAnimalClass, AnimalTransform);
 	if (NewAnimal)
 	{
+		SubscribeToAnimalDeath(NewAnimal);
 		AddOwnerAnimalAndNotify(NewAnimal);
 		BindAnimalToSpawnPoint(NewAnimal, AnimalSpawnPoint);
-		
-		NewAnimal->OnAnimalDied.AddDynamic(this, &ThisClass::HandleAnimalDied);
-		
-		return NewAnimal;
 	}
 	
-	return nullptr;
+	return NewAnimal;
 }
 
 void USimPetAnimalSubsystem::HandleWasteCleaned()
@@ -154,35 +151,26 @@ TArray<FSimPetAnimalSaveData> USimPetAnimalSubsystem::GetAnimalsSaveData() const
 {
 	TArray<FSimPetAnimalSaveData> ResultArray;
 	
-	for (ASimPetAnimal *Animal : OwnerAnimals)
+	auto CollectSaveData = [&](const TArray<ASimPetAnimal *> &Animals, bool bIsOwned)
 	{
-		if (IsValid(Animal) && Animal->GetAnimalState() != ESimPetAnimalState::Dead)
+		for (ASimPetAnimal *Animal : Animals)
 		{
+			if (!IsValid(Animal) || Animal->GetAnimalState() == ESimPetAnimalState::Dead)
+				continue;
+
 			FSimPetAnimalSaveData Data = Animal->GetAnimalSaveData();
-			Data.bIsOwned = true;
-			
+			Data.bIsOwned = bIsOwned;
+
 			ASimPetSpawnPoint *SpawnPoint = AnimalToSpawnPointMap.FindRef(Animal);
 			if (SpawnPoint)
 				Data.BoundSpawnPointName = SpawnPoint->GetFName();
-			
+
 			ResultArray.Add(Data);
 		}
-	}
+	};
 	
-	for (ASimPetAnimal *Animal : WildAnimals)
-    	{
-    		if (IsValid(Animal) && Animal->GetAnimalState() != ESimPetAnimalState::Dead)
-    		{
-    			FSimPetAnimalSaveData Data = Animal->GetAnimalSaveData();
-    			Data.bIsOwned = false;
-    			
-    			ASimPetSpawnPoint *SpawnPoint = AnimalToSpawnPointMap.FindRef(Animal);
-    			if (SpawnPoint)
-    				Data.BoundSpawnPointName = SpawnPoint->GetFName();
-    			
-    			ResultArray.Add(Data);
-    		}
-    	}
+	CollectSaveData(OwnerAnimals, true);
+	CollectSaveData(WildAnimals, false);
 	
 	return ResultArray;
 }
@@ -195,44 +183,53 @@ void USimPetAnimalSubsystem::RestoreAnimalsFromSave(const TArray<FSimPetAnimalSa
 	{
 		if (!IsValid(Data.AnimalClass))
 			continue;
-		
+
 		ASimPetAnimal *SpawnedAnimal = GetWorld()->SpawnActor<ASimPetAnimal>(Data.AnimalClass, Data.Transform);
-		if (SpawnedAnimal)
+		if (SpawnedAnimal == nullptr)
+			return;
+
+		SpawnedAnimal->RestoreFromSaveData(Data);
+		SubscribeToAnimalDeath(SpawnedAnimal);
+
+		if (Data.bIsOwned)
 		{
-			// 1. Відновлюємо внутрішній стан (голод/чистота)
-			SpawnedAnimal->RestoreFromSaveData(Data);
-			
-			// 2. Підписуємося на смерть
-			SpawnedAnimal->OnAnimalDied.AddDynamic(this, &ThisClass::HandleAnimalDied);
-			
-			// 3. Відновлюємо масиви та стан ШІ
-			if (Data.bIsOwned)
-			{
-				OwnerAnimals.Add(SpawnedAnimal);
-				SpawnedAnimal->ApplyOwnerState();
-			}
-			else
-			{
-				WildAnimals.Add(SpawnedAnimal);
-				SpawnedAnimal->ApplyForestState();
-			}
-			
-			// 4. Відновлюємо зв'язок із точкою спавну
-			if (Data.BoundSpawnPointName != NAME_None)
-			{
-				for (ASimPetSpawnPoint * SpawnPoint : AllSpawnPoints)
-				{
-					if (SpawnPoint->GetFName() == Data.BoundSpawnPointName)
-					{
-						BindAnimalToSpawnPoint(SpawnedAnimal, SpawnPoint);
-						break;
-					}
-				}
-			}
+			OwnerAnimals.Add(SpawnedAnimal);
+			SpawnedAnimal->ApplyOwnerState();
 		}
+		else
+		{
+			WildAnimals.Add(SpawnedAnimal);
+			SpawnedAnimal->ApplyForestState();
+		}
+
+		ASimPetSpawnPoint *SpawnPoint = FindSpawnPointByName(Data.BoundSpawnPointName);
+		if (SpawnPoint)
+			BindAnimalToSpawnPoint(SpawnedAnimal, SpawnPoint);
 	}
 	
 	OnAnimalCountChanged.Broadcast();
+}
+
+void USimPetAnimalSubsystem::SubscribeToAnimalDeath(ASimPetAnimal *Animal)
+{
+	if (Animal == nullptr)
+		return;
+	
+	Animal->OnAnimalDied.AddDynamic(this, &ThisClass::HandleAnimalDied);
+}
+
+ASimPetSpawnPoint * USimPetAnimalSubsystem::FindSpawnPointByName(FName SpawnPointName) const
+{
+	if (SpawnPointName == NAME_None)
+		return nullptr;
+
+	for (ASimPetSpawnPoint *SpawnPoint : AllSpawnPoints)
+	{
+		if (SpawnPoint && SpawnPoint->GetFName() == SpawnPointName)
+			return SpawnPoint;
+	}
+	
+	return nullptr;
 }
 
 ASimPetSpawnPoint * USimPetAnimalSubsystem::GetSpawnPointInOwner()

@@ -58,6 +58,9 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SimPet|Stats", meta = (AllowPrivateAccess = "true"))
 	TArray<ASimPetAnimal *> WildAnimals;
 	
+	void SubscribeToAnimalDeath(ASimPetAnimal *Animal);
+	ASimPetSpawnPoint *FindSpawnPointByName(FName SpawnPointName) const;
+	
 	ASimPetSpawnPoint *GetSpawnPointInOwner();
 	ASimPetSpawnPoint *GetSpawnPointInForest();
 	ASimPetSpawnPoint *FindAvailableSpawnPointByTag(const FGameplayTag &LocationTag);
