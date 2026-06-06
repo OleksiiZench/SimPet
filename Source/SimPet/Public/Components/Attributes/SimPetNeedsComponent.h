@@ -31,6 +31,7 @@ public:
 	void EnableNeeds();
 	ESimPetAnimalState GetAnimalState() const;
 	bool NeedsCleaning() const;
+	bool NeedsFeed() const;
 	
 	void Feed();
 	void Wash();

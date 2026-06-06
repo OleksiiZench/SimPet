@@ -18,6 +18,8 @@ void USimPetAutoHidingWidgetComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	GetWorld()->GetTimerManager().SetTimerForNextTick(this, &USimPetAutoHidingWidgetComponent::CheckDistanceToPlayer);
+	
 	StartCheckDistanceTimer();
 }
 

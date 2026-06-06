@@ -21,16 +21,17 @@ void USimPetAnimalNeedsStatusWidget::Init(USimPetNeedsComponent *InNeedsComponen
 {
 	UnbindNeedsEvents();
 	
-	if (InNeedsComponent)
-	{
-		CacheAnimalNeedsComponent = InNeedsComponent;
-		
-		BindNeedsEvents();
-	}
-	else
+	if (!InNeedsComponent)
 	{
 		Debug::Print(TEXT("Filed to cache InNeedsComponent!"));
+		return;
 	}
+	
+	CacheAnimalNeedsComponent = InNeedsComponent;
+	BindNeedsEvents();
+	
+	SetHungryIconVisible(CacheAnimalNeedsComponent->NeedsFeed());
+	SetDirtyIconVisible(CacheAnimalNeedsComponent->NeedsCleaning());
 }
 
 void USimPetAnimalNeedsStatusWidget::Deinit()

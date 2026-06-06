@@ -42,6 +42,11 @@ bool USimPetNeedsComponent::NeedsCleaning() const
 	return bNeedsCleaning;
 }
 
+bool USimPetNeedsComponent::NeedsFeed() const
+{
+	return bNeedsFeed;
+}
+
 void USimPetNeedsComponent::Feed()
 {
 	if (AnimalState == ESimPetAnimalState::Dead)

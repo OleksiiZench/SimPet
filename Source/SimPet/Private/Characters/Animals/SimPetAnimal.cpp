@@ -313,6 +313,7 @@ void ASimPetAnimal::SetupComponents()
 	StatusWidgetComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 	StatusWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
 	StatusWidgetComponent->SetDrawSize(FVector2D(200.0f, 100.0f));
+	StatusWidgetComponent->SetVisibility(false);
 }
 
 void ASimPetAnimal::InitializeAnimalStatusWidget() const
