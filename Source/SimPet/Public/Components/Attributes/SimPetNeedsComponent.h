@@ -30,6 +30,7 @@ public:
 	void DisableNeedsAndBecomeHappy();
 	void EnableNeeds();
 	ESimPetAnimalState GetAnimalState() const;
+	bool NeedsCleaning() const;
 	
 	void Feed();
 	void Wash();

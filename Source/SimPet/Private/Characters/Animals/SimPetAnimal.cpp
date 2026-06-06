@@ -111,6 +111,14 @@ ESimPetAnimalState ASimPetAnimal::GetAnimalState() const
 	return NeedsComponent->GetAnimalState();
 }
 
+bool ASimPetAnimal::NeedsCleaning() const
+{
+	if (NeedsComponent)
+		return NeedsComponent->NeedsCleaning();
+	
+	return false;
+}
+
 FSimPetAnimalSaveData ASimPetAnimal::GetAnimalSaveData() const
 {
 	FSimPetAnimalSaveData SaveData;
@@ -345,6 +353,7 @@ void ASimPetAnimal::UnbindNeedsEvents()
 	}
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ASimPetAnimal::SpawnAnimalWaste()
 {
 	if (!WasteClass || !GetWorld())

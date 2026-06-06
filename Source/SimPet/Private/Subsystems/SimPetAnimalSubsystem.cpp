@@ -49,7 +49,7 @@ void USimPetAnimalSubsystem::HandleWasteCleaned()
 	
 	for (ASimPetAnimal *Animal : Animals)
 	{
-		if (IsValid(Animal) && Animal->GetAnimalState() == ESimPetAnimalState::Tired)
+		if (IsValid(Animal) && Animal->NeedsCleaning())
 		{
 			Animal->CleanAnimal();
 			

@@ -46,6 +46,7 @@ public:
 	void ApplyOwnerState();
 	
 	ESimPetAnimalState GetAnimalState() const;
+	bool NeedsCleaning() const;
 	
 	FSimPetAnimalSaveData GetAnimalSaveData() const;
 	void RestoreFromSaveData(const FSimPetAnimalSaveData &AnimalSaveData);
