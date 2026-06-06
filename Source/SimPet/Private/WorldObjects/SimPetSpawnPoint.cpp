@@ -34,15 +34,15 @@ void ASimPetSpawnPoint::GetOwnedGameplayTags(FGameplayTagContainer& TagContainer
 void ASimPetSpawnPoint::SaveActorData_Implementation(USimPetSaveGame *SaveObject)
 {
 	if (SaveObject)
-		SaveObject->SavedSpawnPointsTags.Add(GetFName(), DynamicTags);
+		SaveObject->SpawnPointsTagsSaveData.Add(GetFName(), DynamicTags);
 }
 
 void ASimPetSpawnPoint::LoadActorData_Implementation(USimPetSaveGame *SaveObject)
 {
-	if (!SaveObject || !SaveObject->SavedSpawnPointsTags.Contains(GetFName()))
+	if (!SaveObject || !SaveObject->SpawnPointsTagsSaveData.Contains(GetFName()))
 		return;
 	
-	DynamicTags = SaveObject->SavedSpawnPointsTags[GetFName()];
+	DynamicTags = SaveObject->SpawnPointsTagsSaveData[GetFName()];
 	
 	if (DynamicTags.HasTag(SimPetGameplayTags::Spawn_Point_HasFeed))
 	{

@@ -8,7 +8,6 @@
 #include "Save/Structures/SimPetPlayerSaveData.h"
 #include "Save/Structures/SimPetDroppedItemSaveData.h"
 #include "Save/Structures/SimPetAnimalSaveData.h"
-#include "SimPetGameplayTags.h"
 
 #include "SimPetSaveGame.generated.h"
 
@@ -28,7 +27,7 @@ public:
 	TArray<FSimPetDroppedItemSaveData> DroppedItemsSaveData;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|Save Data")
-	TMap<FName, FGameplayTagContainer> SavedSpawnPointsTags;
+	TMap<FName, FGameplayTagContainer> SpawnPointsTagsSaveData;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|Save Data")
 	TArray<FSimPetAnimalSaveData> AnimalsSaveData;

@@ -14,6 +14,7 @@ void ASimPetAnimalWaste::Interact_Implementation(AActor *InstigatorActor)
 	Destroy();
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void ASimPetAnimalWaste::CleanNearestAnimal()
 {
 	USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();

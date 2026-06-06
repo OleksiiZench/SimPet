@@ -8,7 +8,6 @@
 #include "Interfaces/SimPetInteractable.h"
 #include "Items/SimPetItem.h"
 #include "Save/Structures/SimPetItemSaveData.h"
-#include "Interfaces/SimPetItemContainer.h"
 #include "Subsystems/SimPetItemSubsystem.h"
 
 USimPetInteractionComponent::USimPetInteractionComponent()

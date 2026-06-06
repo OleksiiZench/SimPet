@@ -201,6 +201,7 @@ void USimPetSaveSubsystem::SaveDroppedItemsData()
 		CachedSaveGame->DroppedItemsSaveData = ItemSubsystem->GetDroppedItemsSaveData();
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetSaveSubsystem::SaveAnimalsData()
 {
 	USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
@@ -253,6 +254,7 @@ void USimPetSaveSubsystem::LoadRegisteredActorsData()
 	}
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetSaveSubsystem::RestoreDroppedItemsData()
 {
 	if (!IsValid(CachedSaveGame))
@@ -263,6 +265,7 @@ void USimPetSaveSubsystem::RestoreDroppedItemsData()
 		ItemSubsystem->RestoreDroppedItemsFromSaveData(CachedSaveGame->DroppedItemsSaveData);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetSaveSubsystem::RestoreAnimalsData()
 {
 	USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();

@@ -48,6 +48,7 @@ void USimPetPauseMenuWidget::OnToMainMenuClicked()
 	UGameplayStatics::OpenLevel(this, MainMenuLevelName);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetPauseMenuWidget::OnSaveGameClicked()
 {
 	if (GetWorld())

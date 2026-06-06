@@ -43,6 +43,7 @@ ASimPetAnimal * USimPetAnimalSubsystem::SpawnAnimal(ESimPetAnimals AnimalType)
 	return NewAnimal;
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetAnimalSubsystem::HandleWasteCleaned()
 {
 	const TArray<ASimPetAnimal *> &Animals = GetOwnerAnimal();
@@ -277,6 +278,7 @@ void USimPetAnimalSubsystem::BindAnimalToSpawnPoint(ASimPetAnimal *Animal, ASimP
 	AnimalToSpawnPointMap.Add(Animal, AnimalSpawnPoint);
 }
 
+// ReSharper disable once CppParameterMayBeConstPtrOrRef
 void USimPetAnimalSubsystem::UnbindAnimalFromSpawnPoint(ASimPetAnimal *Animal)
 {
 	if (!Animal)
