@@ -320,11 +320,15 @@ void USimPetAnimalSubsystem::ClearAnimalsFromLevel()
 	AllAnimals.Append(OwnerAnimals);
 	AllAnimals.Append(WildAnimals);
 	
-	for (int32 i = AllAnimals.Num() - 1; i > 0; --i)
+	for (int32 i = AllAnimals.Num() - 1; i >= 0; --i)
 	{
 		if (IsValid(AllAnimals[i]))
 			AllAnimals[i]->Destroy();
 	}
+	
+	OwnerAnimals.Empty();
+	WildAnimals.Empty();
+	AnimalToSpawnPointMap.Empty();
 }
 
 void USimPetAnimalSubsystem::AddOwnerAnimalAndNotify(ASimPetAnimal *Animal)
