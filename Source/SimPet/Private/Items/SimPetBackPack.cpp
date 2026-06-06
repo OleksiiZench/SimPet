@@ -98,7 +98,7 @@ void ASimPetBackPack::ShowAndDetachItem(ASimPetItem *Item)
 	Item->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 
 	Item->SetActorHiddenInGame(false);
-	Item->SetActorEnableCollision(ECollisionEnabled::QueryAndPhysics);
+	Item->SetActorEnableCollision(true);
 	Item->SetActorTickEnabled(true);
 }
 

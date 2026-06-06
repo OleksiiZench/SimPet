@@ -42,17 +42,17 @@ void USimPetAnimalNeedsStatusWidget::Deinit()
 // ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetAnimalNeedsStatusWidget::SetDirtyIconVisible(const bool bVisible)
 {	
-	const ESlateVisibility Visibility = GetVisibilityFromBool(bVisible);
+	const ESlateVisibility NewVisibility = GetVisibilityFromBool(bVisible);
 	
-	DirtyIcon->SetVisibility(Visibility);
+	DirtyIcon->SetVisibility(NewVisibility);
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetAnimalNeedsStatusWidget::SetHungryIconVisible(const bool bVisible)
 {
-	const ESlateVisibility Visibility = GetVisibilityFromBool(bVisible);
+	const ESlateVisibility NewVisibility = GetVisibilityFromBool(bVisible);
 	
-	HungryIcon->SetVisibility(Visibility);
+	HungryIcon->SetVisibility(NewVisibility);
 }
 
 ESlateVisibility USimPetAnimalNeedsStatusWidget::GetVisibilityFromBool(const bool bVisible)
