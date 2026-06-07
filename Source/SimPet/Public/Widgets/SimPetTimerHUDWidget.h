@@ -8,6 +8,7 @@
 #include "SimPetTimerHUDWidget.generated.h"
 
 class UTextBlock;
+class USimPetTimeSubsystem;
 
 /**
  * 
@@ -28,8 +29,14 @@ protected:
 #pragma endregion
 	
 private:
-	UFUNCTION()
-	void UpdateTimerDisplay();
+	UPROPERTY()
+	USimPetTimeSubsystem *CachedTimeSubsystem;
 	
-	FTimerHandle ClockTimerHandle;
+	UFUNCTION()
+	void UpdateTimerDisplay(int32 CurrentTimeSeconds);
+	
+	void CacheTimeSubsystem();
+	
+	void BindDelegate();
+	void UnbindDelegate();
 };

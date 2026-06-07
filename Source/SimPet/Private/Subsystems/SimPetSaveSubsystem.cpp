@@ -11,6 +11,7 @@
 #include "Interfaces/SimPetSavable.h"
 #include "Subsystems/SimPetAnimalSubsystem.h"
 #include "Subsystems/SimPetItemSubsystem.h"
+#include "Subsystems/SimPetTimeSubsystem.h"
 
 USimPetSaveSubsystem::USimPetSaveSubsystem()
 {
@@ -72,6 +73,7 @@ void USimPetSaveSubsystem::SaveGame()
 	
 	SaveDroppedItemsData();
 	SaveAnimalsData();
+	SaveTimerData();
 	
 	bool bIsSaved = WriteSaveGameToDisk();
 	NotifySaveResult(bIsSaved);
@@ -83,6 +85,7 @@ void USimPetSaveSubsystem::LoadGame()
 	
 	RestoreDroppedItemsData();
 	RestoreAnimalsData();
+	RestoreTimerData();
 	
 	LoadRegisteredActorsData();
 }
@@ -209,6 +212,14 @@ void USimPetSaveSubsystem::SaveAnimalsData()
 		CachedSaveGame->AnimalsSaveData = AnimalSubsystem->GetAnimalsSaveData();
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
+void USimPetSaveSubsystem::SaveTimerData()
+{
+	USimPetTimeSubsystem *TimeSubsystem = GetWorld()->GetSubsystem<USimPetTimeSubsystem>();
+	if (TimeSubsystem)
+		CachedSaveGame->SavedPlayTime = TimeSubsystem->GetCurrentPlayTime();
+}
+
 bool USimPetSaveSubsystem::WriteSaveGameToDisk() const
 {
 	if (!IsValid(CachedSaveGame))
@@ -271,4 +282,12 @@ void USimPetSaveSubsystem::RestoreAnimalsData()
 	USimPetAnimalSubsystem *AnimalSubsystem = GetWorld()->GetSubsystem<USimPetAnimalSubsystem>();
 	if (AnimalSubsystem)
 		AnimalSubsystem->RestoreAnimalsFromSave(CachedSaveGame->AnimalsSaveData);
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void USimPetSaveSubsystem::RestoreTimerData()
+{
+	USimPetTimeSubsystem *TimeSubsystem = GetWorld()->GetSubsystem<USimPetTimeSubsystem>();
+	if (TimeSubsystem)
+		TimeSubsystem->RestoreTimeFromSave(CachedSaveGame->SavedPlayTime);
 }

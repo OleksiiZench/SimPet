@@ -2,3 +2,8 @@
 
 
 #include "Save/SimPetSaveGame.h"
+
+USimPetSaveGame::USimPetSaveGame()
+{
+	SavedPlayTime = 0;
+}

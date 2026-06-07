@@ -72,6 +72,7 @@ private:
 	void SaveRegisteredActorsData();
 	void SaveDroppedItemsData();
 	void SaveAnimalsData();
+	void SaveTimerData();
 	bool WriteSaveGameToDisk() const;
 	void NotifySaveResult(const bool bIsSuccess);
 	
@@ -79,4 +80,5 @@ private:
 	void LoadRegisteredActorsData();
 	void RestoreDroppedItemsData();
 	void RestoreAnimalsData();
+	void RestoreTimerData();
 };

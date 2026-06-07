@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
+#include "GameplayTagContainer.h"
 
 #include "Save/Structures/SimPetPlayerSaveData.h"
 #include "Save/Structures/SimPetDroppedItemSaveData.h"
@@ -20,6 +21,8 @@ class SIMPET_API USimPetSaveGame : public USaveGame
 	GENERATED_BODY()
 
 public:
+	USimPetSaveGame();
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|Save Data")
 	FSimPetPlayerSaveData PlayerSaveData;
 	
@@ -31,4 +34,7 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|Save Data")
 	TArray<FSimPetAnimalSaveData> AnimalsSaveData;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|Save Data")
+	int32 SavedPlayTime;
 };
