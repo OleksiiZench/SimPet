@@ -5,5 +5,5 @@
 
 USimPetSaveGame::USimPetSaveGame()
 {
-	SavedPlayTime = 0;
+	PlayTimeSaveData = 0;
 }

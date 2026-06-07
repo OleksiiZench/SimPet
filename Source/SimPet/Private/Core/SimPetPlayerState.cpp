@@ -6,6 +6,7 @@
 
 ASimPetPlayerState::ASimPetPlayerState()
 {
+	CurrentPoints = 0;
 	bHasBoughtFirstAnimal = false;
 }
 
@@ -26,17 +27,17 @@ bool ASimPetPlayerState::HasRequiredPoints(int32 Points) const
 
 void ASimPetPlayerState::SpendPoints(int Points)
 {
-	UpdateCurrentPoints(CurrentPoints -= Points);
+	UpdateCurrentPoints(CurrentPoints - Points);
 }
 
 void ASimPetPlayerState::AddPoints(int Points)
 {
-	UpdateCurrentPoints(CurrentPoints += Points);
+	UpdateCurrentPoints(CurrentPoints + Points);
 }
 
 void ASimPetPlayerState::ApplyPenalty(int32 PenaltyAmount)
 {
-	UpdateCurrentPoints(CurrentPoints -= PenaltyAmount);
+	UpdateCurrentPoints(CurrentPoints - PenaltyAmount);
 }
 
 bool ASimPetPlayerState::HasBoughtFirstAnimal() const
@@ -52,6 +53,24 @@ void ASimPetPlayerState::MarkFirstAnimalBought()
 int32 ASimPetPlayerState::GetCurrentPoints() const
 {
 	return CurrentPoints;
+}
+
+FSimPetPointsSaveData ASimPetPlayerState::GetSaveData() const
+{
+	FSimPetPointsSaveData SaveData;
+	
+	SaveData.CurrentPoints = CurrentPoints;
+	SaveData.HasBoughtFirstAnimal = bHasBoughtFirstAnimal;
+	
+	return SaveData;
+}
+
+void ASimPetPlayerState::RestoreFromSaveData(const FSimPetPointsSaveData &SaveData)
+{
+	CurrentPoints = SaveData.CurrentPoints;
+	bHasBoughtFirstAnimal = SaveData.HasBoughtFirstAnimal;
+	
+	OnPointsChanged.Broadcast(CurrentPoints);
 }
 
 void ASimPetPlayerState::UpdateCurrentPoints(int32 NewCurrentPoints)

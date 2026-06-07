@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
 
+#include "Save/Structures/SimPetPointsSaveData.h"
+
 #include "SimPetPlayerState.generated.h"
 
 class USimPetSaveSubsystem;
@@ -33,6 +35,9 @@ public:
 	void MarkFirstAnimalBought();
 	
 	int32 GetCurrentPoints() const;
+	
+	FSimPetPointsSaveData GetSaveData() const;
+	void RestoreFromSaveData(const FSimPetPointsSaveData &SaveData);
 	
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnPointsChanged OnPointsChanged;

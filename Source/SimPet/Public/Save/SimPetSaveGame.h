@@ -9,6 +9,7 @@
 #include "Save/Structures/SimPetPlayerSaveData.h"
 #include "Save/Structures/SimPetDroppedItemSaveData.h"
 #include "Save/Structures/SimPetAnimalSaveData.h"
+#include "Save/Structures/SimPetPointsSaveData.h"
 
 #include "SimPetSaveGame.generated.h"
 
@@ -36,5 +37,8 @@ public:
 	TArray<FSimPetAnimalSaveData> AnimalsSaveData;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|Save Data")
-	int32 SavedPlayTime;
+	int32 PlayTimeSaveData;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SimPet|Save Data")
+	FSimPetPointsSaveData PointsSaveData;
 };

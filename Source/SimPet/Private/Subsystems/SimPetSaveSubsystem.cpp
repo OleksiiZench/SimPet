@@ -12,6 +12,7 @@
 #include "Subsystems/SimPetAnimalSubsystem.h"
 #include "Subsystems/SimPetItemSubsystem.h"
 #include "Subsystems/SimPetTimeSubsystem.h"
+#include "Core/SimPetPlayerState.h"
 
 USimPetSaveSubsystem::USimPetSaveSubsystem()
 {
@@ -74,6 +75,7 @@ void USimPetSaveSubsystem::SaveGame()
 	SaveDroppedItemsData();
 	SaveAnimalsData();
 	SaveTimerData();
+	SaveCurrentPointsData();
 	
 	bool bIsSaved = WriteSaveGameToDisk();
 	NotifySaveResult(bIsSaved);
@@ -86,6 +88,7 @@ void USimPetSaveSubsystem::LoadGame()
 	RestoreDroppedItemsData();
 	RestoreAnimalsData();
 	RestoreTimerData();
+	RestoreCurrentPointsData();
 	
 	LoadRegisteredActorsData();
 }
@@ -217,7 +220,21 @@ void USimPetSaveSubsystem::SaveTimerData()
 {
 	USimPetTimeSubsystem *TimeSubsystem = GetWorld()->GetSubsystem<USimPetTimeSubsystem>();
 	if (TimeSubsystem)
-		CachedSaveGame->SavedPlayTime = TimeSubsystem->GetCurrentPlayTime();
+		CachedSaveGame->PlayTimeSaveData = TimeSubsystem->GetCurrentPlayTime();
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void USimPetSaveSubsystem::SaveCurrentPointsData()
+{
+	APlayerController *PlayerController = GetWorld()->GetFirstPlayerController();
+	if (PlayerController == nullptr)
+		return;
+	
+	ASimPetPlayerState *PlayerState = PlayerController->GetPlayerState<ASimPetPlayerState>();
+	if (PlayerState == nullptr)
+		return;
+	
+	CachedSaveGame->PointsSaveData = PlayerState->GetSaveData();
 }
 
 bool USimPetSaveSubsystem::WriteSaveGameToDisk() const
@@ -289,5 +306,22 @@ void USimPetSaveSubsystem::RestoreTimerData()
 {
 	USimPetTimeSubsystem *TimeSubsystem = GetWorld()->GetSubsystem<USimPetTimeSubsystem>();
 	if (TimeSubsystem)
-		TimeSubsystem->RestoreTimeFromSave(CachedSaveGame->SavedPlayTime);
+		TimeSubsystem->RestoreTimeFromSave(CachedSaveGame->PlayTimeSaveData);
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void USimPetSaveSubsystem::RestoreCurrentPointsData()
+{
+	if (!IsValid(CachedSaveGame))
+		return;
+	
+	APlayerController *PlayerController = GetWorld()->GetFirstPlayerController();
+	if (PlayerController == nullptr)
+		return;
+	
+	ASimPetPlayerState *PlayerState = PlayerController->GetPlayerState<ASimPetPlayerState>();
+	if (PlayerState == nullptr)
+		return;
+	
+	PlayerState->RestoreFromSaveData(CachedSaveGame->PointsSaveData);
 }

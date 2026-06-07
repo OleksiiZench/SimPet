@@ -73,6 +73,7 @@ private:
 	void SaveDroppedItemsData();
 	void SaveAnimalsData();
 	void SaveTimerData();
+	void SaveCurrentPointsData();
 	bool WriteSaveGameToDisk() const;
 	void NotifySaveResult(const bool bIsSuccess);
 	
@@ -81,4 +82,5 @@ private:
 	void RestoreDroppedItemsData();
 	void RestoreAnimalsData();
 	void RestoreTimerData();
+	void RestoreCurrentPointsData();
 };
