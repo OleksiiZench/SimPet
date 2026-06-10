@@ -30,14 +30,22 @@ void USimPetSaveSubsystem::Initialize(FSubsystemCollectionBase &Collection)
 	LoadDifficulty();
 }
 
+void USimPetSaveSubsystem::Deinitialize()
+{
+	FlushPendingGlobalSave();
+	
+	Super::Deinitialize();
+}
+
 void USimPetSaveSubsystem::CheckAndUpdateMaxPoints(int32 InCurrentPoints)
 {
-	if (InCurrentPoints > MaxPoints)
-	{
-		MaxPoints = InCurrentPoints;
-
-		SaveMaxPoints();
-	}
+	if (!CachedGlobalSave || InCurrentPoints <= MaxPoints)
+		return;
+	
+	MaxPoints = InCurrentPoints;
+	CachedGlobalSave->MaxPoints = InCurrentPoints;
+	
+	RequestDelayedGlobalSave();
 }
 
 int32 USimPetSaveSubsystem::GetMaxPoints() const
@@ -124,6 +132,38 @@ void USimPetSaveSubsystem::ClearLoadGameRequested()
 	bLoadGameRequested = false;
 }
 
+void USimPetSaveSubsystem::CommitGlobalSaveToDisk()
+{
+	bIsGlobalSavePending = false;
+	
+	if (CachedGlobalSave)
+		UGameplayStatics::SaveGameToSlot(CachedGlobalSave, GlobalSaveSlotName, 0);
+}
+
+void USimPetSaveSubsystem::RequestDelayedGlobalSave()
+{
+	if (bIsGlobalSavePending)
+		return;
+	
+	UWorld* World = GetWorld();
+	if (World == nullptr)
+		return;
+	
+	bIsGlobalSavePending = true;
+	World->GetTimerManager().SetTimer(GlobalSaveTimerHandle, this, &ThisClass::CommitGlobalSaveToDisk, 3.0f, false);
+}
+
+void USimPetSaveSubsystem::FlushPendingGlobalSave()
+{
+	if (!bIsGlobalSavePending)
+		return;
+	
+	if (UWorld* World = GetWorld())
+		World->GetTimerManager().ClearTimer(GlobalSaveTimerHandle);
+	
+	CommitGlobalSaveToDisk();
+}
+
 void USimPetSaveSubsystem::CacheGlobalSave()
 {
 	if (UGameplayStatics::DoesSaveGameExist(GlobalSaveSlotName, 0))
@@ -167,15 +207,6 @@ void USimPetSaveSubsystem::LoadMaxPoints()
 	else
 	{
 		MaxPoints = 0;
-	}
-}
-
-void USimPetSaveSubsystem::SaveMaxPoints() const
-{
-	if (CachedGlobalSave)
-	{
-		CachedGlobalSave->MaxPoints = MaxPoints;
-		UGameplayStatics::SaveGameToSlot(CachedGlobalSave, GlobalSaveSlotName, 0);
 	}
 }
 

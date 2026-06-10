@@ -25,6 +25,7 @@ public:
 	USimPetSaveSubsystem();
 	
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
 	
 	void CheckAndUpdateMaxPoints(int32 InCurrentPoints);
 	int32 GetMaxPoints() const;
@@ -59,14 +60,21 @@ private:
 	int32 MaxPoints;
 	EGameDifficulty Difficulty;
 	
+	bool bIsGlobalSavePending;
+	FTimerHandle GlobalSaveTimerHandle;
+	
+	UFUNCTION()
+	void CommitGlobalSaveToDisk();
+	
+	void RequestDelayedGlobalSave();
+	void FlushPendingGlobalSave();
+	
 	void CacheGlobalSave();
 	void CacheSaveGame();
 	
 	USimPetUISubsystem *GetUISubsystem() const;
 	
 	void LoadMaxPoints();
-	void SaveMaxPoints() const;
-	
 	void LoadDifficulty();
 	
 	void SaveRegisteredActorsData();
