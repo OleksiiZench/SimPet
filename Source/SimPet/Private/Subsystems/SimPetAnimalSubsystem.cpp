@@ -59,43 +59,45 @@ void USimPetAnimalSubsystem::HandleWasteCleaned()
 	}
 }
 
-void USimPetAnimalSubsystem::MoveAnimalToForest()
+bool USimPetAnimalSubsystem::MoveAnimalToForest()
 {
 	if (OwnerAnimals.IsEmpty())
-		return;
+		return false;
+	
+	ASimPetSpawnPoint *SpawnPoint = GetSpawnPointInForest();
+	if (SpawnPoint == nullptr)
+		return false;
 	
 	ASimPetAnimal *Animal = OwnerAnimals.Pop();
-	if (!Animal)
-		return;
+	if (Animal == nullptr)
+		return false;
 
 	AddWildAnimalAndNotify(Animal);
 	
 	UnbindAnimalFromSpawnPoint(Animal);
 	
-	ASimPetSpawnPoint *SpawnPoint = GetSpawnPointInForest();
-	if (SpawnPoint == nullptr)
-		return;
-	
 	FVector LocationSpawnPoint = SpawnPoint->GetActorLocation();
 
 	Animal->SetActorLocation(LocationSpawnPoint);
 	Animal->ApplyForestState();
+	
+	return true;
 }
 
-void USimPetAnimalSubsystem::MoveAnimalToOwner()
+bool USimPetAnimalSubsystem::MoveAnimalToOwner()
 {
 	if (WildAnimals.IsEmpty())
-		return;
-	
-	ASimPetAnimal *Animal = WildAnimals.Pop();
-	if (!Animal)
-		return;
-
-	AddOwnerAnimalAndNotify(Animal);
+		return false;
 	
 	ASimPetSpawnPoint *AnimalSpawnPoint = GetSpawnPointInOwner();
 	if (AnimalSpawnPoint == nullptr)
-		return;
+		return false;
+	
+	ASimPetAnimal *Animal = WildAnimals.Pop();
+	if (Animal == nullptr)
+		return false;
+
+	AddOwnerAnimalAndNotify(Animal);
 	
 	BindAnimalToSpawnPoint(Animal, AnimalSpawnPoint);
 	
@@ -103,6 +105,8 @@ void USimPetAnimalSubsystem::MoveAnimalToOwner()
 	
 	Animal->SetActorLocation(LocationSpawnPoint);
 	Animal->ApplyOwnerState();
+	
+	return true;
 }
 
 const TArray<ASimPetSpawnPoint *> & USimPetAnimalSubsystem::GetAllSpawnPoints() const

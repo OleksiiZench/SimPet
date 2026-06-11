@@ -107,9 +107,11 @@ void ASimPetFabricator::MoveAnimalToForest()
 		return;
 	}
 
-	CachedAnimalSubsystem->MoveAnimalToForest();
-	
-	BroadcastResultNotification(true, MoveToForestMsg.ToString());
+	bool bSuccessfulMove = CachedAnimalSubsystem->MoveAnimalToForest();
+	if (bSuccessfulMove)
+		BroadcastResultNotification(true, MoveToForestMsg.ToString());
+	else
+		BroadcastResultNotification(false, UnsuccessfulMoveMsg.ToString());
 }
 
 void ASimPetFabricator::MoveAnimalToOwner()
@@ -127,9 +129,11 @@ void ASimPetFabricator::MoveAnimalToOwner()
 		return;
 	}
 
-	CachedAnimalSubsystem->MoveAnimalToOwner();
-	
-	BroadcastResultNotification(true, MoveToOwnerMsg.ToString());
+	bool bSuccessfulMove = CachedAnimalSubsystem->MoveAnimalToOwner();
+	if (bSuccessfulMove)
+		BroadcastResultNotification(true, MoveToOwnerMsg.ToString());
+	else
+		BroadcastResultNotification(false, UnsuccessfulMoveMsg.ToString());
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst

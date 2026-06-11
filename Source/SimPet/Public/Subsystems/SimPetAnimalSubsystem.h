@@ -31,8 +31,8 @@ public:
 	
 	void HandleWasteCleaned();
 	
-	void MoveAnimalToForest();
-	void MoveAnimalToOwner();
+	bool MoveAnimalToForest();
+	bool MoveAnimalToOwner();
 	
 	const TArray<ASimPetSpawnPoint *> &GetAllSpawnPoints() const;
 	
