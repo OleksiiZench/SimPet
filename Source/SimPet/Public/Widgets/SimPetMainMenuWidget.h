@@ -18,7 +18,8 @@ enum class EMainMenuTab : uint8
 	MainMenu,
 	GeneralSettings,
 	DifficultySettings,
-	GraphSettings
+	GraphSettings,
+	LanguageSettings,
 };
 
 enum class EGraphicsQuality : uint8
@@ -26,6 +27,12 @@ enum class EGraphicsQuality : uint8
 	Low,
 	Medium,
 	High
+};
+
+enum class ESimPetLanguage : uint8
+{
+	English,
+	Ukrainian
 };
 
 
@@ -68,6 +75,9 @@ protected:
 	UButton *Btn_GraphSettings;
 	
 	UPROPERTY(meta = (BindWidget))
+	UButton *Btn_LanguageSettings;
+	
+	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_GeneralSettingsBack;
 	
 	// 3. DifficultySettingsMenu
@@ -95,6 +105,19 @@ protected:
 	
 	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_GraphSettingsBack;
+	
+	// 5. LanguageSettingsMenu
+	UPROPERTY(meta = (BindWidget))
+	UButton *Btn_LanguageLeft;
+	
+	UPROPERTY(meta = (BindWidget))
+	UButton *Btn_LanguageRight;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_Language;
+	
+	UPROPERTY(meta = (BindWidget))
+	UButton *Btn_LanguageSettingsBack;
 #pragma endregion
 	
 #pragma region UI Callbacks
@@ -119,6 +142,9 @@ protected:
 	void OnGraphSettingsClicked();
 	
 	UFUNCTION()
+	void OnLanguageSettingsClicked();
+	
+	UFUNCTION()
 	void OnGeneralSettingsBackClicked();
 	
 	// 3. DifficultySettingsMenu
@@ -141,6 +167,16 @@ protected:
 	UFUNCTION()
 	void OnGraphBackClicked();
 	
+	// 5. LanguageSettingsMenu
+	UFUNCTION()
+	void OnLanguageLeftClicked();
+	
+	UFUNCTION()
+	void OnLanguageRightClicked();
+	
+	UFUNCTION()
+	void OnLanguageBackClicked();
+	
 #pragma endregion
 	
 private:
@@ -156,6 +192,9 @@ private:
 	TArray<FText> GraphOptions;
 	int32 CurrentGraphIndex;
 	
+	TArray<FText> LanguageOptions;
+	int32 CurrentLanguageIndex;
+	
 	void CacheUserSettings();
 	void CacheSaveSubsystem();
 	
@@ -166,6 +205,7 @@ private:
 	void SetupGeneralSettingsButtonBindings();
 	void SetupDifficultySettingsButtonBindings();
 	void SetupGraphSettingsButtonBindings();
+	void SetupLanguageSettingsButtonBindings();
 	
 	void InitializeContinueButton();
 	
@@ -176,6 +216,10 @@ private:
 	void InitializeGraphOptions();
 	void InitializeGraphIndexFromEngine();
 	void UpdateGraphDisplay();
+	
+	void InitializeLanguageOptions();
+	void InitializeLanguageIndexFromSaveInternationalization();
+	void UpdateLanguageDisplay();
 	
 	void SetGraphSettings();
 	void SetLowGraphSettings();

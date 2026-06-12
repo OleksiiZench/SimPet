@@ -24,6 +24,7 @@ void USimPetMainMenuWidget::NativeOnInitialized()
 	
 	InitializeDifficultyOptions();
 	InitializeGraphOptions();
+	InitializeLanguageOptions();
 }
 
 void USimPetMainMenuWidget::NativeConstruct()
@@ -72,6 +73,11 @@ void USimPetMainMenuWidget::OnDifficultySettingsClicked()
 void USimPetMainMenuWidget::OnGraphSettingsClicked()
 {
 	SwitchToTab(EMainMenuTab::GraphSettings);
+}
+
+void USimPetMainMenuWidget::OnLanguageSettingsClicked()
+{
+	SwitchToTab(EMainMenuTab::LanguageSettings);
 }
 
 void USimPetMainMenuWidget::OnGeneralSettingsBackClicked()
@@ -129,6 +135,31 @@ void USimPetMainMenuWidget::OnGraphBackClicked()
 	SwitchToTab(EMainMenuTab::GeneralSettings);
 }
 
+void USimPetMainMenuWidget::OnLanguageLeftClicked()
+{
+	CurrentLanguageIndex--;
+	if (CurrentLanguageIndex < 0)
+		CurrentLanguageIndex = LanguageOptions.Num() - 1;
+	
+	UpdateLanguageDisplay();
+}
+
+void USimPetMainMenuWidget::OnLanguageRightClicked()
+{
+	CurrentLanguageIndex++;
+	if (CurrentLanguageIndex >= LanguageOptions.Num())
+		CurrentLanguageIndex = 0;
+	
+	UpdateLanguageDisplay();
+}
+
+void USimPetMainMenuWidget::OnLanguageBackClicked()
+{
+	//TODO: Реалізувати фунуцію SetLanguageSettings();
+	
+	SwitchToTab(EMainMenuTab::GeneralSettings);
+}
+
 void USimPetMainMenuWidget::CacheUserSettings()
 {
 	CachedUserSettings = GEngine->GetGameUserSettings();
@@ -157,6 +188,7 @@ void USimPetMainMenuWidget::SetupButtonBindings()
 	SetupGeneralSettingsButtonBindings();
 	SetupDifficultySettingsButtonBindings();
 	SetupGraphSettingsButtonBindings();
+	SetupLanguageSettingsButtonBindings();
 }
 
 void USimPetMainMenuWidget::SetupMainMenuButtonBindings()
@@ -181,6 +213,9 @@ void USimPetMainMenuWidget::SetupGeneralSettingsButtonBindings()
 	
 	if (Btn_GraphSettings)
 		Btn_GraphSettings->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnGraphSettingsClicked);
+	
+	if (Btn_LanguageSettings)
+		Btn_LanguageSettings->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnLanguageSettingsClicked);
 	
 	if (Btn_GeneralSettingsBack)
 		Btn_GeneralSettingsBack->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnGeneralSettingsBackClicked);
@@ -208,6 +243,18 @@ void USimPetMainMenuWidget::SetupGraphSettingsButtonBindings()
 	
 	if (Btn_GraphSettingsBack)
 		Btn_GraphSettingsBack->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnGraphBackClicked);
+}
+
+void USimPetMainMenuWidget::SetupLanguageSettingsButtonBindings()
+{
+	if (Btn_LanguageLeft)
+		Btn_LanguageLeft->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnLanguageLeftClicked);
+	
+	if (Btn_LanguageRight)
+		Btn_LanguageRight->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnLanguageRightClicked);
+	
+	if (Btn_LanguageSettingsBack)
+		Btn_LanguageSettingsBack->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnLanguageBackClicked);
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
@@ -278,6 +325,30 @@ void USimPetMainMenuWidget::UpdateGraphDisplay()
 	if (Text_Graph && GraphOptions.IsValidIndex(CurrentGraphIndex))
 	{
 		Text_Graph->SetText(GraphOptions[CurrentGraphIndex]);
+	}
+}
+
+void USimPetMainMenuWidget::InitializeLanguageOptions()
+{
+	LanguageOptions.Empty();
+	LanguageOptions.Add(NSLOCTEXT("Settings", "Language_English", "English"));
+	LanguageOptions.Add(NSLOCTEXT("Settings", "Language_Ukrainian", "Ukrainian"));
+	
+	InitializeLanguageIndexFromSaveInternationalization();
+	
+	UpdateLanguageDisplay();
+}
+
+void USimPetMainMenuWidget::InitializeLanguageIndexFromSaveInternationalization()
+{
+	CurrentLanguageIndex = 0;  //TODO: Реалізувати отримання поточної мови з системи Internationalization
+}
+
+void USimPetMainMenuWidget::UpdateLanguageDisplay()
+{
+	if (Text_Language && LanguageOptions.IsValidIndex(CurrentLanguageIndex))
+	{
+		Text_Language->SetText(LanguageOptions[CurrentLanguageIndex]);
 	}
 }
 
