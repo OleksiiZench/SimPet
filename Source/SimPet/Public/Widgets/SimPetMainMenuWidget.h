@@ -29,12 +29,6 @@ enum class EGraphicsQuality : uint8
 	High
 };
 
-enum class ESimPetLanguage : uint8
-{
-	English,
-	Ukrainian
-};
-
 
 
 
@@ -226,4 +220,5 @@ private:
 	void SetMediumGraphSettings();
 	void SetHighGraphSettings();
 	void SaveDifficultySettings();
+	void SetLanguageSettings();
 };

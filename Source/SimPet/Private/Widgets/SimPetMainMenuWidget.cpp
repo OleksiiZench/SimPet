@@ -10,6 +10,8 @@
 #include "GameFramework/GameUserSettings.h"
 #include "SimPetTypes/SimPetEnumTypes.h"
 #include "Subsystems/SimPetSaveSubsystem.h"
+#include "Internationalization/Internationalization.h"
+#include "Internationalization/Culture.h"
 
 #include "SimPetDebugHelper.h"
 
@@ -155,7 +157,7 @@ void USimPetMainMenuWidget::OnLanguageRightClicked()
 
 void USimPetMainMenuWidget::OnLanguageBackClicked()
 {
-	//TODO: Реалізувати фунуцію SetLanguageSettings();
+	SetLanguageSettings();
 	
 	SwitchToTab(EMainMenuTab::GeneralSettings);
 }
@@ -341,7 +343,12 @@ void USimPetMainMenuWidget::InitializeLanguageOptions()
 
 void USimPetMainMenuWidget::InitializeLanguageIndexFromSaveInternationalization()
 {
-	CurrentLanguageIndex = 0;  //TODO: Реалізувати отримання поточної мови з системи Internationalization
+	FString CurrentCulture = FInternationalization::Get().GetCurrentCulture()->GetName();
+	
+	if (CurrentCulture.StartsWith(TEXT("uk")))
+		CurrentLanguageIndex = 1;
+	else
+		CurrentLanguageIndex = 0;
 }
 
 void USimPetMainMenuWidget::UpdateLanguageDisplay()
@@ -443,4 +450,20 @@ void USimPetMainMenuWidget::SaveDifficultySettings()
 		
 		CachedSaveSubsystem->SaveDifficulty(Difficulty);
 	}
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void USimPetMainMenuWidget::SetLanguageSettings()
+{
+	FString NewCulture;
+	
+	if (CurrentLanguageIndex == 1)
+		NewCulture = TEXT("uk-UA");
+	else
+		NewCulture = TEXT("en");
+	
+	FInternationalization::Get().SetCurrentCulture(NewCulture);
+	
+	GConfig->SetString(TEXT("Internationalization"), TEXT("Culture"), *NewCulture, GGameUserSettingsIni);
+	GConfig->Flush(false, GGameUserSettingsIni);
 }
