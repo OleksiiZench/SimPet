@@ -22,7 +22,7 @@ void USimPetMainMenuWidget::NativeOnInitialized()
 	CacheUserSettings();
 	CacheSaveSubsystem();
 	
-	SetupButtonBindings();
+	SetupBindings();
 	
 	InitializeDifficultyOptions();
 	InitializeGraphOptions();
@@ -184,47 +184,77 @@ void USimPetMainMenuWidget::SwitchToTab(EMainMenuTab TabToSwitch)
 	}
 }
 
-void USimPetMainMenuWidget::SetupButtonBindings()
+void USimPetMainMenuWidget::SetupBindings()
 {
-	SetupMainMenuButtonBindings();
-	SetupGeneralSettingsButtonBindings();
-	SetupDifficultySettingsButtonBindings();
-	SetupGraphSettingsButtonBindings();
-	SetupLanguageSettingsButtonBindings();
+	SetupMainMenuBindings();
+	SetupGeneralSettingsBindings();
+	SetupDifficultySettingsBindings();
+	SetupGraphSettingsBindings();
+	SetupLanguageSettingsBindings();
 }
 
-void USimPetMainMenuWidget::SetupMainMenuButtonBindings()
+void USimPetMainMenuWidget::SetupMainMenuBindings()
 {
 	if (Btn_Continue)
 		Btn_Continue->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnContinueClicked);
 	
+	if (TextBtn_Continue)
+		TextBtn_Continue->SetText(NSLOCTEXT("MainMenu", "TextBtn_Continue", "Continue"));
+	
 	if (Btn_NewGame)
 		Btn_NewGame->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnNewGameClicked);
+	
+	if (TextBtn_NewGame)
+		TextBtn_NewGame->SetText(NSLOCTEXT("MainMenu", "TextBtn_NewGame", "New Game"));
 	
 	if (Btn_Settings)
 		Btn_Settings->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnSettingsClicked);
 	
+	if (TextBtn_Settings)
+		TextBtn_Settings->SetText(NSLOCTEXT("MainMenu", "TextBtn_Settings", "Settings"));
+	
 	if (Btn_Exit)
 		Btn_Exit->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnExitClicked);
+	
+	if (TextBtn_Exit)
+		TextBtn_Exit->SetText(NSLOCTEXT("MainMenu", "TextBtn_Exit", "Exit"));
 }
 
-void USimPetMainMenuWidget::SetupGeneralSettingsButtonBindings()
+void USimPetMainMenuWidget::SetupGeneralSettingsBindings()
 {
+	if (Text_GeneralSettings)
+		Text_GeneralSettings->SetText(NSLOCTEXT("Settings", "Text_Settings", "General Settings"));
+	
 	if (Btn_DifficultySettings)
 		Btn_DifficultySettings->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnDifficultySettingsClicked);
+	
+	if (TextBtn_DifficultySettings)
+		TextBtn_DifficultySettings->SetText(NSLOCTEXT("Settings", "TextBtn_DifficultySettings", "Difficulty"));
 	
 	if (Btn_GraphSettings)
 		Btn_GraphSettings->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnGraphSettingsClicked);
 	
+	if (TextBtn_GraphSettings)
+		TextBtn_GraphSettings->SetText(NSLOCTEXT("Settings", "TextBtn_GraphSettings", "Graph"));
+	
 	if (Btn_LanguageSettings)
 		Btn_LanguageSettings->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnLanguageSettingsClicked);
 	
+	if (TextBtn_LanguageSettings)
+		TextBtn_LanguageSettings->SetText(NSLOCTEXT("Settings", "TextBtn_LanguageSettings", "Language"));
+	
 	if (Btn_GeneralSettingsBack)
 		Btn_GeneralSettingsBack->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnGeneralSettingsBackClicked);
+	
+	if (TextBtn_GeneralSettingsBack)
+		TextBtn_GeneralSettingsBack->SetText(NSLOCTEXT("Settings", "TextBtn_GeneralSettingsBack", "Back"));
 }
 
-void USimPetMainMenuWidget::SetupDifficultySettingsButtonBindings()
+void USimPetMainMenuWidget::SetupDifficultySettingsBindings()
 {
+	if (Text_DifficultySettings)
+		Text_DifficultySettings->SetText(NSLOCTEXT("Settings", "Text_DifficultySettings", "Difficulty Settings"));
+	
 	if (Btn_DifficultyLeft)
 		Btn_DifficultyLeft->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnDifficultyLeftClicked);
 	
@@ -233,10 +263,16 @@ void USimPetMainMenuWidget::SetupDifficultySettingsButtonBindings()
 	
 	if (Btn_DifficultySettingsBack)
 		Btn_DifficultySettingsBack->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnDifficultyBackClicked);
+	
+	if (TextBtn_DifficultySettingsBack)
+		TextBtn_DifficultySettingsBack->SetText(NSLOCTEXT("Settings", "TextBtn_DifficultySettingsBack", "Back"));
 }
 
-void USimPetMainMenuWidget::SetupGraphSettingsButtonBindings()
+void USimPetMainMenuWidget::SetupGraphSettingsBindings()
 {
+	if (Text_GraphSettings)
+		Text_GraphSettings->SetText(NSLOCTEXT("Settings", "Text_GraphSettings", "Graph Settings"));
+	
 	if (Btn_GraphLeft)
 		Btn_GraphLeft->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnGraphLeftClicked);
 	
@@ -245,10 +281,16 @@ void USimPetMainMenuWidget::SetupGraphSettingsButtonBindings()
 	
 	if (Btn_GraphSettingsBack)
 		Btn_GraphSettingsBack->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnGraphBackClicked);
+	
+	if (TextBtn_GraphSettingsBack)
+		TextBtn_GraphSettingsBack->SetText(NSLOCTEXT("Settings", "TextBtn_GraphSettingsBack", "Back"));
 }
 
-void USimPetMainMenuWidget::SetupLanguageSettingsButtonBindings()
+void USimPetMainMenuWidget::SetupLanguageSettingsBindings()
 {
+	if (Text_LanguageSettings)
+		Text_LanguageSettings->SetText(NSLOCTEXT("Settings", "Text_LanguageSettings", "Language Settings"));
+	
 	if (Btn_LanguageLeft)
 		Btn_LanguageLeft->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnLanguageLeftClicked);
 	
@@ -257,6 +299,9 @@ void USimPetMainMenuWidget::SetupLanguageSettingsButtonBindings()
 	
 	if (Btn_LanguageSettingsBack)
 		Btn_LanguageSettingsBack->OnClicked.AddDynamic(this, &USimPetMainMenuWidget::OnLanguageBackClicked);
+	
+	if (TextBtn_LanguageSettingsBack)
+		TextBtn_LanguageSettingsBack->SetText(NSLOCTEXT("Settings", "TextBtn_LanguageSettingsBack", "Back"));
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst

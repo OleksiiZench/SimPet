@@ -53,28 +53,58 @@ protected:
 	UButton *Btn_Continue;
 	
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock *TextBtn_Continue;
+	
+	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_NewGame;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *TextBtn_NewGame;
 	
 	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_Settings;
 	
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock *TextBtn_Settings;
+	
+	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_Exit;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *TextBtn_Exit;
 	
 	// 2. GeneralSettingsMenu
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_GeneralSettings;
+	
+	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_DifficultySettings;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *TextBtn_DifficultySettings;
 	
 	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_GraphSettings;
 	
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock *TextBtn_GraphSettings;
+	
+	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_LanguageSettings;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *TextBtn_LanguageSettings;
 	
 	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_GeneralSettingsBack;
 	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *TextBtn_GeneralSettingsBack;
+	
 	// 3. DifficultySettingsMenu
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_DifficultySettings;
+	
 	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_DifficultyLeft;
 	
@@ -87,7 +117,13 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_DifficultySettingsBack;
 	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *TextBtn_DifficultySettingsBack;
+	
 	// 4. GraphSettingsMenu
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_GraphSettings;
+	
 	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_GraphLeft;
 	
@@ -100,7 +136,13 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_GraphSettingsBack;
 	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *TextBtn_GraphSettingsBack;
+	
 	// 5. LanguageSettingsMenu
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_LanguageSettings;
+	
 	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_LanguageLeft;
 	
@@ -112,6 +154,9 @@ protected:
 	
 	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_LanguageSettingsBack;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *TextBtn_LanguageSettingsBack;
 #pragma endregion
 	
 #pragma region UI Callbacks
@@ -194,12 +239,12 @@ private:
 	
 	void SwitchToTab(EMainMenuTab TabToSwitch);
 	
-	void SetupButtonBindings();
-	void SetupMainMenuButtonBindings();
-	void SetupGeneralSettingsButtonBindings();
-	void SetupDifficultySettingsButtonBindings();
-	void SetupGraphSettingsButtonBindings();
-	void SetupLanguageSettingsButtonBindings();
+	void SetupBindings();
+	void SetupMainMenuBindings();
+	void SetupGeneralSettingsBindings();
+	void SetupDifficultySettingsBindings();
+	void SetupGraphSettingsBindings();
+	void SetupLanguageSettingsBindings();
 	
 	void InitializeContinueButton();
 	
