@@ -32,6 +32,8 @@ void USimPetFabricatorWidget::NativeConstruct()
 		int32 CurrentPoints = CachedPlayerState->GetCurrentPoints();
 		UpdatePointsText(CurrentPoints);
 	}
+	
+	SetupUIBindings();
 }
 
 void USimPetFabricatorWidget::NativeDestruct()
@@ -120,10 +122,10 @@ FReply USimPetFabricatorWidget::NativeOnMouseButtonDown(const FGeometry &InGeome
 // ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetFabricatorWidget::UpdatePointsText(const int32 Points)
 {
-	const FString FormattedString = FString::Printf(TEXT("Points: %d"), Points);
-	if (PointsText)
+	const FString FormattedString = FString::Printf(TEXT("%d"), Points);
+	if (Text_TotalPoints)
 	{
-		PointsText->SetText(FText::FromString(FormattedString));
+		Text_TotalPoints->SetText(FText::FromString(FormattedString));
 	}
 }
 
@@ -177,4 +179,27 @@ void USimPetFabricatorWidget::UnbindToPointsUpdate()
 {
 	if (CachedPlayerState)
 		CachedPlayerState->OnPointsChanged.RemoveDynamic(this, &ThisClass::UpdatePointsText);
+}
+
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void USimPetFabricatorWidget::SetupUIBindings()
+{
+	if (Text_Points)
+		Text_Points->SetText(NSLOCTEXT("Fabticator", "Text_Points", "Points:"));
+	
+	if (Text_BuyDog)
+		Text_BuyDog->SetText(NSLOCTEXT("Fabticator", "Text_BuyDog", "Buy a dog for:"));
+	
+	if (Text_BuyCanary)
+		Text_BuyCanary->SetText(NSLOCTEXT("Fabticator", "Text_BuyCanary", "Buy a canary for:"));
+	
+	if (Text_BuyLizard)
+		Text_BuyLizard->SetText(NSLOCTEXT("Fabticator", "Text_BuyLizard", "Buy a lizard for:"));
+	
+	if (Text_MoveToOwner)
+		Text_MoveToOwner->SetText(NSLOCTEXT("Fabticator", "Text_MoveToOwner", "Move the animal to the owner <-"));
+	
+	if (Text_MoveToForest)
+		Text_MoveToForest->SetText(NSLOCTEXT("Fabticator", "Text_MoveToForest", "Move the animal to the forest ->"));
 }

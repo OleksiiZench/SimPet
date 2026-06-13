@@ -29,22 +29,43 @@ public:
 protected:
 #pragma region UI Bindings
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_Points;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_TotalPoints;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_OwnerAnimals;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_Dog;
+	
+	UPROPERTY(meta = (BindWidget))
 	UTextBlock *DogCountText;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_Canary;
 	
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock *CanaryCountText;
 	
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_Lizard;
+	
+	UPROPERTY(meta = (BindWidget))
 	UTextBlock *LizardCountText;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_WildAnimals;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_Animals;
 	
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock *WildAnimalCountText;
 	
 	UPROPERTY(meta = (BindWidget))
 	UProgressBar *StaminaProgressBar;
-	
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock *PointsText;
 #pragma endregion
 	
 #pragma region Logic
@@ -73,6 +94,7 @@ private:
 	void CacheDependencies();
 	void CacheAnimalSubsystem();
 	void SetupInitialValues();
+	void SetupUIBindings();
 	
 	void BindDelegates();
 	void UnbindDelegates();

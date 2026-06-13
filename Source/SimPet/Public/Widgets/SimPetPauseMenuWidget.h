@@ -31,19 +31,37 @@ protected:
 	
 #pragma region UI Bindings
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_Pause;
+	
+	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_Resume;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *TextBtn_Resume;
 	
 	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_SaveGame;
 	
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock *TextBtn_SaveGame;
+	
+	UPROPERTY(meta = (BindWidget))
 	UButton *Btn_ToMainMenu;
 	
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock *MaxPointsText;
+	UTextBlock *TextBtn_ToMainMenu;
 	
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock *CurrentPointsText;
+	UTextBlock *Text_MaxPoints;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_CountMaxPoints;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_CurrentPoints;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_CountCurrentPoints;
 #pragma endregion
 	
 #pragma region UI Callbacks
@@ -68,6 +86,7 @@ private:
 	ASimPetPlayerState *CachedPlayerState;
 	
 	void SetupButtonBindings();
+	void SetupUIBindings();
 	
 	void UpdateAssignedText();
 	void UpdateMaxPointsText();

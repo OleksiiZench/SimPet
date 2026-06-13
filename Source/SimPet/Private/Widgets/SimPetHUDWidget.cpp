@@ -19,6 +19,7 @@ void USimPetHUDWidget::NativeConstruct()
 	CacheDependencies();
 	CacheAnimalSubsystem();
 	SetupInitialValues();
+	SetupUIBindings();
 	
 	UpdateAnimalStats();
 	
@@ -44,11 +45,11 @@ void USimPetHUDWidget::UpdateStaminaBar(float Percent)
 // ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetHUDWidget::UpdatePointsText(int32 Points)
 {
-	FString FormattedString = FString::Printf(TEXT("Points: %d"), Points);
+	FString FormattedString = FString::Printf(TEXT("%d"), Points);
 	
-	if (PointsText)
+	if (Text_TotalPoints)
 	{
-		PointsText->SetText(FText::FromString(FormattedString));
+		Text_TotalPoints->SetText(FText::FromString(FormattedString));
 	}
 }
 
@@ -117,6 +118,31 @@ void USimPetHUDWidget::SetupInitialValues()
 		int32 CurrentPoints = CachedPlayerState->GetCurrentPoints();
 		UpdatePointsText(CurrentPoints);
 	}
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void USimPetHUDWidget::SetupUIBindings()
+{
+	if (Text_Points)
+		Text_Points->SetText(NSLOCTEXT("HUD", "Text_Points", "Points: "));
+	
+	if (Text_OwnerAnimals)
+		Text_OwnerAnimals->SetText(NSLOCTEXT("HUD", "Text_OwnerAnimals", "The owner's animals"));
+	
+	if (Text_Dog)
+		Text_Dog->SetText(NSLOCTEXT("HUD", "Text_Dog", "Dogs:"));
+	
+	if (Text_Canary)
+		Text_Canary->SetText(NSLOCTEXT("HUD", "Text_Canary", "Canaries:"));
+	
+	if (Text_Lizard)
+		Text_Lizard->SetText(NSLOCTEXT("HUD", "Text_Lizard", "Lizards:"));
+	
+	if (Text_WildAnimals)
+		Text_WildAnimals->SetText(NSLOCTEXT("HUD", "Text_WildAnimals", "Animals in the wild"));
+	
+	if (Text_Animals)
+		Text_Animals->SetText(NSLOCTEXT("HUD", "Text_Animals", "Animals:"));
 }
 
 void USimPetHUDWidget::BindDelegates()

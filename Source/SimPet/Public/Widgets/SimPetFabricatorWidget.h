@@ -47,16 +47,34 @@ public:
 protected:
 #pragma region UI Bindings
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_Points;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_TotalPoints;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_BuyDog;
+	
+	UPROPERTY(meta = (BindWidget))
 	UTextBlock *PriceDogText;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_BuyCanary;
 	
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock *PriceCanaryText;
 	
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_BuyLizard;
+	
+	UPROPERTY(meta = (BindWidget))
 	UTextBlock *PriceLizardText;
 	
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock *PointsText;
+	UTextBlock *Text_MoveToOwner;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_MoveToForest;
 #pragma endregion
 	
 	TWeakObjectPtr<ASimPetFabricator> LinkedFabricator;  // Посилання на фабрикатор який відкрив цей UI
@@ -77,4 +95,6 @@ private:
 	void CachePlayerState();
 	void BindToPointsUpdate();
 	void UnbindToPointsUpdate();
+	
+	void SetupUIBindings();
 };

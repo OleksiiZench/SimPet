@@ -23,6 +23,7 @@ void USimPetPauseMenuWidget::NativeOnInitialized()
 	CachePlayerState();
 	
 	SetupButtonBindings();
+	SetupUIBindings();
 }
 
 void USimPetPauseMenuWidget::NativeConstruct()
@@ -73,6 +74,28 @@ void USimPetPauseMenuWidget::SetupButtonBindings()
 		Btn_SaveGame->OnClicked.AddDynamic(this, &USimPetPauseMenuWidget::OnSaveGameClicked);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
+void USimPetPauseMenuWidget::SetupUIBindings()
+{
+	if (Text_Pause)
+		Text_Pause->SetText(NSLOCTEXT("Pause", "Text_Pause", "PAUSE"));
+	
+	if (TextBtn_Resume)
+		TextBtn_Resume->SetText(NSLOCTEXT("Resume", "TextBtn_Resume", "Resume"));
+	
+	if (TextBtn_SaveGame)
+		TextBtn_SaveGame->SetText(NSLOCTEXT("SaveGame", "TextBtn_SaveGame", "Save Game"));
+	
+	if (TextBtn_ToMainMenu)
+		TextBtn_ToMainMenu->SetText(NSLOCTEXT("ToMainMenu", "TextBtn_ToMainMenu", "To Main Menu"));
+	
+	if (Text_MaxPoints)
+		Text_MaxPoints->SetText(NSLOCTEXT("MaxPoints", "Text_MaxPoints", "Max points:"));
+	
+	if (Text_CurrentPoints)
+		Text_CurrentPoints->SetText(NSLOCTEXT("CurrentPoints", "Text_CurrentPoints", "Current points:"));
+}
+
 void USimPetPauseMenuWidget::UpdateAssignedText()
 {
 	UpdateMaxPointsText();
@@ -82,22 +105,22 @@ void USimPetPauseMenuWidget::UpdateAssignedText()
 // ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetPauseMenuWidget::UpdateMaxPointsText()
 {
-	if (MaxPointsText && CachedSaveSubsystem)
+	if (Text_CountMaxPoints && CachedSaveSubsystem)
 	{
 		int32 MaxPoints = CachedSaveSubsystem->GetMaxPoints();
 		
-		MaxPointsText->SetText(FText::AsNumber(MaxPoints));
+		Text_CountMaxPoints->SetText(FText::AsNumber(MaxPoints));
 	}
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
 void USimPetPauseMenuWidget::UpdateCurrentPointsText()
 {
-	if (CurrentPointsText && CachedPlayerState)
+	if (Text_CountCurrentPoints && CachedPlayerState)
 	{
 		int32 CurrentPoints = CachedPlayerState->GetCurrentPoints();
 		
-		CurrentPointsText->SetText(FText::AsNumber(CurrentPoints));
+		Text_CountCurrentPoints->SetText(FText::AsNumber(CurrentPoints));
 	}
 }
 
