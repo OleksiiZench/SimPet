@@ -17,6 +17,8 @@
 #include "Subsystems/SimPetSaveSubsystem.h"
 #include "Save/Structures/SimPetPlayerSaveData.h"
 
+#include "SimPetDebugHelper.h"
+
 ASimPetPlayer::ASimPetPlayer()
 {
 	SetupComponents();
@@ -57,6 +59,10 @@ void ASimPetPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputCompon
 		if (LookAction)
 			EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASimPetPlayer::Input_Look);
 
+		const UInputAction *UseAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_Use);
+		if (UseAction)
+			EnhancedInputComponent->BindAction(UseAction, ETriggerEvent::Started, this, &ASimPetPlayer::Input_Use);
+		
 		const UInputAction *InteractAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_Interact);
 		if (InteractAction)
 			EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ASimPetPlayer::Input_Interact);
@@ -161,10 +167,9 @@ void ASimPetPlayer::Input_Look(const FInputActionValue &InputActionValue)
 	}
 }
 
-void ASimPetPlayer::Input_Interact(const FInputActionValue &InputActionValue)
+void ASimPetPlayer::Input_Use(const FInputActionValue &InputActionValue)
 {
 	AActor *HitActor = InteractionComponent->DoInteractionTrace();
-	
 	if (HitActor)
 	{
 		if (InteractionComponent->TryUseEquippedItemOn(HitActor))
@@ -172,6 +177,14 @@ void ASimPetPlayer::Input_Interact(const FInputActionValue &InputActionValue)
 		
 		ISimPetInteractable::Execute_Interact(HitActor, this);
 	}
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void ASimPetPlayer::Input_Interact(const FInputActionValue &InputActionValue)
+{
+	AActor *HitActor = InteractionComponent->DoInteractionTrace();
+	if (HitActor)
+		InteractionComponent->TakeOrDropOrSwapItem(HitActor);
 }
 
 void ASimPetPlayer::Input_SecondaryInteract(const FInputActionValue &InputActionValue)
