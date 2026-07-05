@@ -6,6 +6,8 @@
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
 #include "Components/SceneComponent.h"
+#include "Engine/World.h"
+#include "Engine/GameInstance.h"
 
 #include "DataAsset/Input/SimPetInputConfig.h"
 #include "SimPetGameplayTags.h"
@@ -18,6 +20,7 @@
 #include "Save/Structures/SimPetPlayerSaveData.h"
 
 #include "SimPetDebugHelper.h"
+
 
 ASimPetPlayer::ASimPetPlayer()
 {
@@ -169,9 +172,13 @@ void ASimPetPlayer::Input_Look(const FInputActionValue &InputActionValue)
 
 void ASimPetPlayer::Input_Use(const FInputActionValue &InputActionValue)
 {
-	AActor *HitActor = InteractionComponent->DoInteractionTrace();
+	Debug::Print(TEXT("Input_Use"));
+	
+	AActor *HitActor = InteractionComponent->DoInteractionTrace(50.0f);
 	if (HitActor)
 	{
+		Debug::Print(TEXT("HitActor = true"));
+		
 		if (InteractionComponent->TryUseEquippedItemOn(HitActor))
 			return;
 		

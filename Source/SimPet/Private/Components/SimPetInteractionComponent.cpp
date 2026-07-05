@@ -3,6 +3,9 @@
 
 #include "Components/SimPetInteractionComponent.h"
 
+#include "Engine/HitResult.h"
+#include "Engine/World.h"
+#include "GameFramework/Pawn.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 #include "Interfaces/SimPetInteractable.h"
@@ -19,10 +22,9 @@ USimPetInteractionComponent::USimPetInteractionComponent()
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
-AActor *USimPetInteractionComponent::DoInteractionTrace()
+AActor *USimPetInteractionComponent::DoInteractionTrace(float InteractionRadius)
 {
 	float InteractionDistance = 250.0f;
-	float InteractionRadius = 1.0f;
 	
 	APawn *Player = Cast<APawn>(GetOwner());
 	if (!Player)
@@ -44,7 +46,7 @@ AActor *USimPetInteractionComponent::DoInteractionTrace()
 		InteractionTraceChannel,
 		false,
 		ActorsToIgnore,
-		EDrawDebugTrace::None,
+		EDrawDebugTrace::ForDuration,
 		HitResult,
 		true
 	);

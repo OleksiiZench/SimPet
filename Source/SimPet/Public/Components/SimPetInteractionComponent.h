@@ -19,7 +19,7 @@ class SIMPET_API USimPetInteractionComponent : public UActorComponent
 public:
 	USimPetInteractionComponent();
 	
-	AActor *DoInteractionTrace();
+	AActor *DoInteractionTrace(float InteractionRadius = 1.0f);
 	
 	bool TryUseEquippedItemOn(AActor *TargetActor);
 	void TakeOrDropOrSwapItem(AActor *Actor);
