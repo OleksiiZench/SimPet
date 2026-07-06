@@ -70,7 +70,7 @@ private:
 
 	void Input_Move(const FInputActionValue &InputActionValue);
 	void Input_Look(const FInputActionValue &InputActionValue);
-	void Input_Use(const FInputActionValue &InputActionValue);
+	void Input_PickUp(const FInputActionValue &InputActionValue);
 	void Input_Interact(const FInputActionValue &InputActionValue);
 	void Input_SecondaryInteract(const FInputActionValue &InputActionValue);
 	void Input_Sprint_Started(const FInputActionValue &InputActionValue);

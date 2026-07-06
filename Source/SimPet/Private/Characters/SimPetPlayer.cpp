@@ -62,9 +62,9 @@ void ASimPetPlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputCompon
 		if (LookAction)
 			EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASimPetPlayer::Input_Look);
 
-		const UInputAction *UseAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_Use);
-		if (UseAction)
-			EnhancedInputComponent->BindAction(UseAction, ETriggerEvent::Started, this, &ASimPetPlayer::Input_Use);
+		const UInputAction *PickUpAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_PickUp);
+		if (PickUpAction)
+			EnhancedInputComponent->BindAction(PickUpAction, ETriggerEvent::Started, this, &ASimPetPlayer::Input_PickUp);
 		
 		const UInputAction *InteractAction = InputConfigDataAsset->FindNativeInputActionByTag(SimPetGameplayTags::InputTag_Interact);
 		if (InteractAction)
@@ -170,15 +170,13 @@ void ASimPetPlayer::Input_Look(const FInputActionValue &InputActionValue)
 	}
 }
 
-void ASimPetPlayer::Input_Use(const FInputActionValue &InputActionValue)
+void ASimPetPlayer::Input_PickUp(const FInputActionValue &InputActionValue)
 {
-	Debug::Print(TEXT("Input_Use"));
+	Debug::Print(TEXT("Input_PickUp"));
 	
 	AActor *HitActor = InteractionComponent->DoInteractionTrace(50.0f);
 	if (HitActor)
 	{
-		Debug::Print(TEXT("HitActor = true"));
-		
 		if (InteractionComponent->TryUseEquippedItemOn(HitActor))
 			return;
 		

@@ -8,7 +8,7 @@ namespace SimPetGameplayTags
 	/** Input Tags **/
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Move, "InputTag.Move");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Look, "InputTag.Look");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Use, "InputTag.Use");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_PickUp, "InputTag.PickUp");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Interact, "InputTag.Interact");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_SecondaryInteract, "InputTag.SecondaryInteract");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Pause, "InputTag.Pause");
