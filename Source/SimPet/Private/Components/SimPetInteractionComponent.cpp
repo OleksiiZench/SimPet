@@ -18,7 +18,7 @@ USimPetInteractionComponent::USimPetInteractionComponent()
 	CachedTakenItem = nullptr;
 	HoldPoint = nullptr;
 	
-	InteractionTraceChannel = TraceTypeQuery2;
+	InteractionTraceChannel = UEngineTypes::ConvertToTraceType(ECC_Visibility);
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst

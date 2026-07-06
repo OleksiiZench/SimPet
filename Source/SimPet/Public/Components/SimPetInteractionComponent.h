@@ -28,14 +28,16 @@ public:
 	FSimPetItemSaveData GetSaveDataEquippedItem() const;
 	void ApplyLoadedDataOfEquippedItem(const FSimPetItemSaveData &ItemSaveData);
 	
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Interaction")
+	TEnumAsByte<ETraceTypeQuery> InteractionTraceChannel;
+	
 private:
 	UPROPERTY()
 	ASimPetItem *CachedTakenItem;
 	
 	UPROPERTY()
 	USceneComponent *HoldPoint;
-	
-	TEnumAsByte<ETraceTypeQuery> InteractionTraceChannel;
 	
 	void TakeItem(ASimPetItem *Item);
 	void DropItem(ASimPetItem *Item);
