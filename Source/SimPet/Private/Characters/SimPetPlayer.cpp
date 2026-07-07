@@ -172,30 +172,17 @@ void ASimPetPlayer::Input_Look(const FInputActionValue &InputActionValue)
 
 void ASimPetPlayer::Input_PickUp(const FInputActionValue &InputActionValue)
 {
-	Debug::Print(TEXT("Input_PickUp"));
-	
-	AActor *HitActor = InteractionComponent->DoInteractionTrace(50.0f);
-	if (HitActor)
-	{
-		if (InteractionComponent->TryUseEquippedItemOn(HitActor))
-			return;
-		
-		ISimPetInteractable::Execute_Interact(HitActor, this);
-	}
+	InteractionComponent->TryPickUp();
 }
 
-// ReSharper disable once CppMemberFunctionMayBeConst
 void ASimPetPlayer::Input_Interact(const FInputActionValue &InputActionValue)
 {
-	AActor *HitActor = InteractionComponent->DoInteractionTrace();
-	if (HitActor)
-		InteractionComponent->TakeOrDropOrSwapItem(HitActor);
+	InteractionComponent->TryInteract();
 }
 
 void ASimPetPlayer::Input_SecondaryInteract(const FInputActionValue &InputActionValue)
 {
 	AActor *HitActor = InteractionComponent->DoInteractionTrace();
-
 	if (HitActor)
 	{
 		ISimPetInteractable::Execute_SecondaryInteract(HitActor, this);

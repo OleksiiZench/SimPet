@@ -43,7 +43,7 @@ void ASimPetItem::Interact_Implementation(AActor *InstigatorActor)
 {
 	if (USimPetInteractionComponent *InteractionComp = InstigatorActor->FindComponentByClass<USimPetInteractionComponent>())
 	{
-		InteractionComp->TakeOrDropOrSwapItem(this);
+		//InteractionComp->TakeOrDropOrSwapItem(this);
 	}
 }
 

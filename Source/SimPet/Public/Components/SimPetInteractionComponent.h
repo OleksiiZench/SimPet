@@ -19,18 +19,22 @@ class SIMPET_API USimPetInteractionComponent : public UActorComponent
 public:
 	USimPetInteractionComponent();
 	
-	AActor *DoInteractionTrace(float InteractionRadius = 1.0f);
+	void TryPickUp();
+	void TryInteract();
+	AActor *DoInteractionTrace(float InteractionRadius = 1.0f, ETraceTypeQuery TraceChannel = UEngineTypes::ConvertToTraceType(ECC_Visibility));
 	
 	bool TryUseEquippedItemOn(AActor *TargetActor);
-	void TakeOrDropOrSwapItem(AActor *Actor);
 	void SetHoldPoint(USceneComponent *InHoldPoint);
 	
 	FSimPetItemSaveData GetSaveDataEquippedItem() const;
 	void ApplyLoadedDataOfEquippedItem(const FSimPetItemSaveData &ItemSaveData);
 	
 protected:
-	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Interaction")
-	TEnumAsByte<ETraceTypeQuery> InteractionTraceChannel;
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Collision")
+	TEnumAsByte<ETraceTypeQuery> PickUpTraceChannel;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "SimPet|Collision")
+	TEnumAsByte<ETraceTypeQuery> InteractTraceChannel;
 	
 private:
 	UPROPERTY()

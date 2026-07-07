@@ -18,11 +18,39 @@ USimPetInteractionComponent::USimPetInteractionComponent()
 	CachedTakenItem = nullptr;
 	HoldPoint = nullptr;
 	
-	InteractionTraceChannel = UEngineTypes::ConvertToTraceType(ECC_Visibility);
+	PickUpTraceChannel = UEngineTypes::ConvertToTraceType(ECC_Visibility);
+	InteractTraceChannel = UEngineTypes::ConvertToTraceType(ECC_Visibility);
+}
+
+void USimPetInteractionComponent::TryPickUp()
+{
+	AActor *HitActor = DoInteractionTrace(50.0f, PickUpTraceChannel);
+	
+	if (IsValid(CachedTakenItem))
+	{
+		if (HitActor != CachedTakenItem)
+			DropItem(CachedTakenItem);
+	}
+	else if (HitActor)
+	{
+		TakeItem(Cast<ASimPetItem>(HitActor));
+	}
+}
+
+void USimPetInteractionComponent::TryInteract()
+{
+	AActor *HitActor = DoInteractionTrace(1, InteractTraceChannel);
+	if (HitActor)
+	{ 
+		if (!TryUseEquippedItemOn(HitActor))
+		{
+			ISimPetInteractable::Execute_Interact(HitActor, GetOwner());
+		}
+	}
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
-AActor *USimPetInteractionComponent::DoInteractionTrace(float InteractionRadius)
+AActor *USimPetInteractionComponent::DoInteractionTrace(float InteractionRadius, ETraceTypeQuery TraceChannel)
 {
 	float InteractionDistance = 250.0f;
 	
@@ -36,6 +64,9 @@ AActor *USimPetInteractionComponent::DoInteractionTrace(float InteractionRadius)
 	TArray<AActor *> ActorsToIgnore;
 	ActorsToIgnore.Add(Player);
 	
+	if (IsValid(CachedTakenItem))
+		ActorsToIgnore.Add(CachedTakenItem);
+	
 	FHitResult HitResult;
 
 	bool bHit = UKismetSystemLibrary::SphereTraceSingle(
@@ -43,7 +74,7 @@ AActor *USimPetInteractionComponent::DoInteractionTrace(float InteractionRadius)
 		StartLocation,
 		EndLocation,
 		InteractionRadius,
-		InteractionTraceChannel,
+		TraceChannel,
 		false,
 		ActorsToIgnore,
 		EDrawDebugTrace::ForDuration,
@@ -79,28 +110,6 @@ bool USimPetInteractionComponent::TryUseEquippedItemOn(AActor *TargetActor)
 	return bWasUsed;
 }
 
-void USimPetInteractionComponent::TakeOrDropOrSwapItem(AActor *Actor)
-{
-	ASimPetItem *Item = Cast<ASimPetItem>(Actor);
-	
-	if (!Item)
-		return;
-	
-	if (IsValid(CachedTakenItem) && CachedTakenItem == Item)
-	{
-		DropItem(Item);
-	}
-	else if (!IsValid(CachedTakenItem))
-	{
-		TakeItem(Item);
-	}
-	else
-	{
-		DropItem(CachedTakenItem);
-		TakeItem(Item);
-	}
-}
-
 void USimPetInteractionComponent::SetHoldPoint(USceneComponent *InHoldPoint)
 {
 	if (InHoldPoint)
@@ -128,7 +137,7 @@ void USimPetInteractionComponent::ApplyLoadedDataOfEquippedItem(const FSimPetIte
 	ASimPetItem *RestoredItem = ItemSubsystem->RestoreItemFromSaveData(ItemSaveData, GetOwner()->GetActorTransform());
 	if (RestoredItem)
 	{
-		TakeOrDropOrSwapItem(RestoredItem);
+		TakeItem(RestoredItem);
 	}
 }
 
