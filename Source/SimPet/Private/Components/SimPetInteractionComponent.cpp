@@ -79,7 +79,7 @@ AActor *USimPetInteractionComponent::DoInteractionTrace(float InteractionRadius,
 		TraceChannel,
 		false,
 		ActorsToIgnore,
-		EDrawDebugTrace::ForDuration,
+		EDrawDebugTrace::None,
 		HitResult,
 		true
 	);
