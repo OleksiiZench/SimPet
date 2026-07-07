@@ -24,16 +24,18 @@ USimPetInteractionComponent::USimPetInteractionComponent()
 
 void USimPetInteractionComponent::TryPickUp()
 {
-	AActor *HitActor = DoInteractionTrace(50.0f, PickUpTraceChannel);
-	
 	if (IsValid(CachedTakenItem))
 	{
-		if (HitActor != CachedTakenItem)
-			DropItem(CachedTakenItem);
+		DropItem(CachedTakenItem);
 	}
-	else if (HitActor)
+	else
 	{
-		TakeItem(Cast<ASimPetItem>(HitActor));
+		AActor *HitActor = DoInteractionTrace(50.0f, PickUpTraceChannel);
+		if (HitActor)
+		{
+			if (ASimPetItem *HitItem = Cast<ASimPetItem>(HitActor))
+				TakeItem(HitItem);
+		}
 	}
 }
 
@@ -143,6 +145,9 @@ void USimPetInteractionComponent::ApplyLoadedDataOfEquippedItem(const FSimPetIte
 
 void USimPetInteractionComponent::TakeItem(ASimPetItem *Item)
 {
+	if (!IsValid(Item))
+		return;
+	
 	Item->DisablePhysics();
 	
 	if (HoldPoint)

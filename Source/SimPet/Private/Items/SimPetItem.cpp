@@ -3,7 +3,9 @@
 
 #include "Items/SimPetItem.h"
 
-#include "Components/SimPetInteractionComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Engine/World.h"
+
 #include "Interfaces/SimPetItemContainer.h"
 #include "Subsystems/SimPetItemSubsystem.h"
 
@@ -39,12 +41,10 @@ void ASimPetItem::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 }
 
+// Базова реалізація навмисно залишена порожньою
+// Перевизначте її в підкласах, щоб забезпечити додаткові можливості взаємодії
 void ASimPetItem::Interact_Implementation(AActor *InstigatorActor)
 {
-	if (USimPetInteractionComponent *InteractionComp = InstigatorActor->FindComponentByClass<USimPetInteractionComponent>())
-	{
-		//InteractionComp->TakeOrDropOrSwapItem(this);
-	}
 }
 
 // Базова реалізація навмисно залишена порожньою

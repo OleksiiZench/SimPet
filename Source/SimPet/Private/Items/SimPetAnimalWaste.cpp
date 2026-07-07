@@ -3,6 +3,8 @@
 
 #include "Items/SimPetAnimalWaste.h"
 
+#include "Engine/World.h"
+
 #include "Subsystems/SimPetAnimalSubsystem.h"
 
 void ASimPetAnimalWaste::Interact_Implementation(AActor *InstigatorActor)
