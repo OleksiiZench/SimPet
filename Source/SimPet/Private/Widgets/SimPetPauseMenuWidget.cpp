@@ -6,6 +6,7 @@
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
+#include "Engine/GameInstance.h"
 
 #include "Characters/SimPetPlayer.h"
 #include "Controllers/SimPetPlayerController.h"
@@ -62,6 +63,11 @@ void USimPetPauseMenuWidget::OnSaveGameClicked()
 	}
 }
 
+void USimPetPauseMenuWidget::OnHelpClicked()
+{
+	Debug::Print("Help clicked!");
+}
+
 void USimPetPauseMenuWidget::SetupButtonBindings()
 {
 	if (Btn_Resume)
@@ -71,7 +77,10 @@ void USimPetPauseMenuWidget::SetupButtonBindings()
 		Btn_ToMainMenu->OnClicked.AddDynamic(this, &USimPetPauseMenuWidget::OnToMainMenuClicked);
 	
 	if (Btn_SaveGame)
-		Btn_SaveGame->OnClicked.AddDynamic(this, &USimPetPauseMenuWidget::OnSaveGameClicked);
+		Btn_SaveGame->OnClicked.AddDynamic(this, &USimPetPauseMenuWidget::OnSaveGameClicked);\
+
+	if (Btn_Help)
+		Btn_Help->OnClicked.AddDynamic(this, &USimPetPauseMenuWidget::OnHelpClicked);
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst

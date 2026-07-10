@@ -52,6 +52,12 @@ protected:
 	UTextBlock *TextBtn_ToMainMenu;
 	
 	UPROPERTY(meta = (BindWidget))
+	UButton *Btn_Help;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *TextBtn_Help;
+	
+	UPROPERTY(meta = (BindWidget))
 	UTextBlock *Text_MaxPoints;
 	
 	UPROPERTY(meta = (BindWidget))
@@ -73,6 +79,9 @@ protected:
 	
 	UFUNCTION()
 	void OnSaveGameClicked();
+	
+	UFUNCTION()
+	void OnHelpClicked();
 #pragma endregion
 	
 private:
