@@ -12,6 +12,7 @@ class UTextBlock;
 class ASimPetPlayerController;
 class USimPetSaveSubsystem;
 class ASimPetPlayerState;
+class USimPetHelpWidget;
 
 /**
  * 
@@ -28,6 +29,9 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Config")
 	FName MainMenuLevelName;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Config")
+	TSubclassOf<USimPetHelpWidget> HelpWidgetClass;
 	
 #pragma region UI Bindings
 	UPROPERTY(meta = (BindWidget))
@@ -93,6 +97,12 @@ private:
 	
 	UPROPERTY()
 	ASimPetPlayerState *CachedPlayerState;
+	
+	UPROPERTY()
+	USimPetHelpWidget* HelpWidgetInstance;
+	
+	UFUNCTION()
+	void OnHelpMenuClosedFromPause();
 	
 	void SetupButtonBindings();
 	void SetupUIBindings();

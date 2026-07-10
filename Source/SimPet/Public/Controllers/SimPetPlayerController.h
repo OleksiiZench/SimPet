@@ -11,6 +11,7 @@ class UInputMappingContext;
 class USimPetInputConfig;
 class UUserWidget;
 class USimPetPauseMenuWidget;
+class USimPetHelpWidget;
 
 struct FInputActionValue;
 
@@ -32,6 +33,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void TogglePauseMenu();
 	
+	UFUNCTION()
+	void OnStartupHelpClosed();
+	
 private:
 #pragma region Inputs
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
@@ -47,6 +51,11 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<USimPetPauseMenuWidget> PauseMenuWidgetClass;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<USimPetHelpWidget> HelpWidgetClass;
+	
 	UPROPERTY()
 	USimPetPauseMenuWidget *CurrentPauseMenuWidget;
+	
+	void ShowStartupHelp();
 };

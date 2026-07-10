@@ -7,13 +7,14 @@
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "EnhancedInputComponent.h"
+#include "Engine/GameInstance.h"
 
 #include "SimPetGameplayTags.h"
 #include "DataAsset/Input/SimPetInputConfig.h"
 #include "Widgets/SimPetHUD.h"
 #include "Widgets/SimPetPauseMenuWidget.h"
+#include "Widgets/SimPetHelpWidget.h"
 
-#include "SimPetDebugHelper.h"
 #include "Subsystems/SimPetSaveSubsystem.h"
 
 void ASimPetPlayerController::BeginPlay()
@@ -28,7 +29,21 @@ void ASimPetPlayerController::BeginPlay()
 		}
 	}
 	
-	SetInputMode_Game();
+	bool bShouldShowHelp = true;
+	
+	USimPetSaveSubsystem *SaveSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<USimPetSaveSubsystem>();
+	if (SaveSubsystem)
+	{
+		//bShouldShowHelp = !SaveSubsystem->GetHasSeenHelp();
+	}
+	
+	if (bShouldShowHelp && HelpWidgetClass)
+	{
+		FTimerHandle StartupHelpTimerHandle;
+		GetWorld()->GetTimerManager().SetTimer(StartupHelpTimerHandle, this, &ASimPetPlayerController::ShowStartupHelp, 0.1f, false);
+	}
+	else
+		SetInputMode_Game();
 }
 
 void ASimPetPlayerController::SetupInputComponent()
@@ -108,6 +123,13 @@ void ASimPetPlayerController::TogglePauseMenu()
 	}
 }
 
+void ASimPetPlayerController::OnStartupHelpClosed()
+{
+	UGameplayStatics::SetGamePaused(GetWorld(), false);
+	
+	SetInputMode_Game();
+}
+
 void ASimPetPlayerController::Input_Pause(const FInputActionValue &InputActionValue)
 {
 	TogglePauseMenu();
@@ -122,5 +144,23 @@ void ASimPetPlayerController::Input_SaveGame(const FInputActionValue &InputActio
 		{
 			SaveSubsystem->SaveGame();
 		}
+	}
+}
+
+void ASimPetPlayerController::ShowStartupHelp()
+{
+	USimPetHelpWidget *StartupHelpWidget = CreateWidget<USimPetHelpWidget>(this, HelpWidgetClass);
+	if (StartupHelpWidget)
+	{
+		StartupHelpWidget->OnHelpClosed.AddDynamic(this, &ASimPetPlayerController::OnStartupHelpClosed);
+		StartupHelpWidget->AddToViewport(100);
+		
+		UGameplayStatics::SetGamePaused(GetWorld(), true);
+		
+		SetInputMode_UI(StartupHelpWidget);
+		
+		USimPetSaveSubsystem *SaveSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<USimPetSaveSubsystem>();
+		//if (SaveSubsystem)
+		//SaveSubsystem->SetHasSeenHelp(true);
 	}
 }

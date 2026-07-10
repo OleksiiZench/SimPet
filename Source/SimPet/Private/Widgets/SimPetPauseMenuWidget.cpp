@@ -12,6 +12,7 @@
 #include "Controllers/SimPetPlayerController.h"
 #include "Subsystems/SimPetSaveSubsystem.h"
 #include "Core/SimPetPlayerState.h"
+#include "Widgets/SimPetHelpWidget.h"
 
 #include "SimPetDebugHelper.h"
 
@@ -65,7 +66,26 @@ void USimPetPauseMenuWidget::OnSaveGameClicked()
 
 void USimPetPauseMenuWidget::OnHelpClicked()
 {
-	Debug::Print("Help clicked!");
+	if (!HelpWidgetInstance && HelpWidgetClass)
+	{
+		HelpWidgetInstance = CreateWidget<USimPetHelpWidget>(GetWorld(), HelpWidgetClass);
+		HelpWidgetInstance->OnHelpClosed.AddDynamic(this, &USimPetPauseMenuWidget::OnHelpMenuClosedFromPause);
+	}
+	
+	if (HelpWidgetInstance && !HelpWidgetInstance->IsInViewport())
+	{
+		SetVisibility(ESlateVisibility::Hidden);
+		
+		HelpWidgetInstance->AddToViewport(100);
+		HelpWidgetInstance->SetKeyboardFocus();
+	}
+}
+
+void USimPetPauseMenuWidget::OnHelpMenuClosedFromPause()
+{
+	SetVisibility(ESlateVisibility::Visible);
+	
+	SetKeyboardFocus();
 }
 
 void USimPetPauseMenuWidget::SetupButtonBindings()
