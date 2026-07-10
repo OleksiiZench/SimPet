@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "Engine/TimerHandle.h"
 
 #include "SimPetTypes/SimPetEnumTypes.h"
 
@@ -42,6 +43,9 @@ public:
 	void RequestLoadGame();
 	bool IsLoadGameRequested() const;
 	void ClearLoadGameRequested();
+	
+	bool GetHasSeenHelp() const;
+	void SetHasSeenHelp(bool bSeen);
 private:
 	UPROPERTY()
 	USimPetGlobalSave *CachedGlobalSave;
@@ -63,6 +67,8 @@ private:
 	bool bIsGlobalSavePending;
 	FTimerHandle GlobalSaveTimerHandle;
 	
+	bool bHasSeenHelp;
+	
 	UFUNCTION()
 	void CommitGlobalSaveToDisk();
 	
@@ -76,6 +82,7 @@ private:
 	
 	void LoadMaxPoints();
 	void LoadDifficulty();
+	void LoadHasSeenHelp();
 	
 	void SaveRegisteredActorsData();
 	void SaveDroppedItemsData();

@@ -4,6 +4,7 @@
 #include "Subsystems/SimPetSaveSubsystem.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
 
 #include "Save/SimPetGlobalSave.h"
 #include "Save/SimPetSaveGame.h"
@@ -28,6 +29,7 @@ void USimPetSaveSubsystem::Initialize(FSubsystemCollectionBase &Collection)
 	
 	LoadMaxPoints();
 	LoadDifficulty();
+	LoadHasSeenHelp();
 }
 
 void USimPetSaveSubsystem::Deinitialize()
@@ -132,6 +134,25 @@ void USimPetSaveSubsystem::ClearLoadGameRequested()
 	bLoadGameRequested = false;
 }
 
+bool USimPetSaveSubsystem::GetHasSeenHelp() const
+{
+	return bHasSeenHelp;
+}
+
+void USimPetSaveSubsystem::SetHasSeenHelp(bool bSeen)
+{
+	if (bHasSeenHelp == bSeen)
+		return;
+	
+	bHasSeenHelp = bSeen;
+	
+	if (CachedGlobalSave)
+	{
+		CachedGlobalSave->bHasSeenHelp = bSeen;
+		RequestDelayedGlobalSave();
+	}
+}
+
 void USimPetSaveSubsystem::CommitGlobalSaveToDisk()
 {
 	bIsGlobalSavePending = false;
@@ -219,6 +240,18 @@ void USimPetSaveSubsystem::LoadDifficulty()
 	else
 	{
 		Difficulty = EGameDifficulty::Easy;
+	}
+}
+
+void USimPetSaveSubsystem::LoadHasSeenHelp()
+{
+	if (CachedGlobalSave)
+	{
+		bHasSeenHelp = CachedGlobalSave->bHasSeenHelp;
+	}
+	else
+	{
+		bHasSeenHelp = false;
 	}
 }
 

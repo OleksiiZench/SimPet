@@ -7,4 +7,5 @@ USimPetGlobalSave::USimPetGlobalSave()
 {
 	MaxPoints = 0;
 	Difficulty = EGameDifficulty::Easy;
+	bHasSeenHelp = false;
 }

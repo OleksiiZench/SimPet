@@ -24,4 +24,7 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, Category = "SimPet|Stats")
 	EGameDifficulty Difficulty;
+	
+	UPROPERTY(VisibleAnywhere, Category = "SimPet|SaveData")
+	bool bHasSeenHelp;
 };

@@ -34,7 +34,7 @@ void ASimPetPlayerController::BeginPlay()
 	USimPetSaveSubsystem *SaveSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<USimPetSaveSubsystem>();
 	if (SaveSubsystem)
 	{
-		//bShouldShowHelp = !SaveSubsystem->GetHasSeenHelp();
+		bShouldShowHelp = !SaveSubsystem->GetHasSeenHelp();
 	}
 	
 	if (bShouldShowHelp && HelpWidgetClass)
@@ -160,7 +160,7 @@ void ASimPetPlayerController::ShowStartupHelp()
 		SetInputMode_UI(StartupHelpWidget);
 		
 		USimPetSaveSubsystem *SaveSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<USimPetSaveSubsystem>();
-		//if (SaveSubsystem)
-		//SaveSubsystem->SetHasSeenHelp(true);
+		if (SaveSubsystem)
+			SaveSubsystem->SetHasSeenHelp(true);
 	}
 }
