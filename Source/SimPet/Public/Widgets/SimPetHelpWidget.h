@@ -7,6 +7,8 @@
 
 #include "SimPetHelpWidget.generated.h"
 
+class UTextBlock;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHelpClosedSignature);
 
 /**
@@ -24,4 +26,18 @@ public:
 protected:
 	virtual FReply NativeOnKeyDown(const FGeometry &InGeometry, const FKeyEvent &InKeyEvent) override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	
+#pragma region UI Bindings
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_Welcome;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_KeysMeanings;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_ListKeysMeanings;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock *Text_TipWhereToLook;
+#pragma endregion
 };
